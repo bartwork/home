@@ -5,36 +5,33 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/rs/zerolog/log"
-
-	"github.com/bartwork/home/pkg/errors"
 )
 
 type Health struct {
 	srv *fiber.App
 }
 
-func NewHealth(path string, response any) (health Health) {
-
-	health = Health{srv: fiber.New(fiber.Config{DisableStartupMessage: true})}
-	health.srv.Get(path, func(ftx *fiber.Ctx) (err error) {
-		return ftx.JSON(response)
+func NewHealth(path string, response any) Health {
+	h := Health{srv: fiber.New(fiber.Config{DisableStartupMessage: true})}
+	h.srv.Get(path, func(c *fiber.Ctx) error {
+		return c.JSON(response)
 	})
-	return
+	return h
 }
 
-func (health Health) Start(ctx context.Context, address string) {
-
+func (h Health) Start(ctx context.Context, address string) {
 	go func() {
-		err := health.srv.Listen(address)
-		errors.ExitOnError(ctx, err, "serve health on "+address)
+		if err := h.srv.Listen(address); err != nil {
+			log.Ctx(ctx).Panic().Err(err).Str("addr", address).Msg("health listen")
+		}
 	}()
 }
 
-func (health Health) Stop(ctx context.Context) {
-
-	if health.srv != nil {
-		if err := health.srv.Shutdown(); err != nil {
-			log.Ctx(ctx).Error().Err(err).Msg("shutdown health check")
-		}
+func (h Health) Stop(ctx context.Context) {
+	if h.srv == nil {
+		return
+	}
+	if err := h.srv.Shutdown(); err != nil {
+		log.Ctx(ctx).Error().Err(err).Msg("health shutdown")
 	}
 }

@@ -42,7 +42,7 @@ func (m loggerUsers) ListUsers(ctx context.Context) (users []dto.User, err error
 	return m.next.ListUsers(ctx)
 }
 
-func (m loggerUsers) GetUser(ctx context.Context, id int64) (user dto.UserDetails, err error) {
+func (m loggerUsers) GetUser(ctx context.Context, id int64) (user dto.User, err error) {
 	logger := log.Ctx(ctx).With().Str("service", "Users").Str("method", "getUser").Logger()
 	defer func(_begin time.Time) {
 		logHandle := func(ev *zerolog.Event) {
@@ -60,4 +60,67 @@ func (m loggerUsers) GetUser(ctx context.Context, id int64) (user dto.UserDetail
 		logger.Info().Func(logHandle).Msg("call getUser")
 	}(time.Now())
 	return m.next.GetUser(ctx, id)
+}
+
+func (m loggerUsers) CreateUser(ctx context.Context, in dto.CreateUser) (user dto.User, err error) {
+	logger := log.Ctx(ctx).With().Str("service", "Users").Str("method", "createUser").Logger()
+	defer func(_begin time.Time) {
+		logHandle := func(ev *zerolog.Event) {
+			fields := map[string]interface{}{
+				"method":   "users.createUser",
+				"request":  viewer.Sprintf("%+v", requestUsersCreateUser{In: in}),
+				"response": viewer.Sprintf("%+v", responseUsersCreateUser{User: user}),
+			}
+			ev.Fields(fields).Str("took", time.Since(_begin).String())
+		}
+		if err != nil {
+			logger.Error().Err(err).Func(logHandle).Msg("call createUser")
+			return
+		}
+		logger.Info().Func(logHandle).Msg("call createUser")
+	}(time.Now())
+	return m.next.CreateUser(ctx, in)
+}
+
+func (m loggerUsers) UpdateUser(ctx context.Context, id int64, in dto.UpdateUser) (user dto.User, err error) {
+	logger := log.Ctx(ctx).With().Str("service", "Users").Str("method", "updateUser").Logger()
+	defer func(_begin time.Time) {
+		logHandle := func(ev *zerolog.Event) {
+			fields := map[string]interface{}{
+				"method": "users.updateUser",
+				"request": viewer.Sprintf("%+v", requestUsersUpdateUser{
+					Id: id,
+					In: in,
+				}),
+				"response": viewer.Sprintf("%+v", responseUsersUpdateUser{User: user}),
+			}
+			ev.Fields(fields).Str("took", time.Since(_begin).String())
+		}
+		if err != nil {
+			logger.Error().Err(err).Func(logHandle).Msg("call updateUser")
+			return
+		}
+		logger.Info().Func(logHandle).Msg("call updateUser")
+	}(time.Now())
+	return m.next.UpdateUser(ctx, id, in)
+}
+
+func (m loggerUsers) DeleteUser(ctx context.Context, id int64) (err error) {
+	logger := log.Ctx(ctx).With().Str("service", "Users").Str("method", "deleteUser").Logger()
+	defer func(_begin time.Time) {
+		logHandle := func(ev *zerolog.Event) {
+			fields := map[string]interface{}{
+				"method":   "users.deleteUser",
+				"request":  viewer.Sprintf("%+v", requestUsersDeleteUser{Id: id}),
+				"response": viewer.Sprintf("%+v", responseUsersDeleteUser{}),
+			}
+			ev.Fields(fields).Str("took", time.Since(_begin).String())
+		}
+		if err != nil {
+			logger.Error().Err(err).Func(logHandle).Msg("call deleteUser")
+			return
+		}
+		logger.Info().Func(logHandle).Msg("call deleteUser")
+	}(time.Now())
+	return m.next.DeleteUser(ctx, id)
 }

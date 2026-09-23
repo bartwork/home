@@ -80,3 +80,126 @@ func (http *httpUsers) serveGetUser(ctx *fiber.Ctx) (err error) {
 	}
 	return sendResponse(ctx, err)
 }
+func (http *httpUsers) createUser(ctx context.Context, request requestUsersCreateUser) (response responseUsersCreateUser, err error) {
+
+	response.User, err = http.svc.CreateUser(ctx, request.In)
+	if err != nil {
+		if http.errorHandler != nil {
+			err = http.errorHandler(err)
+		}
+	}
+	return
+}
+func (http *httpUsers) serveCreateUser(ctx *fiber.Ctx) (err error) {
+
+	var request requestUsersCreateUser
+	ctx.Response().SetStatusCode(201)
+	if err = ctx.BodyParser(&request); err != nil {
+		ctx.Response().SetStatusCode(fiber.StatusBadRequest)
+		_, err = ctx.WriteString("request body could not be decoded: " + err.Error())
+		return
+	}
+
+	var response responseUsersCreateUser
+	if response, err = http.createUser(ctx.UserContext(), request); err == nil {
+		var iResponse interface{} = response
+		if redirect, ok := iResponse.(withRedirect); ok {
+			return ctx.Redirect(redirect.RedirectTo())
+		}
+
+		return sendResponse(ctx, response)
+	}
+	if errCoder, ok := err.(withErrorCode); ok {
+		ctx.Status(errCoder.Code())
+	} else {
+		ctx.Status(fiber.StatusInternalServerError)
+	}
+	return sendResponse(ctx, err)
+}
+func (http *httpUsers) updateUser(ctx context.Context, request requestUsersUpdateUser) (response responseUsersUpdateUser, err error) {
+
+	response.User, err = http.svc.UpdateUser(ctx, request.Id, request.In)
+	if err != nil {
+		if http.errorHandler != nil {
+			err = http.errorHandler(err)
+		}
+	}
+	return
+}
+func (http *httpUsers) serveUpdateUser(ctx *fiber.Ctx) (err error) {
+
+	var request requestUsersUpdateUser
+	ctx.Response().SetStatusCode(200)
+	if err = ctx.BodyParser(&request); err != nil {
+		ctx.Response().SetStatusCode(fiber.StatusBadRequest)
+		_, err = ctx.WriteString("request body could not be decoded: " + err.Error())
+		return
+	}
+
+	if _id := ctx.Params("id"); _id != "" {
+		var id int64
+		id, err = strconv.ParseInt(_id, 10, 64)
+		if err != nil {
+			ctx.Status(fiber.StatusBadRequest)
+			return sendResponse(ctx, "path arguments could not be decoded: "+err.Error())
+		}
+		request.Id = id
+	}
+
+	var response responseUsersUpdateUser
+	if response, err = http.updateUser(ctx.UserContext(), request); err == nil {
+		var iResponse interface{} = response
+		if redirect, ok := iResponse.(withRedirect); ok {
+			return ctx.Redirect(redirect.RedirectTo())
+		}
+
+		return sendResponse(ctx, response)
+	}
+	if errCoder, ok := err.(withErrorCode); ok {
+		ctx.Status(errCoder.Code())
+	} else {
+		ctx.Status(fiber.StatusInternalServerError)
+	}
+	return sendResponse(ctx, err)
+}
+func (http *httpUsers) deleteUser(ctx context.Context, request requestUsersDeleteUser) (response responseUsersDeleteUser, err error) {
+
+	err = http.svc.DeleteUser(ctx, request.Id)
+	if err != nil {
+		if http.errorHandler != nil {
+			err = http.errorHandler(err)
+		}
+	}
+	return
+}
+func (http *httpUsers) serveDeleteUser(ctx *fiber.Ctx) (err error) {
+
+	var request requestUsersDeleteUser
+	ctx.Response().SetStatusCode(204)
+
+	if _id := ctx.Params("id"); _id != "" {
+		var id int64
+		id, err = strconv.ParseInt(_id, 10, 64)
+		if err != nil {
+			ctx.Status(fiber.StatusBadRequest)
+			return sendResponse(ctx, "path arguments could not be decoded: "+err.Error())
+		}
+		request.Id = id
+	}
+
+	var response responseUsersDeleteUser
+	if response, err = http.deleteUser(ctx.UserContext(), request); err == nil {
+		var iResponse interface{} = response
+		if redirect, ok := iResponse.(withRedirect); ok {
+			return ctx.Redirect(redirect.RedirectTo())
+		}
+
+		return sendResponse(ctx, response)
+	}
+	if errCoder, ok := err.(withErrorCode); ok {
+		ctx.Status(errCoder.Code())
+	} else {
+		ctx.Status(fiber.StatusInternalServerError)
+	}
+	return sendResponse(ctx, err)
+}

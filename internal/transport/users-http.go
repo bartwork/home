@@ -45,4 +45,7 @@ func (http *httpUsers) WithErrorHandler(handler ErrorHandler) *httpUsers {
 func (http *httpUsers) SetRoutes(route *fiber.App) {
 	route.Get("/api/v1/users", http.serveListUsers)
 	route.Get("/api/v1/users/:id", http.serveGetUser)
+	route.Post("/api/v1/users", http.serveCreateUser)
+	route.Put("/api/v1/users/:id", http.serveUpdateUser)
+	route.Delete("/api/v1/users/:id", http.serveDeleteUser)
 }

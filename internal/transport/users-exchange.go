@@ -15,5 +15,29 @@ type requestUsersGetUser struct {
 }
 
 type responseUsersGetUser struct {
-	User dto.UserDetails `json:"user,omitempty"`
+	User dto.User `json:"user,omitempty"`
 }
+
+type requestUsersCreateUser struct {
+	In dto.CreateUser `json:"in,omitempty"`
+}
+
+type responseUsersCreateUser struct {
+	User dto.User `json:"user,omitempty"`
+}
+
+type requestUsersUpdateUser struct {
+	Id int64          `json:"id,omitempty"`
+	In dto.UpdateUser `json:"in,omitempty"`
+}
+
+type responseUsersUpdateUser struct {
+	User dto.User `json:"user,omitempty"`
+}
+
+type requestUsersDeleteUser struct {
+	Id int64 `json:"id,omitempty"`
+}
+
+// Formal exchange type, please do not delete.
+type responseUsersDeleteUser struct{}

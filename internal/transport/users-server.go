@@ -9,15 +9,21 @@ import (
 )
 
 type serverUsers struct {
-	svc       contracts.Users
-	listUsers UsersListUsers
-	getUser   UsersGetUser
+	svc        contracts.Users
+	listUsers  UsersListUsers
+	getUser    UsersGetUser
+	createUser UsersCreateUser
+	updateUser UsersUpdateUser
+	deleteUser UsersDeleteUser
 }
 
 type MiddlewareSetUsers interface {
 	Wrap(m MiddlewareUsers)
 	WrapListUsers(m MiddlewareUsersListUsers)
 	WrapGetUser(m MiddlewareUsersGetUser)
+	WrapCreateUser(m MiddlewareUsersCreateUser)
+	WrapUpdateUser(m MiddlewareUsersUpdateUser)
+	WrapDeleteUser(m MiddlewareUsersDeleteUser)
 
 	WithMetrics()
 	WithLog()
@@ -25,9 +31,12 @@ type MiddlewareSetUsers interface {
 
 func newServerUsers(svc contracts.Users) *serverUsers {
 	return &serverUsers{
-		getUser:   svc.GetUser,
-		listUsers: svc.ListUsers,
-		svc:       svc,
+		createUser: svc.CreateUser,
+		deleteUser: svc.DeleteUser,
+		getUser:    svc.GetUser,
+		listUsers:  svc.ListUsers,
+		svc:        svc,
+		updateUser: svc.UpdateUser,
 	}
 }
 
@@ -35,14 +44,29 @@ func (srv *serverUsers) Wrap(m MiddlewareUsers) {
 	srv.svc = m(srv.svc)
 	srv.listUsers = srv.svc.ListUsers
 	srv.getUser = srv.svc.GetUser
+	srv.createUser = srv.svc.CreateUser
+	srv.updateUser = srv.svc.UpdateUser
+	srv.deleteUser = srv.svc.DeleteUser
 }
 
 func (srv *serverUsers) ListUsers(ctx context.Context) (users []dto.User, err error) {
 	return srv.listUsers(ctx)
 }
 
-func (srv *serverUsers) GetUser(ctx context.Context, id int64) (user dto.UserDetails, err error) {
+func (srv *serverUsers) GetUser(ctx context.Context, id int64) (user dto.User, err error) {
 	return srv.getUser(ctx, id)
+}
+
+func (srv *serverUsers) CreateUser(ctx context.Context, in dto.CreateUser) (user dto.User, err error) {
+	return srv.createUser(ctx, in)
+}
+
+func (srv *serverUsers) UpdateUser(ctx context.Context, id int64, in dto.UpdateUser) (user dto.User, err error) {
+	return srv.updateUser(ctx, id, in)
+}
+
+func (srv *serverUsers) DeleteUser(ctx context.Context, id int64) (err error) {
+	return srv.deleteUser(ctx, id)
 }
 
 func (srv *serverUsers) WrapListUsers(m MiddlewareUsersListUsers) {
@@ -51,6 +75,18 @@ func (srv *serverUsers) WrapListUsers(m MiddlewareUsersListUsers) {
 
 func (srv *serverUsers) WrapGetUser(m MiddlewareUsersGetUser) {
 	srv.getUser = m(srv.getUser)
+}
+
+func (srv *serverUsers) WrapCreateUser(m MiddlewareUsersCreateUser) {
+	srv.createUser = m(srv.createUser)
+}
+
+func (srv *serverUsers) WrapUpdateUser(m MiddlewareUsersUpdateUser) {
+	srv.updateUser = m(srv.updateUser)
+}
+
+func (srv *serverUsers) WrapDeleteUser(m MiddlewareUsersDeleteUser) {
+	srv.deleteUser = m(srv.deleteUser)
 }
 
 func (srv *serverUsers) WithMetrics() {

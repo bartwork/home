@@ -9,9 +9,15 @@ import (
 )
 
 type UsersListUsers func(ctx context.Context) (users []dto.User, err error)
-type UsersGetUser func(ctx context.Context, id int64) (user dto.UserDetails, err error)
+type UsersGetUser func(ctx context.Context, id int64) (user dto.User, err error)
+type UsersCreateUser func(ctx context.Context, in dto.CreateUser) (user dto.User, err error)
+type UsersUpdateUser func(ctx context.Context, id int64, in dto.UpdateUser) (user dto.User, err error)
+type UsersDeleteUser func(ctx context.Context, id int64) (err error)
 
 type MiddlewareUsers func(next contracts.Users) contracts.Users
 
 type MiddlewareUsersListUsers func(next UsersListUsers) UsersListUsers
 type MiddlewareUsersGetUser func(next UsersGetUser) UsersGetUser
+type MiddlewareUsersCreateUser func(next UsersCreateUser) UsersCreateUser
+type MiddlewareUsersUpdateUser func(next UsersUpdateUser) UsersUpdateUser
+type MiddlewareUsersDeleteUser func(next UsersDeleteUser) UsersDeleteUser

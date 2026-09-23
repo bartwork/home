@@ -3,7 +3,7 @@ info:
     title: home API
     version: v0.0.1
 servers:
-    - url: http://home-server:9000
+    - url: http://localhost:9000
 paths:
     /api/v1/users:
         get:
@@ -17,11 +17,27 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/responseUsersListUsers'
+        post:
+            tags:
+                - users
+            summary: Создать пользователя
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/requestUsersCreateUser'
+            responses:
+                "201":
+                    description: Created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/responseUsersCreateUser'
     /api/v1/users/{id}:
         get:
             tags:
                 - users
-            summary: Пользователь и его устройства
+            summary: Пользователь
             parameters:
                 - in: path
                   name: id
@@ -36,55 +52,157 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/responseUsersGetUser'
-components:
-    schemas:
-        dto.Device:
-            type: object
-            required:
-                - id
-                - name
-                - fingerprint
-                - lastSeen
-            properties:
-                fingerprint:
-                    type: string
-                id:
+        put:
+            tags:
+                - users
+            summary: Обновить пользователя
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
                     type: number
                     format: int64
-                lastSeen:
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/requestUsersUpdateUser'
+            responses:
+                "200":
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/responseUsersUpdateUser'
+        delete:
+            tags:
+                - users
+            summary: Удалить пользователя
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: number
+                    format: int64
+            responses:
+                "204":
+                    description: No Content
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/responseUsersDeleteUser'
+components:
+    schemas:
+        dto.CreateUser:
+            type: object
+            required:
+                - lastName
+                - firstName
+                - secondName
+                - email
+                - phone
+                - password
+            properties:
+                active:
+                    oneOf:
+                        - type: boolean
+                        - nullable: true
+                email:
                     type: string
-                name:
+                firstName:
+                    type: string
+                lastName:
+                    type: string
+                password:
+                    type: string
+                phone:
+                    type: string
+                secondName:
+                    type: string
+        dto.UpdateUser:
+            type: object
+            required:
+                - lastName
+                - firstName
+                - secondName
+                - email
+                - phone
+                - active
+            properties:
+                active:
+                    type: boolean
+                email:
+                    type: string
+                firstName:
+                    type: string
+                lastName:
+                    type: string
+                password:
+                    oneOf:
+                        - type: string
+                        - nullable: true
+                phone:
+                    type: string
+                secondName:
                     type: string
         dto.User:
             type: object
             required:
                 - id
-                - login
-                - name
+                - lastName
+                - firstName
+                - secondName
+                - email
+                - phone
+                - active
             properties:
+                active:
+                    type: boolean
+                email:
+                    type: string
+                firstName:
+                    type: string
                 id:
                     type: number
                     format: int64
-                login:
+                lastAuthAt:
                     type: string
-                name:
+                lastName:
                     type: string
-        dto.UserDetails:
+                phone:
+                    type: string
+                secondName:
+                    type: string
+        requestUsersCreateUser:
             type: object
             required:
-                - user
-                - devices
+                - in
             properties:
-                devices:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/dto.Device'
-                    nullable: true
-                user:
-                    $ref: '#/components/schemas/dto.User'
+                in:
+                    $ref: '#/components/schemas/dto.CreateUser'
+        requestUsersDeleteUser:
+            type: object
         requestUsersGetUser:
             type: object
         requestUsersListUsers:
+            type: object
+        requestUsersUpdateUser:
+            type: object
+            required:
+                - in
+            properties:
+                in:
+                    $ref: '#/components/schemas/dto.UpdateUser'
+        responseUsersCreateUser:
+            type: object
+            required:
+                - user
+            properties:
+                user:
+                    $ref: '#/components/schemas/dto.User'
+        responseUsersDeleteUser:
             type: object
         responseUsersGetUser:
             type: object
@@ -92,7 +210,7 @@ components:
                 - user
             properties:
                 user:
-                    $ref: '#/components/schemas/dto.UserDetails'
+                    $ref: '#/components/schemas/dto.User'
         responseUsersListUsers:
             type: object
             required:
@@ -103,3 +221,10 @@ components:
                     items:
                         $ref: '#/components/schemas/dto.User'
                     nullable: true
+        responseUsersUpdateUser:
+            type: object
+            required:
+                - user
+            properties:
+                user:
+                    $ref: '#/components/schemas/dto.User'

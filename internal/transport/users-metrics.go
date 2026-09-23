@@ -42,7 +42,7 @@ func (m metricsUsers) ListUsers(ctx context.Context) (users []dto.User, err erro
 	return m.next.ListUsers(ctx)
 }
 
-func (m metricsUsers) GetUser(ctx context.Context, id int64) (user dto.UserDetails, err error) {
+func (m metricsUsers) GetUser(ctx context.Context, id int64) (user dto.User, err error) {
 
 	defer func(_begin time.Time) {
 		var (
@@ -63,4 +63,73 @@ func (m metricsUsers) GetUser(ctx context.Context, id int64) (user dto.UserDetai
 	}(time.Now())
 
 	return m.next.GetUser(ctx, id)
+}
+
+func (m metricsUsers) CreateUser(ctx context.Context, in dto.CreateUser) (user dto.User, err error) {
+
+	defer func(_begin time.Time) {
+		var (
+			success = true
+			errCode int
+		)
+		if err != nil {
+			success = false
+			errCode = v2.StatusInternalServerError
+			ec, ok := err.(withErrorCode)
+			if ok {
+				errCode = ec.Code()
+			}
+		}
+		RequestCount.WithLabelValues("users", "createUser", strconv.FormatBool(success), strconv.Itoa(errCode)).Add(1)
+		RequestCountAll.WithLabelValues("users", "createUser", strconv.FormatBool(success), strconv.Itoa(errCode)).Add(1)
+		RequestLatency.WithLabelValues("users", "createUser", strconv.FormatBool(success), strconv.Itoa(errCode)).Observe(time.Since(_begin).Seconds())
+	}(time.Now())
+
+	return m.next.CreateUser(ctx, in)
+}
+
+func (m metricsUsers) UpdateUser(ctx context.Context, id int64, in dto.UpdateUser) (user dto.User, err error) {
+
+	defer func(_begin time.Time) {
+		var (
+			success = true
+			errCode int
+		)
+		if err != nil {
+			success = false
+			errCode = v2.StatusInternalServerError
+			ec, ok := err.(withErrorCode)
+			if ok {
+				errCode = ec.Code()
+			}
+		}
+		RequestCount.WithLabelValues("users", "updateUser", strconv.FormatBool(success), strconv.Itoa(errCode)).Add(1)
+		RequestCountAll.WithLabelValues("users", "updateUser", strconv.FormatBool(success), strconv.Itoa(errCode)).Add(1)
+		RequestLatency.WithLabelValues("users", "updateUser", strconv.FormatBool(success), strconv.Itoa(errCode)).Observe(time.Since(_begin).Seconds())
+	}(time.Now())
+
+	return m.next.UpdateUser(ctx, id, in)
+}
+
+func (m metricsUsers) DeleteUser(ctx context.Context, id int64) (err error) {
+
+	defer func(_begin time.Time) {
+		var (
+			success = true
+			errCode int
+		)
+		if err != nil {
+			success = false
+			errCode = v2.StatusInternalServerError
+			ec, ok := err.(withErrorCode)
+			if ok {
+				errCode = ec.Code()
+			}
+		}
+		RequestCount.WithLabelValues("users", "deleteUser", strconv.FormatBool(success), strconv.Itoa(errCode)).Add(1)
+		RequestCountAll.WithLabelValues("users", "deleteUser", strconv.FormatBool(success), strconv.Itoa(errCode)).Add(1)
+		RequestLatency.WithLabelValues("users", "deleteUser", strconv.FormatBool(success), strconv.Itoa(errCode)).Observe(time.Since(_begin).Seconds())
+	}(time.Now())
+
+	return m.next.DeleteUser(ctx, id)
 }

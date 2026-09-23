@@ -7,7 +7,6 @@ import (
 
 	"github.com/kelseyhightower/envconfig"
 	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/pkgerrors"
 )
 
 const FormatJSON = "json"
@@ -21,12 +20,13 @@ type CfgService struct {
 	MetricsBind   string `envconfig:"BIND_METRICS" default:":9090"`
 	LivenessBind  string `envconfig:"BIND_LIVENESS" default:":9091"`
 	ReadinessBind string `envconfig:"BIND_READINESS" default:":9092"`
+
+	DBPath string `envconfig:"DB_PATH" default:"data/home.db"`
 }
 
 var service *CfgService
 
 func Service() CfgService {
-
 	if service != nil {
 		return *service
 	}
@@ -37,20 +37,18 @@ func Service() CfgService {
 	return *service
 }
 
-func (cfg CfgService) Logger() (logger zerolog.Logger) {
-
+func (cfg CfgService) Logger() zerolog.Logger {
 	level := zerolog.InfoLevel
-	if newLevel, err := zerolog.ParseLevel(cfg.LogLevel); err == nil {
-		level = newLevel
+	if l, err := zerolog.ParseLevel(cfg.LogLevel); err == nil {
+		level = l
 	}
 	var out io.Writer = os.Stdout
 	if cfg.LogFormat != FormatJSON {
 		out = zerolog.ConsoleWriter{Out: os.Stdout, TimeFormat: time.StampMicro}
 	}
-	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack // nolint:reassign
-	ctxLog := zerolog.New(out).Level(level).With().Timestamp().Stack()
+	c := zerolog.New(out).Level(level).With().Timestamp()
 	if cfg.ReportCaller {
-		ctxLog = ctxLog.Caller()
+		c = c.Caller()
 	}
-	return ctxLog.Logger()
+	return c.Logger()
 }
