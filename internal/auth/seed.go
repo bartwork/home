@@ -8,6 +8,7 @@ import (
 )
 
 const (
+	DefaultAdminLogin    = "admin"
 	DefaultAdminEmail    = "admin@home.local"
 	DefaultAdminPhone    = "+70000000000"
 	DefaultAdminPassword = "admin"
@@ -29,6 +30,7 @@ func SeedAdmin(ctx context.Context, repo repository.UserStore) error {
 	}
 
 	_, err = repo.Create(ctx, repository.WriteUser{
+		Login:        DefaultAdminLogin,
 		LastName:     "Админ",
 		FirstName:    "Системный",
 		Email:        DefaultAdminEmail,

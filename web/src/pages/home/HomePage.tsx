@@ -1,15 +1,31 @@
 import { useEffect, useState } from 'react'
+import {
+  Alert,
+  AppBar,
+  Box,
+  Button,
+  Chip,
+  Container,
+  List,
+  ListItem,
+  Paper,
+  Stack,
+  Switch,
+  Toolbar,
+  Typography,
+} from '@mui/material'
 import { Navigate } from 'react-router-dom'
 import { listDevices, type Device } from '../../shared/api/client'
 import { useAuth } from '../../shared/auth/AuthContext'
 import { useRealtime } from '../../shared/realtime/useRealtime'
-import styles from './home.module.css'
+import { useDocumentTitle } from '../../shared/useDocumentTitle'
 
 function switchOn(value: string) {
   return value === '1' || value === 'true' || value === 'on'
 }
 
 export function HomePage() {
+  useDocumentTitle('Устройства · Мой дом')
   const { token, user, logout } = useAuth()
   const { connected, values, sendCmd } = useRealtime()
   const [devices, setDevices] = useState<Device[]>([])
@@ -35,59 +51,112 @@ export function HomePage() {
   }
 
   return (
-    <main className={styles.page}>
-      <header className={styles.top}>
-        <p className={styles.brand}>home</p>
-        <div className={styles.meta}>
-          <span className={connected ? styles.online : styles.offline}>
-            {connected ? 'live' : 'offline'}
-          </span>
-          <button type="button" className={styles.logout} onClick={logout}>
-            Выйти
-          </button>
-        </div>
-      </header>
+    <Box
+      component="main"
+      sx={{
+        minHeight: '100dvh',
+        background: [
+          'radial-gradient(900px 420px at 85% -10%, rgba(94, 200, 216, 0.12), transparent 55%)',
+          'radial-gradient(700px 360px at 10% 100%, rgba(240, 179, 90, 0.08), transparent 50%)',
+          'var(--mui-palette-background-default)',
+        ].join(', '),
+      }}
+    >
+      <AppBar
+        position="sticky"
+        elevation={0}
+        color="transparent"
+        sx={{ borderBottom: 1, borderColor: 'divider', backdropFilter: 'blur(10px)' }}
+      >
+        <Toolbar sx={{ gap: 2, justifyContent: 'space-between' }}>
+          <Typography variant="h1" sx={{ fontSize: '1.8rem' }}>
+            Мой дом
+          </Typography>
+          <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
+            <Chip
+              size="small"
+              label={connected ? 'live' : 'offline'}
+              color={connected ? 'secondary' : 'default'}
+              variant="outlined"
+              sx={{ textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600 }}
+            />
+            <Button variant="outlined" color="inherit" onClick={logout} size="small">
+              Выйти
+            </Button>
+          </Stack>
+        </Toolbar>
+      </AppBar>
 
-      <section className={styles.body}>
-        <h1>Устройства</h1>
-        <p className={styles.lead}>
+      <Container maxWidth="sm" sx={{ py: { xs: 3, sm: 4 } }}>
+        <Typography variant="h2" sx={{ fontSize: { xs: '1.8rem', sm: '2.4rem' }, mb: 0.5 }}>
+          Устройства
+        </Typography>
+        <Typography color="text.secondary" sx={{ mb: 3 }}>
           {user
-            ? `${user.firstName || user.email} · MQTT → WebSocket`
+            ? `${user.login}${user.firstName ? ` · ${user.firstName}` : ''} · MQTT → WebSocket`
             : 'MQTT → WebSocket'}
-        </p>
-        {error ? <p className={styles.error}>{error}</p> : null}
+        </Typography>
 
-        <ul className={styles.list}>
+        {error ? (
+          <Alert severity="error" variant="outlined" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        ) : null}
+
+        <List disablePadding sx={{ display: 'grid', gap: 1.5 }}>
           {devices.map((d) => {
             const value = values[d.mqttTopic] ?? '—'
             const on = switchOn(value)
             return (
-              <li key={d.id} className={styles.card}>
-                <div>
-                  <p className={styles.name}>{d.name}</p>
-                  <p className={styles.topic}>{d.mqttTopic}</p>
-                </div>
-                <div className={styles.actions}>
+              <ListItem
+                key={d.id}
+                component={Paper}
+                elevation={0}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: 2,
+                  px: 2,
+                  py: 1.75,
+                  border: 1,
+                  borderColor: 'divider',
+                  bgcolor: 'rgba(18, 26, 24, 0.72)',
+                }}
+              >
+                <Box sx={{ minWidth: 0 }}>
+                  <Typography sx={{ fontWeight: 600 }}>{d.name}</Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ wordBreak: 'break-all', mt: 0.25 }}
+                  >
+                    {d.mqttTopic}
+                  </Typography>
+                </Box>
+                <Box sx={{ flexShrink: 0 }}>
                   {d.deviceType === 'switch' ? (
-                    <button
-                      type="button"
-                      className={on ? styles.switchOn : styles.switchOff}
-                      onClick={() => sendCmd(d.mqttTopic, on ? '0' : '1')}
-                    >
-                      {on ? 'ON' : 'OFF'}
-                    </button>
+                    <Switch
+                      checked={on}
+                      color="primary"
+                      slotProps={{ input: { 'aria-label': d.name } }}
+                      onChange={(_, checked) => sendCmd(d.mqttTopic, checked ? '1' : '0')}
+                    />
                   ) : (
-                    <p className={styles.value}>
+                    <Typography
+                      variant="h3"
+                      sx={{ fontSize: '1.25rem', fontFamily: '"Syne", sans-serif' }}
+                    >
                       {value}
                       {d.unit ? ` ${d.unit}` : ''}
-                    </p>
+                    </Typography>
                   )}
-                </div>
-              </li>
+                </Box>
+              </ListItem>
             )
           })}
-        </ul>
-      </section>
-    </main>
+        </List>
+      </Container>
+    </Box>
   )
 }

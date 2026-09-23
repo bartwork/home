@@ -42,7 +42,7 @@ func (s *Service) GetUser(ctx context.Context, id int64) (dto.User, error) {
 }
 
 func (s *Service) CreateUser(ctx context.Context, in dto.CreateUser) (dto.User, error) {
-	email, phone, password, err := normalizeContacts(in.Email, in.Phone, in.Password, true)
+	login, email, phone, password, err := normalize(in.Login, in.Email, in.Phone, in.Password, true)
 	if err != nil {
 		return dto.User{}, err
 	}
@@ -58,6 +58,7 @@ func (s *Service) CreateUser(ctx context.Context, in dto.CreateUser) (dto.User, 
 	}
 
 	row, err := s.repo.Create(ctx, repository.WriteUser{
+		Login:        login,
 		LastName:     strings.TrimSpace(in.LastName),
 		FirstName:    strings.TrimSpace(in.FirstName),
 		SecondName:   strings.TrimSpace(in.SecondName),
@@ -77,12 +78,13 @@ func (s *Service) UpdateUser(ctx context.Context, id int64, in dto.UpdateUser) (
 		return dto.User{}, errors.ErrBadRequest
 	}
 
-	email, phone, _, err := normalizeContacts(in.Email, in.Phone, "", false)
+	login, email, phone, _, err := normalize(in.Login, in.Email, in.Phone, "", false)
 	if err != nil {
 		return dto.User{}, err
 	}
 
 	row, err := s.repo.Update(ctx, id, repository.WriteUser{
+		Login:      login,
 		LastName:   strings.TrimSpace(in.LastName),
 		FirstName:  strings.TrimSpace(in.FirstName),
 		SecondName: strings.TrimSpace(in.SecondName),
@@ -118,17 +120,18 @@ func (s *Service) DeleteUser(ctx context.Context, id int64) error {
 	return s.repo.Delete(ctx, id)
 }
 
-func normalizeContacts(email, phone, password string, requirePassword bool) (string, string, string, error) {
+func normalize(login, email, phone, password string, requirePassword bool) (string, string, string, string, error) {
+	login = strings.TrimSpace(login)
 	email = strings.TrimSpace(email)
 	phone = strings.TrimSpace(phone)
 	password = strings.TrimSpace(password)
-	if email == "" || phone == "" {
-		return "", "", "", errors.ErrBadRequest
+	if login == "" || email == "" || phone == "" {
+		return "", "", "", "", errors.ErrBadRequest
 	}
 	if requirePassword && password == "" {
-		return "", "", "", errors.ErrBadRequest
+		return "", "", "", "", errors.ErrBadRequest
 	}
-	return email, phone, password, nil
+	return login, email, phone, password, nil
 }
 
 func hashPassword(password string) (string, error) {
@@ -142,6 +145,7 @@ func hashPassword(password string) (string, error) {
 func toDTO(u repository.User) dto.User {
 	out := dto.User{
 		ID:         u.ID,
+		Login:      u.Login,
 		LastName:   u.LastName,
 		FirstName:  u.FirstName,
 		SecondName: u.SecondName,

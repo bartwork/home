@@ -22,7 +22,6 @@ func New(repo repository.UserStore, tokens *Tokens) *Service {
 
 func (s *Service) Login(ctx context.Context, login, password string) (token string, user dto.User, err error) {
 	login = strings.TrimSpace(login)
-	password = strings.TrimSpace(password)
 	if login == "" || password == "" {
 		return "", dto.User{}, errors.ErrBadRequest
 	}
@@ -49,18 +48,24 @@ func (s *Service) Login(ctx context.Context, login, password string) (token stri
 		return "", dto.User{}, err
 	}
 
-	return token, toDTO(row.User, now), nil
+	u := toDTO(row.User)
+	u.LastAuthAt = now
+	return token, u, nil
 }
 
-func toDTO(u repository.User, lastAuth string) dto.User {
-	return dto.User{
+func toDTO(u repository.User) dto.User {
+	out := dto.User{
 		ID:         u.ID,
+		Login:      u.Login,
 		LastName:   u.LastName,
 		FirstName:  u.FirstName,
 		SecondName: u.SecondName,
 		Email:      u.Email,
 		Phone:      u.Phone,
 		Active:     u.Active,
-		LastAuthAt: lastAuth,
 	}
+	if u.LastAuthAt != nil {
+		out.LastAuthAt = *u.LastAuthAt
+	}
+	return out
 }

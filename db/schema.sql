@@ -1,5 +1,6 @@
 CREATE TABLE users (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    login         TEXT    NOT NULL UNIQUE,
     last_name     TEXT    NOT NULL DEFAULT '',
     first_name    TEXT    NOT NULL DEFAULT '',
     second_name   TEXT    NOT NULL DEFAULT '',

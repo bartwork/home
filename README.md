@@ -11,7 +11,7 @@ task generate
 task run
 ```
 
-Открыть http://localhost:9000 · `admin@home.local` / `admin`
+Открыть http://localhost:9000 · логин `admin` / пароль `admin`
 
 ## Taskfile
 

@@ -203,6 +203,7 @@ components:
         dto.CreateUser:
             type: object
             required:
+                - login
                 - lastName
                 - firstName
                 - secondName
@@ -219,6 +220,8 @@ components:
                 firstName:
                     type: string
                 lastName:
+                    type: string
+                login:
                     type: string
                 password:
                     type: string
@@ -253,6 +256,7 @@ components:
         dto.UpdateUser:
             type: object
             required:
+                - login
                 - lastName
                 - firstName
                 - secondName
@@ -268,6 +272,8 @@ components:
                     type: string
                 lastName:
                     type: string
+                login:
+                    type: string
                 password:
                     oneOf:
                         - type: string
@@ -280,6 +286,7 @@ components:
             type: object
             required:
                 - id
+                - login
                 - lastName
                 - firstName
                 - secondName
@@ -299,6 +306,8 @@ components:
                 lastAuthAt:
                     type: string
                 lastName:
+                    type: string
+                login:
                     type: string
                 phone:
                     type: string

@@ -2,6 +2,7 @@ package dto
 
 type User struct {
 	ID         int64  `json:"id"`
+	Login      string `json:"login"`
 	LastName   string `json:"lastName"`
 	FirstName  string `json:"firstName"`
 	SecondName string `json:"secondName"`
@@ -12,6 +13,7 @@ type User struct {
 }
 
 type CreateUser struct {
+	Login      string `json:"login"`
 	LastName   string `json:"lastName"`
 	FirstName  string `json:"firstName"`
 	SecondName string `json:"secondName"`
@@ -22,6 +24,7 @@ type CreateUser struct {
 }
 
 type UpdateUser struct {
+	Login      string  `json:"login"`
 	LastName   string  `json:"lastName"`
 	FirstName  string  `json:"firstName"`
 	SecondName string  `json:"secondName"`

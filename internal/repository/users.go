@@ -32,6 +32,7 @@ var _ UserStore = (*Users)(nil)
 
 type User struct {
 	ID         int64
+	Login      string
 	LastName   string
 	FirstName  string
 	SecondName string
@@ -43,6 +44,7 @@ type User struct {
 
 // WriteUser — поля записи (create/update), без id.
 type WriteUser struct {
+	Login        string
 	LastName     string
 	FirstName    string
 	SecondName   string
@@ -64,7 +66,7 @@ func (r *Users) List(ctx context.Context) ([]User, error) {
 	}
 	out := make([]User, 0, len(rows))
 	for _, row := range rows {
-		out = append(out, mapUser(row.ID, row.LastName, row.FirstName, row.SecondName, row.Email, row.Phone, row.LastAuthAt, row.IsActive))
+		out = append(out, mapUser(row.ID, row.Login, row.LastName, row.FirstName, row.SecondName, row.Email, row.Phone, row.LastAuthAt, row.IsActive))
 	}
 	return out, nil
 }
@@ -74,11 +76,12 @@ func (r *Users) Get(ctx context.Context, id int64) (User, error) {
 	if err != nil {
 		return User{}, mapDBErr(err)
 	}
-	return mapUser(row.ID, row.LastName, row.FirstName, row.SecondName, row.Email, row.Phone, row.LastAuthAt, row.IsActive), nil
+	return mapUser(row.ID, row.Login, row.LastName, row.FirstName, row.SecondName, row.Email, row.Phone, row.LastAuthAt, row.IsActive), nil
 }
 
 func (r *Users) Create(ctx context.Context, in WriteUser) (User, error) {
 	id, err := r.q.CreateUser(ctx, db.CreateUserParams{
+		Login:        in.Login,
 		LastName:     in.LastName,
 		FirstName:    in.FirstName,
 		SecondName:   in.SecondName,
@@ -95,6 +98,7 @@ func (r *Users) Create(ctx context.Context, in WriteUser) (User, error) {
 
 func (r *Users) Update(ctx context.Context, id int64, in WriteUser) (User, error) {
 	n, err := r.q.UpdateUser(ctx, db.UpdateUserParams{
+		Login:      in.Login,
 		LastName:   in.LastName,
 		FirstName:  in.FirstName,
 		SecondName: in.SecondName,
@@ -138,16 +142,12 @@ func (r *Users) Delete(ctx context.Context, id int64) error {
 }
 
 func (r *Users) GetForAuth(ctx context.Context, login string) (AuthUser, error) {
-	login = strings.TrimSpace(login)
-	row, err := r.q.GetUserForAuth(ctx, db.GetUserForAuthParams{
-		Email: login,
-		Phone: login,
-	})
+	row, err := r.q.GetUserForAuth(ctx, strings.TrimSpace(login))
 	if err != nil {
 		return AuthUser{}, mapDBErr(err)
 	}
 	return AuthUser{
-		User:         mapUser(row.ID, row.LastName, row.FirstName, row.SecondName, row.Email, row.Phone, row.LastAuthAt, row.IsActive),
+		User:         mapUser(row.ID, row.Login, row.LastName, row.FirstName, row.SecondName, row.Email, row.Phone, row.LastAuthAt, row.IsActive),
 		PasswordHash: row.PasswordHash,
 	}, nil
 }
@@ -160,9 +160,10 @@ func (r *Users) TouchLastAuth(ctx context.Context, id int64, at string) error {
 	return mapDBErr(err)
 }
 
-func mapUser(id int64, lastName, firstName, secondName, email, phone string, lastAuthAt *string, active bool) User {
+func mapUser(id int64, login, lastName, firstName, secondName, email, phone string, lastAuthAt *string, active bool) User {
 	return User{
 		ID:         id,
+		Login:      login,
 		LastName:   lastName,
 		FirstName:  firstName,
 		SecondName: secondName,

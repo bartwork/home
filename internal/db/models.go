@@ -16,6 +16,7 @@ type Device struct {
 
 type User struct {
 	ID           int64   `json:"id"`
+	Login        string  `json:"login"`
 	LastName     string  `json:"last_name"`
 	FirstName    string  `json:"first_name"`
 	SecondName   string  `json:"second_name"`

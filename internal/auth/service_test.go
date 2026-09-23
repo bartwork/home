@@ -25,15 +25,20 @@ func TestLoginSeedAdmin(t *testing.T) {
 	}
 
 	svc := auth.New(repo, auth.NewTokens("test-secret"))
-	token, user, err := svc.Login(ctx, auth.DefaultAdminEmail, auth.DefaultAdminPassword)
+	token, user, err := svc.Login(ctx, auth.DefaultAdminLogin, auth.DefaultAdminPassword)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if token == "" || user.Email != auth.DefaultAdminEmail {
+	if token == "" || user.Login != auth.DefaultAdminLogin {
 		t.Fatalf("unexpected: token=%q user=%+v", token, user)
 	}
 
-	_, _, err = svc.Login(ctx, auth.DefaultAdminEmail, "wrong")
+	_, _, err = svc.Login(ctx, auth.DefaultAdminEmail, auth.DefaultAdminPassword)
+	if err != errors.ErrUnauthorized {
+		t.Fatalf("email must not authenticate, got %v", err)
+	}
+
+	_, _, err = svc.Login(ctx, auth.DefaultAdminLogin, "wrong")
 	if err != errors.ErrUnauthorized {
 		t.Fatalf("want unauthorized, got %v", err)
 	}

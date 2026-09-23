@@ -43,7 +43,7 @@ func TestOpenMigratesUsers(t *testing.T) {
 	}
 
 	for _, want := range []string{
-		"id", "last_name", "first_name", "second_name",
+		"id", "login", "last_name", "first_name", "second_name",
 		"email", "phone", "password_hash", "last_auth_at", "is_active", "created_at",
 	} {
 		if !cols[want] {
@@ -58,7 +58,7 @@ func TestDatabaseFileIsEncrypted(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err := db.Exec(`INSERT INTO users (email, phone) VALUES ('a@b.c', '+1')`); err != nil {
+	if _, err := db.Exec(`INSERT INTO users (login, email, phone) VALUES ('alice', 'a@b.c', '+1')`); err != nil {
 		t.Fatal(err)
 	}
 	if err := db.Close(); err != nil {

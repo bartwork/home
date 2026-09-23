@@ -23,6 +23,7 @@ func TestUsersCRUD(t *testing.T) {
 	ctx := context.Background()
 
 	created, err := svc.CreateUser(ctx, dto.CreateUser{
+		Login:      "ivan",
 		LastName:   "Иванов",
 		FirstName:  "Иван",
 		SecondName: "Иванович",
@@ -33,7 +34,7 @@ func TestUsersCRUD(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if created.ID == 0 || !created.Active {
+	if created.ID == 0 || !created.Active || created.Login != "ivan" {
 		t.Fatalf("create: %+v", created)
 	}
 
@@ -41,12 +42,13 @@ func TestUsersCRUD(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if got.Email != created.Email {
+	if got.Login != created.Login || got.Email != created.Email {
 		t.Fatalf("get: %+v", got)
 	}
 
 	pass := "new-secret"
 	updated, err := svc.UpdateUser(ctx, created.ID, dto.UpdateUser{
+		Login:      "petr",
 		LastName:   "Петров",
 		FirstName:  "Пётр",
 		SecondName: "Петрович",
@@ -58,7 +60,7 @@ func TestUsersCRUD(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if updated.LastName != "Петров" || updated.Active || updated.Email != "petr@example.com" {
+	if updated.Login != "petr" || updated.LastName != "Петров" || updated.Active || updated.Email != "petr@example.com" {
 		t.Fatalf("update: %+v", updated)
 	}
 
@@ -68,12 +70,23 @@ func TestUsersCRUD(t *testing.T) {
 	}
 
 	_, err = svc.CreateUser(ctx, dto.CreateUser{
+		Login:    "other",
 		Email:    "petr@example.com",
 		Phone:    "+70001112233",
 		Password: "x",
 	})
 	if err != errors.ErrConflict {
 		t.Fatalf("want email conflict, got %v", err)
+	}
+
+	_, err = svc.CreateUser(ctx, dto.CreateUser{
+		Login:    "petr",
+		Email:    "x@y.z",
+		Phone:    "+71112223344",
+		Password: "x",
+	})
+	if err != errors.ErrConflict {
+		t.Fatalf("want login conflict, got %v", err)
 	}
 
 	_, err = svc.GetUser(ctx, 0)

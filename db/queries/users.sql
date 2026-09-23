@@ -1,6 +1,7 @@
 -- name: ListUsers :many
 SELECT
     id,
+    login,
     last_name,
     first_name,
     second_name,
@@ -14,6 +15,7 @@ ORDER BY id;
 -- name: GetUser :one
 SELECT
     id,
+    login,
     last_name,
     first_name,
     second_name,
@@ -26,6 +28,7 @@ WHERE id = ?;
 
 -- name: CreateUser :execlastid
 INSERT INTO users (
+    login,
     last_name,
     first_name,
     second_name,
@@ -33,11 +36,12 @@ INSERT INTO users (
     phone,
     password_hash,
     is_active
-) VALUES (?, ?, ?, ?, ?, ?, ?);
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
 
 -- name: UpdateUser :execrows
 UPDATE users
 SET
+    login = ?,
     last_name = ?,
     first_name = ?,
     second_name = ?,
@@ -58,6 +62,7 @@ WHERE id = ?;
 -- name: GetUserForAuth :one
 SELECT
     id,
+    login,
     last_name,
     first_name,
     second_name,
@@ -67,7 +72,7 @@ SELECT
     last_auth_at,
     is_active
 FROM users
-WHERE email = ? OR phone = ?
+WHERE login = ?
 LIMIT 1;
 
 -- name: TouchLastAuth :execrows

@@ -11,6 +11,7 @@ import (
 
 const createUser = `-- name: CreateUser :execlastid
 INSERT INTO users (
+    login,
     last_name,
     first_name,
     second_name,
@@ -18,10 +19,11 @@ INSERT INTO users (
     phone,
     password_hash,
     is_active
-) VALUES (?, ?, ?, ?, ?, ?, ?)
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 `
 
 type CreateUserParams struct {
+	Login        string `json:"login"`
 	LastName     string `json:"last_name"`
 	FirstName    string `json:"first_name"`
 	SecondName   string `json:"second_name"`
@@ -33,6 +35,7 @@ type CreateUserParams struct {
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (int64, error) {
 	result, err := q.db.ExecContext(ctx, createUser,
+		arg.Login,
 		arg.LastName,
 		arg.FirstName,
 		arg.SecondName,
@@ -63,6 +66,7 @@ func (q *Queries) DeleteUser(ctx context.Context, id int64) (int64, error) {
 const getUser = `-- name: GetUser :one
 SELECT
     id,
+    login,
     last_name,
     first_name,
     second_name,
@@ -76,6 +80,7 @@ WHERE id = ?
 
 type GetUserRow struct {
 	ID         int64   `json:"id"`
+	Login      string  `json:"login"`
 	LastName   string  `json:"last_name"`
 	FirstName  string  `json:"first_name"`
 	SecondName string  `json:"second_name"`
@@ -90,6 +95,7 @@ func (q *Queries) GetUser(ctx context.Context, id int64) (GetUserRow, error) {
 	var i GetUserRow
 	err := row.Scan(
 		&i.ID,
+		&i.Login,
 		&i.LastName,
 		&i.FirstName,
 		&i.SecondName,
@@ -104,6 +110,7 @@ func (q *Queries) GetUser(ctx context.Context, id int64) (GetUserRow, error) {
 const getUserForAuth = `-- name: GetUserForAuth :one
 SELECT
     id,
+    login,
     last_name,
     first_name,
     second_name,
@@ -113,17 +120,13 @@ SELECT
     last_auth_at,
     is_active
 FROM users
-WHERE email = ? OR phone = ?
+WHERE login = ?
 LIMIT 1
 `
 
-type GetUserForAuthParams struct {
-	Email string `json:"email"`
-	Phone string `json:"phone"`
-}
-
 type GetUserForAuthRow struct {
 	ID           int64   `json:"id"`
+	Login        string  `json:"login"`
 	LastName     string  `json:"last_name"`
 	FirstName    string  `json:"first_name"`
 	SecondName   string  `json:"second_name"`
@@ -134,11 +137,12 @@ type GetUserForAuthRow struct {
 	IsActive     bool    `json:"is_active"`
 }
 
-func (q *Queries) GetUserForAuth(ctx context.Context, arg GetUserForAuthParams) (GetUserForAuthRow, error) {
-	row := q.db.QueryRowContext(ctx, getUserForAuth, arg.Email, arg.Phone)
+func (q *Queries) GetUserForAuth(ctx context.Context, login string) (GetUserForAuthRow, error) {
+	row := q.db.QueryRowContext(ctx, getUserForAuth, login)
 	var i GetUserForAuthRow
 	err := row.Scan(
 		&i.ID,
+		&i.Login,
 		&i.LastName,
 		&i.FirstName,
 		&i.SecondName,
@@ -154,6 +158,7 @@ func (q *Queries) GetUserForAuth(ctx context.Context, arg GetUserForAuthParams) 
 const listUsers = `-- name: ListUsers :many
 SELECT
     id,
+    login,
     last_name,
     first_name,
     second_name,
@@ -167,6 +172,7 @@ ORDER BY id
 
 type ListUsersRow struct {
 	ID         int64   `json:"id"`
+	Login      string  `json:"login"`
 	LastName   string  `json:"last_name"`
 	FirstName  string  `json:"first_name"`
 	SecondName string  `json:"second_name"`
@@ -187,6 +193,7 @@ func (q *Queries) ListUsers(ctx context.Context) ([]ListUsersRow, error) {
 		var i ListUsersRow
 		if err := rows.Scan(
 			&i.ID,
+			&i.Login,
 			&i.LastName,
 			&i.FirstName,
 			&i.SecondName,
@@ -249,6 +256,7 @@ func (q *Queries) TouchLastAuth(ctx context.Context, arg TouchLastAuthParams) (i
 const updateUser = `-- name: UpdateUser :execrows
 UPDATE users
 SET
+    login = ?,
     last_name = ?,
     first_name = ?,
     second_name = ?,
@@ -259,6 +267,7 @@ WHERE id = ?
 `
 
 type UpdateUserParams struct {
+	Login      string `json:"login"`
 	LastName   string `json:"last_name"`
 	FirstName  string `json:"first_name"`
 	SecondName string `json:"second_name"`
@@ -270,6 +279,7 @@ type UpdateUserParams struct {
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (int64, error) {
 	result, err := q.db.ExecContext(ctx, updateUser,
+		arg.Login,
 		arg.LastName,
 		arg.FirstName,
 		arg.SecondName,
