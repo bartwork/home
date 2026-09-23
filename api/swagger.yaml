@@ -1,0 +1,105 @@
+openapi: 3.0.0
+info:
+    title: home API
+    version: v0.0.1
+servers:
+    - url: http://home-server:9000
+paths:
+    /api/v1/users:
+        get:
+            tags:
+                - users
+            summary: Список пользователей
+            responses:
+                "200":
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/responseUsersListUsers'
+    /api/v1/users/{id}:
+        get:
+            tags:
+                - users
+            summary: Пользователь и его устройства
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: number
+                    format: int64
+            responses:
+                "200":
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/responseUsersGetUser'
+components:
+    schemas:
+        dto.Device:
+            type: object
+            required:
+                - id
+                - name
+                - fingerprint
+                - lastSeen
+            properties:
+                fingerprint:
+                    type: string
+                id:
+                    type: number
+                    format: int64
+                lastSeen:
+                    type: string
+                name:
+                    type: string
+        dto.User:
+            type: object
+            required:
+                - id
+                - login
+                - name
+            properties:
+                id:
+                    type: number
+                    format: int64
+                login:
+                    type: string
+                name:
+                    type: string
+        dto.UserDetails:
+            type: object
+            required:
+                - user
+                - devices
+            properties:
+                devices:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/dto.Device'
+                    nullable: true
+                user:
+                    $ref: '#/components/schemas/dto.User'
+        requestUsersGetUser:
+            type: object
+        requestUsersListUsers:
+            type: object
+        responseUsersGetUser:
+            type: object
+            required:
+                - user
+            properties:
+                user:
+                    $ref: '#/components/schemas/dto.UserDetails'
+        responseUsersListUsers:
+            type: object
+            required:
+                - users
+            properties:
+                users:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/dto.User'
+                    nullable: true

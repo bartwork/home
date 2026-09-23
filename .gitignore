@@ -1,0 +1,6 @@
+.run/
+.idea/
+.vscode/
+.DS_Store
+/bin/
+*.exe
