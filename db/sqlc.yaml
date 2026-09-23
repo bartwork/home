@@ -17,3 +17,5 @@ sql:
             go_type:
               type: "string"
               pointer: true
+          - column: "devices.is_active"
+            go_type: "bool"

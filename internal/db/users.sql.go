@@ -101,6 +101,56 @@ func (q *Queries) GetUser(ctx context.Context, id int64) (GetUserRow, error) {
 	return i, err
 }
 
+const getUserForAuth = `-- name: GetUserForAuth :one
+SELECT
+    id,
+    last_name,
+    first_name,
+    second_name,
+    email,
+    phone,
+    password_hash,
+    last_auth_at,
+    is_active
+FROM users
+WHERE email = ? OR phone = ?
+LIMIT 1
+`
+
+type GetUserForAuthParams struct {
+	Email string `json:"email"`
+	Phone string `json:"phone"`
+}
+
+type GetUserForAuthRow struct {
+	ID           int64   `json:"id"`
+	LastName     string  `json:"last_name"`
+	FirstName    string  `json:"first_name"`
+	SecondName   string  `json:"second_name"`
+	Email        string  `json:"email"`
+	Phone        string  `json:"phone"`
+	PasswordHash string  `json:"password_hash"`
+	LastAuthAt   *string `json:"last_auth_at"`
+	IsActive     bool    `json:"is_active"`
+}
+
+func (q *Queries) GetUserForAuth(ctx context.Context, arg GetUserForAuthParams) (GetUserForAuthRow, error) {
+	row := q.db.QueryRowContext(ctx, getUserForAuth, arg.Email, arg.Phone)
+	var i GetUserForAuthRow
+	err := row.Scan(
+		&i.ID,
+		&i.LastName,
+		&i.FirstName,
+		&i.SecondName,
+		&i.Email,
+		&i.Phone,
+		&i.PasswordHash,
+		&i.LastAuthAt,
+		&i.IsActive,
+	)
+	return i, err
+}
+
 const listUsers = `-- name: ListUsers :many
 SELECT
     id,
@@ -171,6 +221,25 @@ type SetUserPasswordParams struct {
 
 func (q *Queries) SetUserPassword(ctx context.Context, arg SetUserPasswordParams) (int64, error) {
 	result, err := q.db.ExecContext(ctx, setUserPassword, arg.PasswordHash, arg.ID)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected()
+}
+
+const touchLastAuth = `-- name: TouchLastAuth :execrows
+UPDATE users
+SET last_auth_at = ?
+WHERE id = ?
+`
+
+type TouchLastAuthParams struct {
+	LastAuthAt *string `json:"last_auth_at"`
+	ID         int64   `json:"id"`
+}
+
+func (q *Queries) TouchLastAuth(ctx context.Context, arg TouchLastAuthParams) (int64, error) {
+	result, err := q.db.ExecContext(ctx, touchLastAuth, arg.LastAuthAt, arg.ID)
 	if err != nil {
 		return 0, err
 	}

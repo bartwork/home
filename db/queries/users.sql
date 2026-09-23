@@ -54,3 +54,23 @@ WHERE id = ?;
 -- name: DeleteUser :execrows
 DELETE FROM users
 WHERE id = ?;
+
+-- name: GetUserForAuth :one
+SELECT
+    id,
+    last_name,
+    first_name,
+    second_name,
+    email,
+    phone,
+    password_hash,
+    last_auth_at,
+    is_active
+FROM users
+WHERE email = ? OR phone = ?
+LIMIT 1;
+
+-- name: TouchLastAuth :execrows
+UPDATE users
+SET last_auth_at = ?
+WHERE id = ?;

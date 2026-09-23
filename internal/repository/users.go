@@ -2,8 +2,6 @@ package repository
 
 import (
 	"context"
-	"database/sql"
-	"errors"
 	"strings"
 
 	"github.com/bartwork/home/internal/db"
@@ -18,6 +16,8 @@ type UserStore interface {
 	Update(ctx context.Context, id int64, in WriteUser) (User, error)
 	SetPassword(ctx context.Context, id int64, passwordHash string) error
 	Delete(ctx context.Context, id int64) error
+	GetForAuth(ctx context.Context, login string) (AuthUser, error)
+	TouchLastAuth(ctx context.Context, id int64, at string) error
 }
 
 type Users struct {
@@ -52,6 +52,11 @@ type WriteUser struct {
 	Active       bool
 }
 
+type AuthUser struct {
+	User
+	PasswordHash string
+}
+
 func (r *Users) List(ctx context.Context) ([]User, error) {
 	rows, err := r.q.ListUsers(ctx)
 	if err != nil {
@@ -59,10 +64,7 @@ func (r *Users) List(ctx context.Context) ([]User, error) {
 	}
 	out := make([]User, 0, len(rows))
 	for _, row := range rows {
-		out = append(out, User{
-			ID: row.ID, LastName: row.LastName, FirstName: row.FirstName, SecondName: row.SecondName,
-			Email: row.Email, Phone: row.Phone, LastAuthAt: row.LastAuthAt, Active: row.IsActive,
-		})
+		out = append(out, mapUser(row.ID, row.LastName, row.FirstName, row.SecondName, row.Email, row.Phone, row.LastAuthAt, row.IsActive))
 	}
 	return out, nil
 }
@@ -72,10 +74,7 @@ func (r *Users) Get(ctx context.Context, id int64) (User, error) {
 	if err != nil {
 		return User{}, mapDBErr(err)
 	}
-	return User{
-		ID: row.ID, LastName: row.LastName, FirstName: row.FirstName, SecondName: row.SecondName,
-		Email: row.Email, Phone: row.Phone, LastAuthAt: row.LastAuthAt, Active: row.IsActive,
-	}, nil
+	return mapUser(row.ID, row.LastName, row.FirstName, row.SecondName, row.Email, row.Phone, row.LastAuthAt, row.IsActive), nil
 }
 
 func (r *Users) Create(ctx context.Context, in WriteUser) (User, error) {
@@ -138,12 +137,38 @@ func (r *Users) Delete(ctx context.Context, id int64) error {
 	return nil
 }
 
-func mapDBErr(err error) error {
-	if errors.Is(err, sql.ErrNoRows) {
-		return apperr.ErrNotFound
+func (r *Users) GetForAuth(ctx context.Context, login string) (AuthUser, error) {
+	login = strings.TrimSpace(login)
+	row, err := r.q.GetUserForAuth(ctx, db.GetUserForAuthParams{
+		Email: login,
+		Phone: login,
+	})
+	if err != nil {
+		return AuthUser{}, mapDBErr(err)
 	}
-	if strings.Contains(err.Error(), "UNIQUE constraint failed") {
-		return apperr.ErrConflict
+	return AuthUser{
+		User:         mapUser(row.ID, row.LastName, row.FirstName, row.SecondName, row.Email, row.Phone, row.LastAuthAt, row.IsActive),
+		PasswordHash: row.PasswordHash,
+	}, nil
+}
+
+func (r *Users) TouchLastAuth(ctx context.Context, id int64, at string) error {
+	_, err := r.q.TouchLastAuth(ctx, db.TouchLastAuthParams{
+		LastAuthAt: &at,
+		ID:         id,
+	})
+	return mapDBErr(err)
+}
+
+func mapUser(id int64, lastName, firstName, secondName, email, phone string, lastAuthAt *string, active bool) User {
+	return User{
+		ID:         id,
+		LastName:   lastName,
+		FirstName:  firstName,
+		SecondName: secondName,
+		Email:      email,
+		Phone:      phone,
+		LastAuthAt: lastAuthAt,
+		Active:     active,
 	}
-	return err
 }

@@ -22,6 +22,11 @@ type CfgService struct {
 	ReadinessBind string `envconfig:"BIND_READINESS" default:":9092"`
 
 	DBPath string `envconfig:"DB_PATH" default:"data/home.db"`
+
+	JWTSecret string `envconfig:"JWT_SECRET" default:"home-dev-jwt-secret"`
+
+	MQTTBroker   string `envconfig:"MQTT_BROKER" default:"tcp://127.0.0.1:1883"`
+	MQTTClientID string `envconfig:"MQTT_CLIENT_ID" default:"home-controller"`
 }
 
 var service *CfgService

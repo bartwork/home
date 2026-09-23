@@ -24,6 +24,24 @@ func Service(svc ServiceRoute) Option {
 	}
 }
 
+func Auth(svc *httpAuth) Option {
+	return func(srv *Server) {
+		if srv.srvHTTP != nil {
+			srv.httpAuth = svc
+			svc.SetRoutes(srv.Fiber())
+		}
+	}
+}
+
+func Devices(svc *httpDevices) Option {
+	return func(srv *Server) {
+		if srv.srvHTTP != nil {
+			srv.httpDevices = svc
+			svc.SetRoutes(srv.Fiber())
+		}
+	}
+}
+
 func Users(svc *httpUsers) Option {
 	return func(srv *Server) {
 		if srv.srvHTTP != nil {

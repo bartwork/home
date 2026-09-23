@@ -26,6 +26,8 @@ type Server struct {
 	srvMetrics *fiber.App
 
 	reporterCloser io.Closer
+	httpAuth       *httpAuth
+	httpDevices    *httpDevices
 	httpUsers      *httpUsers
 	headerHandlers map[string]HeaderHandler
 }
@@ -56,6 +58,12 @@ func (srv *Server) Fiber() *fiber.App {
 }
 
 func (srv *Server) WithLog() *Server {
+	if srv.httpAuth != nil {
+		srv.httpAuth = srv.Auth().WithLog()
+	}
+	if srv.httpDevices != nil {
+		srv.httpDevices = srv.Devices().WithLog()
+	}
 	if srv.httpUsers != nil {
 		srv.httpUsers = srv.Users().WithLog()
 	}
@@ -128,10 +136,24 @@ func (srv *Server) WithMetrics() *Server {
 	}
 	hostname, _ := os.Hostname()
 	VersionGauge.WithLabelValues("tg", VersionTg, hostname).Set(1)
+	if srv.httpAuth != nil {
+		srv.httpAuth = srv.Auth().WithMetrics()
+	}
+	if srv.httpDevices != nil {
+		srv.httpDevices = srv.Devices().WithMetrics()
+	}
 	if srv.httpUsers != nil {
 		srv.httpUsers = srv.Users().WithMetrics()
 	}
 	return srv
+}
+
+func (srv *Server) Auth() *httpAuth {
+	return srv.httpAuth
+}
+
+func (srv *Server) Devices() *httpDevices {
+	return srv.httpDevices
 }
 
 func (srv *Server) Users() *httpUsers {

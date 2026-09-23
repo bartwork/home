@@ -4,6 +4,16 @@
 
 package db
 
+type Device struct {
+	ID         int64  `json:"id"`
+	Name       string `json:"name"`
+	MqttTopic  string `json:"mqtt_topic"`
+	DeviceType string `json:"device_type"`
+	Unit       string `json:"unit"`
+	IsActive   bool   `json:"is_active"`
+	CreatedAt  string `json:"created_at"`
+}
+
 type User struct {
 	ID           int64   `json:"id"`
 	LastName     string  `json:"last_name"`

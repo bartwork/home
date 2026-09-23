@@ -1,0 +1,95 @@
+version: "3"
+
+vars:
+  BIN: bin/home
+
+tasks:
+  default:
+    desc: Список задач
+    cmds:
+      - task --list
+
+  deps:
+    desc: Go-модули + npm deps
+    cmds:
+      - go mod tidy
+      - cd web && npm install
+
+  tg:install:
+    desc: Собрать CLI tg в bin/
+    cmds:
+      - mkdir -p bin
+      - |
+        if [ ! -x bin/tg ]; then
+          curl -sL https://github.com/seniorGolang/tg/archive/refs/heads/main.tar.gz | tar xz -C /tmp
+          (cd /tmp/tg-main && go build -o "{{.ROOT_DIR}}/bin/tg" ./cmd/tg)
+        fi
+
+  generate:
+    desc: sqlc + tg transport/swagger
+    deps: [tg:install]
+    cmds:
+      - sqlc generate -f db/sqlc.yaml
+      - ./bin/tg transport --services contracts --out internal/transport
+      - ./bin/tg swagger --services contracts --outFile api/swagger.yaml
+
+  web:dev:
+    desc: Vite dev (proxy /api и WS → :9000)
+    dir: web
+    cmds:
+      - npm run dev
+
+  web:build:
+    desc: React → internal/webui/dist
+    cmds:
+      - cd web && npm run build:go
+
+  build:
+    desc: Бинарь bin/home
+    deps: [web:build]
+    env:
+      CGO_ENABLED: "1"
+    cmds:
+      - go build -o {{.BIN}} ./cmd/home
+
+  run:
+    desc: Фронт + сервер
+    deps: [web:build]
+    env:
+      CGO_ENABLED: "1"
+    cmds:
+      - go run ./cmd/home
+
+  test:
+    desc: Go-тесты
+    env:
+      CGO_ENABLED: "1"
+    cmds:
+      - go test ./... -count=1
+
+  tidy:
+    desc: gofmt (без generated) + tidy
+    cmds:
+      - |
+        find . -name '*.go' \
+          -not -path './internal/transport/*' \
+          -not -path './internal/db/*' \
+          -not -path './web/*' \
+          -print0 | xargs -0 gofmt -w
+      - go mod tidy
+
+  smoke:
+    desc: login + devices под JWT (сервер уже запущен)
+    cmds:
+      - |
+        set -e
+        TOKEN=$(curl -sf -X POST 'http://127.0.0.1:9000/api/v1/auth/login' \
+          -H 'Content-Type: application/json' \
+          -d '{"login":"admin@home.local","password":"admin"}' \
+          | python3 -c 'import sys,json; print(json.load(sys.stdin)["token"])')
+        echo "token ok"
+        curl -sf 'http://127.0.0.1:9000/api/v1/devices' -H "Authorization: Bearer $TOKEN" | head -c 400
+        echo
+        code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:9000/api/v1/devices)
+        test "$code" = "401"
+        echo "unauthorized without token ok"

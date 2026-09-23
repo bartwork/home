@@ -5,6 +5,111 @@ info:
 servers:
     - url: http://localhost:9000
 paths:
+    /api/v1/auth/login:
+        post:
+            tags:
+                - auth
+            summary: Вход
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/requestAuthLogin'
+            responses:
+                "200":
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/responseAuthLogin'
+    /api/v1/devices:
+        get:
+            tags:
+                - devices
+            summary: Список устройств
+            responses:
+                "200":
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/responseDevicesListDevices'
+        post:
+            tags:
+                - devices
+            summary: Создать устройство
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/requestDevicesCreateDevice'
+            responses:
+                "201":
+                    description: Created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/responseDevicesCreateDevice'
+    /api/v1/devices/{id}:
+        get:
+            tags:
+                - devices
+            summary: Устройство
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: number
+                    format: int64
+            responses:
+                "200":
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/responseDevicesGetDevice'
+        put:
+            tags:
+                - devices
+            summary: Обновить устройство
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: number
+                    format: int64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/requestDevicesUpdateDevice'
+            responses:
+                "200":
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/responseDevicesUpdateDevice'
+        delete:
+            tags:
+                - devices
+            summary: Удалить устройство
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: number
+                    format: int64
+            responses:
+                "204":
+                    description: No Content
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/responseDevicesDeleteDevice'
     /api/v1/users:
         get:
             tags:
@@ -121,6 +226,30 @@ components:
                     type: string
                 secondName:
                     type: string
+        dto.Device:
+            type: object
+            required:
+                - id
+                - name
+                - mqttTopic
+                - deviceType
+                - active
+            properties:
+                active:
+                    type: boolean
+                createdAt:
+                    type: string
+                deviceType:
+                    type: string
+                id:
+                    type: number
+                    format: int64
+                mqttTopic:
+                    type: string
+                name:
+                    type: string
+                unit:
+                    type: string
         dto.UpdateUser:
             type: object
             required:
@@ -175,6 +304,60 @@ components:
                     type: string
                 secondName:
                     type: string
+        requestAuthLogin:
+            type: object
+            required:
+                - login
+                - password
+            properties:
+                login:
+                    type: string
+                password:
+                    type: string
+        requestDevicesCreateDevice:
+            type: object
+            required:
+                - name
+                - mqttTopic
+                - deviceType
+                - unit
+                - active
+            properties:
+                active:
+                    type: boolean
+                deviceType:
+                    type: string
+                mqttTopic:
+                    type: string
+                name:
+                    type: string
+                unit:
+                    type: string
+        requestDevicesDeleteDevice:
+            type: object
+        requestDevicesGetDevice:
+            type: object
+        requestDevicesListDevices:
+            type: object
+        requestDevicesUpdateDevice:
+            type: object
+            required:
+                - name
+                - mqttTopic
+                - deviceType
+                - unit
+                - active
+            properties:
+                active:
+                    type: boolean
+                deviceType:
+                    type: string
+                mqttTopic:
+                    type: string
+                name:
+                    type: string
+                unit:
+                    type: string
         requestUsersCreateUser:
             type: object
             required:
@@ -195,6 +378,49 @@ components:
             properties:
                 in:
                     $ref: '#/components/schemas/dto.UpdateUser'
+        responseAuthLogin:
+            type: object
+            required:
+                - token
+                - user
+            properties:
+                token:
+                    type: string
+                user:
+                    $ref: '#/components/schemas/dto.User'
+        responseDevicesCreateDevice:
+            type: object
+            required:
+                - device
+            properties:
+                device:
+                    $ref: '#/components/schemas/dto.Device'
+        responseDevicesDeleteDevice:
+            type: object
+        responseDevicesGetDevice:
+            type: object
+            required:
+                - device
+            properties:
+                device:
+                    $ref: '#/components/schemas/dto.Device'
+        responseDevicesListDevices:
+            type: object
+            required:
+                - devices
+            properties:
+                devices:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/dto.Device'
+                    nullable: true
+        responseDevicesUpdateDevice:
+            type: object
+            required:
+                - device
+            properties:
+                device:
+                    $ref: '#/components/schemas/dto.Device'
         responseUsersCreateUser:
             type: object
             required:
