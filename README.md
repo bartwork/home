@@ -1,4 +1,4 @@
-# home
+# Мой дом
 
 Локальный контроллер (Wirenboard): API + React UI + MQTT→WS.
 
@@ -12,6 +12,8 @@ task run
 ```
 
 Открыть http://localhost:9000 · логин `admin` / пароль `admin`
+
+Если схема БД менялась — удали `data/home.db` и перезапусти (сид создаст admin заново).
 
 ## Taskfile
 

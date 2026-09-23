@@ -7,6 +7,7 @@ import (
 
 	"github.com/bartwork/home/contracts/dto"
 	"github.com/bartwork/home/internal/repository"
+	"github.com/bartwork/home/internal/usermap"
 	"github.com/bartwork/home/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -48,24 +49,7 @@ func (s *Service) Login(ctx context.Context, login, password string) (token stri
 		return "", dto.User{}, err
 	}
 
-	u := toDTO(row.User)
+	u := usermap.DTO(row.User)
 	u.LastAuthAt = now
 	return token, u, nil
-}
-
-func toDTO(u repository.User) dto.User {
-	out := dto.User{
-		ID:         u.ID,
-		Login:      u.Login,
-		LastName:   u.LastName,
-		FirstName:  u.FirstName,
-		SecondName: u.SecondName,
-		Email:      u.Email,
-		Phone:      u.Phone,
-		Active:     u.Active,
-	}
-	if u.LastAuthAt != nil {
-		out.LastAuthAt = *u.LastAuthAt
-	}
-	return out
 }

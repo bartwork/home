@@ -7,9 +7,10 @@ import {
   type ReactNode,
 } from 'react'
 import {
+  getStoredUser,
   getToken,
   login as apiLogin,
-  setToken,
+  setSession,
   type User,
 } from '../api/client'
 
@@ -24,17 +25,17 @@ const AuthContext = createContext<AuthState | null>(null)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setTokenState] = useState<string | null>(() => getToken())
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<User | null>(() => getStoredUser())
 
   const login = useCallback(async (loginValue: string, password: string) => {
     const res = await apiLogin(loginValue, password)
-    setToken(res.token)
+    setSession(res.token, res.user)
     setTokenState(res.token)
     setUser(res.user)
   }, [])
 
   const logout = useCallback(() => {
-    setToken(null)
+    setSession(null)
     setTokenState(null)
     setUser(null)
   }, [])

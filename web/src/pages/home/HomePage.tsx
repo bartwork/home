@@ -18,6 +18,7 @@ import { Navigate } from 'react-router-dom'
 import { listDevices, type Device } from '../../shared/api/client'
 import { useAuth } from '../../shared/auth/AuthContext'
 import { useRealtime } from '../../shared/realtime/useRealtime'
+import { APP_NAME, pageTitle } from '../../shared/brand'
 import { useDocumentTitle } from '../../shared/useDocumentTitle'
 
 function switchOn(value: string) {
@@ -25,7 +26,7 @@ function switchOn(value: string) {
 }
 
 export function HomePage() {
-  useDocumentTitle('Устройства · Мой дом')
+  useDocumentTitle(pageTitle('Устройства'))
   const { token, user, logout } = useAuth()
   const { connected, values, sendCmd } = useRealtime()
   const [devices, setDevices] = useState<Device[]>([])
@@ -70,7 +71,7 @@ export function HomePage() {
       >
         <Toolbar sx={{ gap: 2, justifyContent: 'space-between' }}>
           <Typography variant="h1" sx={{ fontSize: '1.8rem' }}>
-            Мой дом
+            {APP_NAME}
           </Typography>
           <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
             <Chip
@@ -121,7 +122,7 @@ export function HomePage() {
                   py: 1.75,
                   border: 1,
                   borderColor: 'divider',
-                  bgcolor: 'rgba(18, 26, 24, 0.72)',
+                  bgcolor: 'rgba(18, 26, 36, 0.72)',
                 }}
               >
                 <Box sx={{ minWidth: 0 }}>

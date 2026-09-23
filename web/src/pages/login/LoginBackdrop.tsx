@@ -27,23 +27,27 @@ const floatUp = keyframes`
   100% { transform: translateY(-28vh); opacity: 0; }
 `
 
+function rgba(r: number, g: number, b: number, a: number) {
+  return `rgba(${r}, ${g}, ${b}, ${a})`
+}
+
 const windows = [
-  { left: '8%', top: '18%', w: 28, h: 38, delay: '0s', color: 'rgba(110, 210, 225, 0.55)' },
-  { left: '14%', top: '28%', w: 22, h: 30, delay: '1.2s', color: 'rgba(240, 190, 110, 0.45)' },
-  { left: '9%', top: '48%', w: 24, h: 34, delay: '2.4s', color: 'rgba(130, 180, 230, 0.4)' },
-  { left: '78%', top: '16%', w: 30, h: 40, delay: '0.6s', color: 'rgba(240, 185, 100, 0.5)' },
-  { left: '84%', top: '32%', w: 22, h: 28, delay: '1.8s', color: 'rgba(100, 205, 220, 0.45)' },
-  { left: '80%', top: '52%', w: 26, h: 32, delay: '3s', color: 'rgba(160, 200, 240, 0.35)' },
-  { left: '22%', top: '62%', w: 18, h: 24, delay: '0.9s', color: 'rgba(94, 200, 216, 0.35)' },
-  { left: '68%', top: '66%', w: 20, h: 26, delay: '2.1s', color: 'rgba(240, 179, 90, 0.3)' },
+  { left: '8%', top: '18%', w: 28, h: 38, delay: '0s', rgb: [110, 210, 225] as const, a: 0.55 },
+  { left: '14%', top: '28%', w: 22, h: 30, delay: '1.2s', rgb: [240, 190, 110] as const, a: 0.45 },
+  { left: '9%', top: '48%', w: 24, h: 34, delay: '2.4s', rgb: [130, 180, 230] as const, a: 0.4 },
+  { left: '78%', top: '16%', w: 30, h: 40, delay: '0.6s', rgb: [240, 185, 100] as const, a: 0.5 },
+  { left: '84%', top: '32%', w: 22, h: 28, delay: '1.8s', rgb: [100, 205, 220] as const, a: 0.45 },
+  { left: '80%', top: '52%', w: 26, h: 32, delay: '3s', rgb: [160, 200, 240] as const, a: 0.35 },
+  { left: '22%', top: '62%', w: 18, h: 24, delay: '0.9s', rgb: [94, 200, 216] as const, a: 0.35 },
+  { left: '68%', top: '66%', w: 20, h: 26, delay: '2.1s', rgb: [240, 179, 90] as const, a: 0.3 },
 ] as const
 
 const sparks = [
-  { left: '18%', bottom: '12%', delay: '0s', dur: '9s' },
-  { left: '35%', bottom: '8%', delay: '2s', dur: '11s' },
-  { left: '52%', bottom: '14%', delay: '4s', dur: '10s' },
-  { left: '70%', bottom: '10%', delay: '1s', dur: '12s' },
-  { left: '85%', bottom: '16%', delay: '3.5s', dur: '9.5s' },
+  { left: '18%', bottom: '12%', delay: '0s', dur: '9s', cool: true },
+  { left: '35%', bottom: '8%', delay: '2s', dur: '11s', cool: false },
+  { left: '52%', bottom: '14%', delay: '4s', dur: '10s', cool: true },
+  { left: '70%', bottom: '10%', delay: '1s', dur: '12s', cool: false },
+  { left: '85%', bottom: '16%', delay: '3.5s', dur: '9.5s', cool: true },
 ] as const
 
 export function LoginBackdrop() {
@@ -62,7 +66,6 @@ export function LoginBackdrop() {
         ].join(', '),
       }}
     >
-      {/* night sky wash */}
       <Box
         sx={{
           position: 'absolute',
@@ -75,7 +78,6 @@ export function LoginBackdrop() {
         }}
       />
 
-      {/* large aurora / ambient light */}
       <Box
         sx={{
           position: 'absolute',
@@ -112,14 +114,12 @@ export function LoginBackdrop() {
           left: '25%',
           bottom: '-18%',
           borderRadius: '50%',
-          background:
-            'radial-gradient(circle, rgba(90, 140, 200, 0.22) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(90, 140, 200, 0.22) 0%, transparent 70%)',
           filter: 'blur(36px)',
           animation: `${driftSlow} 20s ease-in-out infinite reverse`,
         }}
       />
 
-      {/* soft architectural silhouette */}
       <Box
         sx={{
           position: 'absolute',
@@ -134,7 +134,6 @@ export function LoginBackdrop() {
         }}
       />
 
-      {/* building mass left */}
       <Box
         sx={{
           position: 'absolute',
@@ -148,7 +147,6 @@ export function LoginBackdrop() {
           borderRight: '1px solid rgba(140, 180, 210, 0.08)',
         }}
       />
-      {/* building mass right */}
       <Box
         sx={{
           position: 'absolute',
@@ -163,26 +161,30 @@ export function LoginBackdrop() {
         }}
       />
 
-      {/* glowing windows */}
-      {windows.map((w, i) => (
-        <Box
-          key={i}
-          sx={{
-            position: 'absolute',
-            left: w.left,
-            top: w.top,
-            width: w.w,
-            height: w.h,
-            borderRadius: '3px',
-            background: `linear-gradient(180deg, ${w.color}, ${w.color.replace(/[\d.]+\)$/, '0.15)')})`,
-            boxShadow: `0 0 18px ${w.color}, 0 0 40px ${w.color.replace(/[\d.]+\)$/, '0.25)')}`,
-            animation: `${breathe} ${5 + (i % 3)}s ease-in-out ${w.delay} infinite`,
-            opacity: 0.55,
-          }}
-        />
-      ))}
+      {windows.map((w, i) => {
+        const [r, g, b] = w.rgb
+        const color = rgba(r, g, b, w.a)
+        const soft = rgba(r, g, b, 0.15)
+        const glow = rgba(r, g, b, 0.25)
+        return (
+          <Box
+            key={i}
+            sx={{
+              position: 'absolute',
+              left: w.left,
+              top: w.top,
+              width: w.w,
+              height: w.h,
+              borderRadius: '3px',
+              background: `linear-gradient(180deg, ${color}, ${soft})`,
+              boxShadow: `0 0 18px ${color}, 0 0 40px ${glow}`,
+              animation: `${breathe} ${5 + (i % 3)}s ease-in-out ${w.delay} infinite`,
+              opacity: 0.55,
+            }}
+          />
+        )
+      })}
 
-      {/* horizon glow */}
       <Box
         sx={{
           position: 'absolute',
@@ -204,13 +206,11 @@ export function LoginBackdrop() {
           right: '15%',
           bottom: { xs: '26%', md: '30%' },
           height: 48,
-          background:
-            'linear-gradient(180deg, rgba(94, 200, 216, 0.12), transparent)',
+          background: 'linear-gradient(180deg, rgba(94, 200, 216, 0.12), transparent)',
           filter: 'blur(12px)',
         }}
       />
 
-      {/* floor reflection */}
       <Box
         sx={{
           position: 'absolute',
@@ -227,10 +227,9 @@ export function LoginBackdrop() {
         }}
       />
 
-      {/* floating light particles */}
       {sparks.map((s, i) => (
         <Box
-          key={`s-${i}`}
+          key={i}
           sx={{
             position: 'absolute',
             left: s.left,
@@ -238,14 +237,13 @@ export function LoginBackdrop() {
             width: 4,
             height: 4,
             borderRadius: '50%',
-            background: i % 2 === 0 ? '#8adceb' : '#f0c274',
-            boxShadow: i % 2 === 0 ? '0 0 12px #5ec8d8' : '0 0 12px #f0b35a',
+            background: s.cool ? '#8adceb' : '#f0c274',
+            boxShadow: s.cool ? '0 0 12px #5ec8d8' : '0 0 12px #f0b35a',
             animation: `${floatUp} ${s.dur} linear ${s.delay} infinite`,
           }}
         />
       ))}
 
-      {/* vignette */}
       <Box
         sx={{
           position: 'absolute',

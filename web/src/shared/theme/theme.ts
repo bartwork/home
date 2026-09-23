@@ -56,6 +56,18 @@ export const theme = createTheme({
       defaultProps: {
         disableElevation: true,
       },
+      variants: [
+        {
+          props: { variant: 'contained', color: 'primary' },
+          style: {
+            background: 'linear-gradient(135deg, #7ad4e2 0%, #4fb8ca 55%, #3aa8ba 100%)',
+            color: '#061018',
+            '&:hover': {
+              background: 'linear-gradient(135deg, #8adceb 0%, #5ec8d8 55%, #3aa8ba 100%)',
+            },
+          },
+        },
+      ],
     },
     MuiTextField: {
       defaultProps: {

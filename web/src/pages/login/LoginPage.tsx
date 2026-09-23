@@ -12,11 +12,12 @@ import {
 import { Navigate, useNavigate } from 'react-router-dom'
 import { ApiError } from '../../shared/api/client'
 import { useAuth } from '../../shared/auth/AuthContext'
+import { APP_NAME, pageTitle } from '../../shared/brand'
 import { useDocumentTitle } from '../../shared/useDocumentTitle'
 import { LoginBackdrop } from './LoginBackdrop'
 
 export function LoginPage() {
-  useDocumentTitle('Мой дом')
+  useDocumentTitle(pageTitle())
   const { token, login } = useAuth()
   const navigate = useNavigate()
   const [loginValue, setLoginValue] = useState('')
@@ -91,7 +92,7 @@ export function LoginPage() {
             color: 'text.primary',
           }}
         >
-          Мой дом
+          {APP_NAME}
         </Typography>
 
         <Box component="form" onSubmit={onSubmit} noValidate>
@@ -125,19 +126,10 @@ export function LoginPage() {
             <Button
               type="submit"
               variant="contained"
+              color="primary"
               size="large"
               disabled={pending}
-              sx={{
-                mt: 0.5,
-                py: 1.4,
-                borderRadius: 2,
-                fontSize: '1rem',
-                background: 'linear-gradient(135deg, #7ad4e2 0%, #4fb8ca 55%, #3aa8ba 100%)',
-                color: '#061018',
-                '&:hover': {
-                  background: 'linear-gradient(135deg, #8adceb 0%, #5ec8d8 55%, #3aa8ba 100%)',
-                },
-              }}
+              sx={{ mt: 0.5, py: 1.4, borderRadius: 2, fontSize: '1rem' }}
             >
               {pending ? <CircularProgress size={22} color="inherit" /> : 'Войти'}
             </Button>

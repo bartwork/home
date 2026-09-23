@@ -1,19 +1,35 @@
-import type { Device, LoginResponse } from './types'
+import type { Device, LoginResponse, User } from './types'
 
 export type { Device, LoginResponse, User } from './types'
 
 const TOKEN_KEY = 'home.token'
+const USER_KEY = 'home.user'
 
 export function getToken(): string | null {
   return sessionStorage.getItem(TOKEN_KEY)
 }
 
-export function setToken(token: string | null) {
+export function getStoredUser(): User | null {
+  const raw = sessionStorage.getItem(USER_KEY)
+  if (!raw) return null
+  try {
+    return JSON.parse(raw) as User
+  } catch {
+    sessionStorage.removeItem(USER_KEY)
+    return null
+  }
+}
+
+export function setSession(token: string | null, user: User | null = null) {
   if (!token) {
     sessionStorage.removeItem(TOKEN_KEY)
+    sessionStorage.removeItem(USER_KEY)
     return
   }
   sessionStorage.setItem(TOKEN_KEY, token)
+  if (user) {
+    sessionStorage.setItem(USER_KEY, JSON.stringify(user))
+  }
 }
 
 export class ApiError extends Error {
@@ -38,7 +54,7 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   const res = await fetch(path, { ...init, headers })
   if (!res.ok) {
     if (res.status === 401 && !path.includes('/auth/login')) {
-      setToken(null)
+      setSession(null)
       if (window.location.pathname !== '/login') {
         window.location.assign('/login')
       }
