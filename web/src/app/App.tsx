@@ -3,6 +3,7 @@ import { ThemeProvider } from '@mui/material/styles'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AuthProvider } from '../shared/auth/AuthContext'
 import { theme } from '../shared/theme/theme'
+import { DiscoveredPage } from '../pages/discovered/DiscoveredPage'
 import { HomePage } from '../pages/home/HomePage'
 import { LoginPage } from '../pages/login/LoginPage'
 
@@ -15,6 +16,7 @@ export function App() {
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/" element={<HomePage />} />
+            <Route path="/discovered" element={<DiscoveredPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </BrowserRouter>

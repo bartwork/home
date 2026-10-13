@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Щит ABB AT62 — схема</title>
+  <style>
+    :root {
+      --bg: #eef1f4;
+      --ink: #15202b;
+      --muted: #5a6570;
+      --card: #fff;
+      --line: #cfd6dd;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.35;
+    }
+    header {
+      background: linear-gradient(120deg, #143a5c, #1f4e79 55%, #2a6f97);
+      color: #fff;
+      padding: 1.25rem 1.5rem 1.1rem;
+    }
+    header h1 { margin: 0 0 .35rem; font-size: 1.35rem; font-weight: 700; }
+    header p { margin: 0; opacity: .92; font-size: .92rem; max-width: 900px; }
+    main { max-width: 1320px; margin: 0 auto; padding: 1.1rem 1.25rem 3rem; }
+    section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1rem 1.1rem 1.15rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 1px 0 rgba(20,40,60,.04);
+    }
+    h2 { margin: 0 0 .75rem; font-size: 1.05rem; }
+    h3 { margin: 0 0 .4rem; font-size: .92rem; }
+    .note { margin: .65rem 0 0; font-size: .84rem; color: var(--muted); }
+    .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: .7rem; }
+    .card {
+      background: #f7f9fb;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: .65rem .75rem;
+      font-size: .84rem;
+    }
+    .card ul { margin: .2rem 0 0; padding-left: 1.05rem; }
+    .pill {
+      display: inline-block;
+      font-size: .72rem;
+      padding: .15rem .45rem;
+      border-radius: 999px;
+      background: #e8eef4;
+      margin: .15rem .15rem 0 0;
+    }
+    .ok { color: #1e7a45; font-weight: 700; }
+    .warn { color: #9a5b00; font-weight: 700; }
+
+    .legend {
+      display: flex; flex-wrap: wrap; gap: .35rem .7rem;
+      margin: 0 0 .55rem; font-size: .72rem; color: var(--muted);
+    }
+    .legend i {
+      width: .65rem; height: .65rem; border-radius: 2px;
+      display: inline-block; margin-right: .25rem; vertical-align: -1px;
+      border: 1px solid rgba(0,0,0,.12);
+    }
+    .legend .tag {
+      display: inline-block; font-size: .62rem; font-weight: 700;
+      padding: 0 .28rem; border-radius: 3px; margin-right: .15rem;
+      vertical-align: 1px;
+    }
+
+    .panel-wrap { overflow-x: auto; padding-bottom: .25rem; }
+    .panel {
+      min-width: 1280px;
+      background: #1a222b;
+      border-radius: 10px;
+      padding: .55rem .6rem .65rem;
+      border: 2px solid #0f141a;
+    }
+    .rail-title {
+      color: #c5d0da;
+      font-size: .65rem;
+      font-weight: 650;
+      margin: 0 0 .28rem .1rem;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+    }
+    .rail-title em { color: #8fa0b0; font-style: normal; font-weight: 500; text-transform: none; }
+    .scale, .rail {
+      display: grid;
+      grid-template-columns: 2.4rem repeat(24, minmax(0, 1fr));
+      gap: 2px;
+    }
+    .scale {
+      margin-bottom: 3px;
+      padding: 0 2px;
+      color: #7a8a99;
+      font-size: .48rem;
+      text-align: center;
+    }
+    .rail {
+      background: #12181f;
+      padding: 2px;
+      border-radius: 4px;
+      margin-bottom: 5px;
+      position: relative;
+    }
+    .rail:last-child { margin-bottom: 0; }
+    .rail-label {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: #fff; font-weight: 800; font-size: .68rem;
+      background: #0b1015; border-radius: 3px; gap: 1px;
+    }
+    .rail-label span { font-size: .42rem; font-weight: 600; color: #8b9aab; letter-spacing: 0; }
+
+    .mod {
+      min-height: 72px;
+      border-radius: 3px;
+      display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start;
+      text-align: center;
+      font-size: .48rem;
+      font-weight: 600;
+      line-height: 1.1;
+      padding: 2px 2px 3px;
+      color: #1a1a1a;
+      border: 1px solid rgba(0,0,0,.18);
+      border-top-width: 3px;
+      overflow: hidden;
+    }
+    .mod .rt { font-size: .58rem; font-weight: 800; letter-spacing: -.02em; }
+    .mod .nm { font-size: .46rem; font-weight: 700; margin-top: 1px; }
+    .mod .cab { font-size: .42rem; font-weight: 600; opacity: .92; margin-top: 1px; word-break: break-word; }
+    .mod .ctl {
+      margin-top: auto; padding-top: 2px;
+      font-size: .4rem; font-weight: 800; letter-spacing: .01em;
+      border-radius: 2px; padding: 1px 2px;
+    }
+    .mod .ctl.dim { background: rgba(0,0,0,.14); color: #0b3d32; }
+    .mod .ctl.rel { background: rgba(0,0,0,.14); color: #2c0a45; }
+    .mod .ctl.off { background: rgba(255,255,255,.25); color: #333; font-weight: 650; }
+    .mod .ctl.alw { background: #1e8449; color: #fff; }
+    .mod .ctl.bus { background: #1a5276; color: #fff; }
+    .mod small { display: block; font-weight: 600; font-size: .42rem; opacity: .9; margin-top: 1px; }
+
+    /* УЗО-группы (верхняя полоса = цвет группы) */
+    .u1 { background: #ffe0a3; border-top-color: #e67e22; }
+    .u2 { background: #c5e4f7; border-top-color: #2980b9; }
+    .u3 { background: #c8efc8; border-top-color: #27ae60; }
+    .u4 { background: #ffd5c2; border-top-color: #e74c3c; }
+    .u5 { background: #f5c6cb; border-top-color: #c0392b; }
+    .u6 { background: #e0d4f7; border-top-color: #8e44ad; }
+    .u7 { background: #d5f5e3; border-top-color: #148f77; }
+    .u1 .rt, .u2 .rt, .u3 .rt, .u4 .rt, .u5 .rt, .u6 .rt, .u7 .rt { font-size: .55rem; }
+
+    .m-term { background: #9aa5b1; color: #111; border-top-color: #5d6d7e; }
+    .m-in { background: #f5b7b1; border-top-color: #922b21; }
+    .m-uzm { background: #e74c3c; color: #fff; border-top-color: #7b241c; }
+    .m-kont { background: #922b21; color: #fff; border-top-color: #641e16; }
+    .m-uzo { color: #fff; border-top-color: rgba(0,0,0,.35); }
+    .m-uzo.u1 { background: #e67e22; }
+    .m-uzo.u2 { background: #2980b9; }
+    .m-uzo.u3 { background: #27ae60; }
+    .m-uzo.u4 { background: #e74c3c; }
+    .m-uzo.u5 { background: #c0392b; }
+    .m-uzo.u6 { background: #8e44ad; }
+    .m-uzo.u7 { background: #148f77; }
+    .m-b32 .rt { color: #6e2c00; }
+    .m-d { background: #f7dc6f; border-top-color: #b7950b; }
+    .m-wb { background: #9b59b6; color: #fff; border-top-color: #5b2c6f; }
+    .m-mr { background: #6c3483; color: #fff; border-top-color: #3b1a4a; }
+    .m-mdm { background: #0e6655; color: #fff; border-top-color: #064035; }
+    .m-psu { background: #d35400; color: #fff; border-top-color: #6e2c00; }
+    .m-empty { background: #3d4a57; color: #aeb6bf; border-top-color: #2c3640; border-style: dashed; }
+    .m-eh { background: #fadbd8; border-top-color: #922b21; }
+    .m-c2 { background: #f9e79f; border-top-color: #b7950b; }
+    /* Освободившиеся каналы после MDM×3 */
+    .m-free {
+      background: #1e8449 !important;
+      color: #fff !important;
+      border-top-color: #f1c40f !important;
+      box-shadow: inset 0 0 0 2px #f1c40f, 0 0 0 1px #f9e79f;
+    }
+    .m-free .ctl { background: #f1c40f; color: #1a1a1a; font-weight: 800; }
+    .m-partfree {
+      background: #5b2c6f !important;
+      color: #fff !important;
+      border-top-color: #f1c40f !important;
+      box-shadow: inset 0 0 0 2px #f1c40f;
+    }
+    .m-partfree .ctl { background: #f1c40f; color: #1a1a1a; font-weight: 800; }
+    .freed-banner {
+      background: linear-gradient(90deg, #145a32, #1e8449 40%, #145a32);
+      color: #fff;
+      border: 2px solid #f1c40f;
+      border-radius: 8px;
+      padding: .75rem 1rem;
+      margin: .75rem 0;
+    }
+    .freed-banner h3 { margin: 0 0 .4rem; color: #f9e79f; font-size: 1rem; }
+    .freed-banner ul { margin: 0; padding-left: 1.1rem; }
+    .freed-banner li { margin: .2rem 0; }
+    .pill-free {
+      display: inline-block;
+      background: #f1c40f;
+      color: #1a1a1a;
+      font-weight: 800;
+      font-size: .72rem;
+      padding: .1rem .45rem;
+      border-radius: 3px;
+      margin-right: .25rem;
+    }
+
+    .cluster-bar {
+      display: grid;
+      grid-template-columns: 2.4rem repeat(24, minmax(0, 1fr));
+      gap: 2px;
+      margin: -2px 0 4px;
+      font-size: .42rem;
+      font-weight: 700;
+      text-align: center;
+      color: #dfe6ed;
+    }
+    .cluster-bar span {
+      border-radius: 2px;
+      padding: 1px 0;
+      opacity: .95;
+    }
+
+    .flow {
+      display: flex; flex-wrap: wrap; align-items: center; gap: .35rem;
+      font-size: .86rem; margin-bottom: .55rem;
+    }
+    .box {
+      border: 2px solid #2c3e50;
+      border-radius: 8px;
+      padding: .4rem .55rem;
+      background: #fff;
+      font-weight: 700;
+      font-size: .78rem;
+      text-align: center;
+    }
+    .box small { display: block; font-weight: 500; color: var(--muted); font-size: .68rem; }
+    .arrow { color: var(--muted); font-weight: 800; }
+
+    table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+    th, td { border: 1px solid var(--line); padding: .35rem .45rem; text-align: left; vertical-align: top; }
+    th { background: #1f4e79; color: #fff; }
+    tr:nth-child(even) { background: #f8fafb; }
+    .g-k { background: #fff8e7 !important; }
+    .g-s { background: #eef6fc !important; }
+    .g-w { background: #eef8ef !important; }
+    .g-z { background: #fff1e8 !important; }
+    .g-p { background: #fceeed !important; }
+    .g-i { background: #f3eef8 !important; }
+    .g-a { background: #eafaf1 !important; }
+
+    .term-scheme {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: .75rem;
+    }
+    @media (min-width: 980px) {
+      .term-scheme { grid-template-columns: 1fr 1fr; }
+    }
+    .term-panel {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #f7f9fb;
+      padding: .7rem .75rem .85rem;
+    }
+    .term-panel h3 { margin: 0 0 .45rem; font-size: .95rem; }
+    .term-panel .sub { font-size: .75rem; color: var(--muted); margin: 0 0 .55rem; }
+    .bus {
+      border-radius: 6px;
+      padding: .4rem .5rem;
+      margin-bottom: .4rem;
+      font-size: .72rem;
+      border: 1px solid rgba(0,0,0,.12);
+    }
+    .bus .ttl { font-weight: 800; font-size: .78rem; margin-bottom: .15rem; }
+    .bus .meta { color: #333; font-size: .7rem; }
+    .bus .use { margin-top: .2rem; font-size: .68rem; font-weight: 650; }
+    .bus.pe { background: #e8f5e9; border-left: 4px solid #2e7d32; }
+    .bus.n1 { background: #ffe0a3; border-left: 4px solid #e67e22; }
+    .bus.n2 { background: #c5e4f7; border-left: 4px solid #2980b9; }
+    .bus.n3 { background: #c8efc8; border-left: 4px solid #27ae60; }
+    .bus.n4 { background: #ffd5c2; border-left: 4px solid #e74c3c; }
+    .bus.n5 { background: #f5c6cb; border-left: 4px solid #c0392b; }
+    .bus.n6 { background: #e0d4f7; border-left: 4px solid #8e44ad; }
+    .bus.n7 { background: #d5f5e3; border-left: 4px solid #148f77; }
+    .bus.l { background: #eceff1; border-left: 4px solid #546e7a; }
+    .bus.buy { background: #fff3e0; border-left: 4px solid #ef6c00; border-style: dashed; }
+    .bus.soft { background: #e3f2fd; border-left: 4px solid #1565c0; }
+    .flow-mini {
+      display: flex; flex-wrap: wrap; align-items: center; gap: .25rem;
+      font-size: .7rem; margin: .35rem 0 .55rem; font-weight: 650;
+    }
+    .flow-mini .b {
+      background: #fff; border: 1px solid #cfd6dd; border-radius: 4px;
+      padding: .2rem .35rem;
+    }
+    .inv { width: 100%; font-size: .75rem; margin-top: .4rem; }
+    .inv th { background: #334155; }
+    .pill-yes { background: #c8e6c9; color: #1b5e20; font-weight: 700; padding: .05rem .3rem; border-radius: 3px; font-size: .68rem; }
+    .pill-no { background: #ffe0b2; color: #e65100; font-weight: 700; padding: .05rem .3rem; border-radius: 3px; font-size: .68rem; }
+    .pill-have { background: #bbdefb; color: #0d47a1; font-weight: 700; padding: .05rem .3rem; border-radius: 3px; font-size: .68rem; }
+
+    /* Карта держателей ZK13 · вид «в щит сверху» */
+    .zk-map {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr 1fr;
+      grid-template-rows: auto auto auto;
+      gap: .55rem;
+      margin: .4rem 0 .2rem;
+      align-items: stretch;
+    }
+    .zk-zone {
+      border: 2px solid #334155;
+      border-radius: 12px;
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: .55rem .6rem .65rem;
+      min-height: 0;
+    }
+    .zk-zone .zh {
+      display: flex; justify-content: space-between; align-items: baseline; gap: .4rem;
+      margin-bottom: .45rem; padding-bottom: .35rem;
+      border-bottom: 1px solid #334155;
+      font-size: .78rem; font-weight: 800;
+    }
+    .zk-zone .zh small { font-weight: 600; color: #94a3b8; font-size: .68rem; }
+    .zk-zone .zh .fit { font-size: .62rem; font-weight: 800; color: #86efac; }
+    .zk-block {
+      border-radius: 7px;
+      padding: .4rem .45rem;
+      margin-bottom: .35rem;
+      font-size: .72rem;
+      border: 1px solid rgba(255,255,255,.12);
+    }
+    .zk-block:last-child { margin-bottom: 0; }
+    .zk-block .bn { font-weight: 800; font-size: .8rem; }
+    .zk-block .ba { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .62rem; opacity: .95; margin: .12rem 0; }
+    .zk-block .bu { font-size: .66rem; font-weight: 650; margin-top: .1rem; }
+    .zk-block .bw { font-size: .6rem; color: rgba(255,255,255,.75); margin-top: .08rem; }
+    .zk-pe { background: #166534; border-left: 4px solid #4ade80; }
+    .zk-n { background: #1e3a8a; border-left: 4px solid #60a5fa; }
+    .zk-n.u1 { background: #9a3412; border-left-color: #fb923c; }
+    .zk-n.u2 { background: #1e40af; border-left-color: #93c5fd; }
+    .zk-n.u3 { background: #166534; border-left-color: #86efac; }
+    .zk-n.u4 { background: #991b1b; border-left-color: #fca5a5; }
+    .zk-n.u5 { background: #9f1239; border-left-color: #fda4af; }
+    .zk-n.u6 { background: #6b21a8; border-left-color: #d8b4fe; }
+    .zk-n.u7 { background: #115e59; border-left-color: #5eead4; }
+    .zk-buy { outline: 2px dashed #fbbf24; outline-offset: 1px; }
+    .zk-extra { background: #334155; border-left: 4px solid #94a3b8; }
+    .zk-center {
+      grid-column: 2; grid-row: 1 / span 2;
+      background: linear-gradient(160deg, #1e293b, #0f172a);
+      border: 2px dashed #475569;
+      border-radius: 12px;
+      padding: .7rem .75rem;
+      color: #cbd5e1;
+      font-size: .78rem;
+      display: flex; flex-direction: column; justify-content: center; gap: .35rem;
+    }
+    .zk-center strong { color: #fff; font-size: .9rem; }
+    .zk-center .art {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: .68rem; background: #020617; border-radius: 6px;
+      padding: .35rem .45rem; line-height: 1.45;
+    }
+    .zk-legend-row {
+      display: flex; flex-wrap: wrap; gap: .35rem .7rem;
+      margin: .55rem 0 0; font-size: .72rem; color: var(--muted);
+    }
+    .zk-legend-row b { color: var(--ink); }
+    .mod .art {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: .38rem; font-weight: 700; opacity: .9; margin-top: 1px;
+    }
+    .m-pe { background: #2e7d32; color: #fff; border-top-color: #1b5e20; }
+    .m-n { color: #fff; }
+    .bus .ba {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: .66rem; font-weight: 700; margin: .1rem 0 .15rem;
+      color: #0f172a;
+    }
+
+    /* ZK13 holders — НЕ на DIN R1–R6, а над/под рядами */
+    .holder-row {
+      display: grid;
+      grid-template-columns: 2.4rem 1fr 1fr;
+      gap: 4px;
+      margin: 0 0 6px;
+      padding: 3px;
+      background: #0b1220;
+      border: 1px dashed #64748b;
+      border-radius: 6px;
+    }
+    .holder-row.below { margin: 6px 0 0; }
+    .holder-label {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: #fde68a; font-weight: 800; font-size: .55rem; text-align: center;
+      background: #1e293b; border-radius: 3px; line-height: 1.15; padding: 2px;
+    }
+    .holder-label span { font-size: .4rem; font-weight: 600; color: #94a3b8; }
+    .holder-slot {
+      display: flex; flex-wrap: wrap; gap: 3px; align-content: flex-start;
+      background: #111827; border-radius: 4px; padding: 3px; min-height: 52px;
+    }
+    .holder-slot .cap {
+      width: 100%; font-size: .42rem; font-weight: 700; color: #94a3b8;
+      margin-bottom: 1px; letter-spacing: .02em;
+    }
+    .zk-chip {
+      flex: 1 1 auto; min-width: 5.2rem; max-width: 100%;
+      border-radius: 3px; padding: 3px 4px; font-size: .42rem; line-height: 1.15;
+      border: 1px solid rgba(255,255,255,.15); color: #fff;
+    }
+    .zk-chip .t { font-weight: 800; font-size: .5rem; }
+    .zk-chip .a { font-family: ui-monospace, Menlo, monospace; font-size: .36rem; opacity: .92; }
+    .zk-chip .u { font-weight: 650; opacity: .95; }
+    .zk-chip.pe { background: #166534; border-left: 3px solid #4ade80; }
+    .zk-chip.n1 { background: #9a3412; border-left: 3px solid #fb923c; }
+    .zk-chip.n2 { background: #1e40af; border-left: 3px solid #93c5fd; }
+    .zk-chip.n3 { background: #166534; border-left: 3px solid #86efac; }
+    .zk-chip.n4 { background: #991b1b; border-left: 3px solid #fca5a5; }
+    .zk-chip.n5 { background: #9f1239; border-left: 3px solid #fda4af; }
+    .zk-chip.n6 { background: #6b21a8; border-left: 3px solid #d8b4fe; }
+    .zk-chip.buy { outline: 1px dashed #fbbf24; }
+    .zk-chip.x { background: #334155; border-left: 3px solid #94a3b8; }
+    .din-note {
+      color: #94a3b8; font-size: .55rem; margin: 0 0 4px 2.6rem; font-weight: 600;
+    }
+
+    @media (max-width: 900px) {
+      .zk-map { grid-template-columns: 1fr; }
+      .zk-center { grid-column: 1; grid-row: auto; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      header, .panel, .mod, .rail-label { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      section { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ABB AT62 · 6×24 = 144 модуля</h1>
+    <p>
+      Клеммы №1–24 снизу, №25+ сверху · BUSHUB справа ·
+      отъезд: один ESB63 (без OT) · поле Modbus / MSW
+    </p>
+  </header>
+
+  <main>
+    <section>
+      <h2>Ключевые правила</h2>
+      <div class="cols">
+        <div class="card">
+          <h3>Ввод кабелей</h3>
+          <ul>
+            <li><strong>№1–24</strong> → снизу → рейка <strong>R6</strong></li>
+            <li><strong>№25+</strong> → сверху → рейка <strong>R1</strong></li>
+            <li>Дальше по щиту только <strong>ПУГВ</strong></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Силовая цепочка</h3>
+          <ul>
+            <li>ВА-103 2P C50 (`12294DEK`) → УЗМ-50Ц → развилка</li>
+            <li><strong>УЗО6+7 всегда</strong> ‖ <strong>ESB63 → УЗО1…5</strong> <em>(не про УЗМ)</em></li>
+            <li>УЗМ — <em>в силе</em>: L/N всего щита · без OT63</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Вне щита · всё на шину BUSHUB</h3>
+          <ul>
+            <li><strong>MWAC</strong> · <strong>M1W2 ×2</strong> · <strong>MSW v.4</strong> · <strong>ONOKOM ×2</strong> · <strong>карнизы Modbus</strong></li>
+            <li>Только RS-485 + 24В → <strong>BUSHUB (R1)</strong></li>
+            <li><strong>WB-LED 2M</strong> → <strong>D6</strong> → <strong>ARV-DR100-24</strong> на DIN R5 (шина до ARV); №35 = 24В+/0В с WB-LED</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Бюджет</h3>
+          <ul>
+            <li>AT62 = <strong>144M</strong> · устройств ~<strong>93M</strong> (29×1P + ARV 4M + WB-LED 2M + MDM×3, CU×1)</li>
+            <li>Клеммы R1/R6 + запас ~49M · R4 впритык · R5 = WB-LED+D6+ARV (24M)</li>
+            <li><span class="ok">Места хватает</span> · R5: MDM · WB-LED · D6 · ARV 70мм · MR6C#1 на R4</li>
+            <li><span class="pill-free">FREE</span> MR6C#1 +2ch · MR6C#2 +1ch · MR6CU#1 = катушка №5</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Аудит · перепроверка</h2>
+      <div class="cols">
+        <div class="card">
+          <h3 class="ok">OK</h3>
+          <ul>
+            <li>Рейки R1–R6: каждая ровно 24M</li>
+            <li>Ввод №1–24↓ / №25+↑ — 0 нарушений</li>
+            <li>28×1P (R3×21 + запас 3M + УЗО6×4 + D10 + D6 + C2) · 7 УЗО · кусты R3/R4 под гребенки · <b>1 автомат = 1 MDM</b></li>
+            <li>Прямой = обратный Excel · покрытие 1–72 без дыр</li>
+            <li>MR6C#1–3 = <strong>4</strong>/<strong>5</strong>/<strong>6</strong> · MDM3 <strong>9/9 ×3</strong> · CU#1 = катушка №5 · CU#2 = ESB</li>
+            <li>Катушка: L(УЗО7)→C2→MR6CU#2→A1 · УЗМ не в катушке</li>
+            <li><span class="pill-free">FREE</span> MR6C#1 +2ch · MR6C#2 +1ch · MR6CU#1 = катушка №5 · MR6C#1 на R4</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 class="ok">Перепроверка сейчас</h3>
+          <ul>
+            <li><span class="ok">Места AT62: ~93M устройств из 144 — хватает</span></li>
+            <li>Кабели <strong>1–72 все покрыты</strong> (сила или слаботочка)</li>
+            <li>Аудит 2026-08-26: MDM DIM1/2/3 · ТП C1/C2 · №56→MR2.3 · №5 контактор←CU#1 · JXB · УЗО4×6 · OK</li>
+            <li>C2 = 12265DEK · №101 люк → <strong>свой B16</strong> УЗО6 (не с кондеем)</li>
+            <li>№27 лента шкафа: B10→MR→локальный БП (не D6)</li>
+            <li>Неразмеченные → лист «Слаботочка» в Excel</li>
+            <li><strong>MUST купить:</strong> VPR-2.5-GY×50 · VPR-2.5-BU×6 · D-VPR-2.5×20 · <strong>JXB-ST-2.5-10pin уп.20</strong> · ZK144B×2 · MDM3×1 · гребёнки DEKraft · НШВИ · ESB+EH04 если нет</li>
+            <li><strong>Есть (1581):</strong> VPR-2.5-GY ≈14 на лицо · VPRTT×25 и QUATTRO-BU×8 в коробку · PE DIN · ПУГВ · толстые L/N/PE</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 class="warn">Риски · решить</h3>
+          <ul>
+            <li><span class="ok">MDM: 1 автомат на модуль · R5 слева→: кух.дим→#1 · комн.дим→#2 · бра+кор→#3 · карнизы 34·38 отдельно</span></li>
+            <li>УЗО1 ΣIn≈130А / УЗО4 — неодновременность</li>
+            <li>D6 карнизная лента на УЗО7 — при отъезде не гаснет</li>
+            <li>2× ONOKOM в кондеях + MSW климат · много лучей на 1× BUSHUB</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Свободные каналы реле <small>(не на лице щита)</small></h2>
+      <div class="freed-banner">
+        <h3><span class="pill-free">FREE</span> MR6C · карта после правки C1/C2</h3>
+        <ul>
+          <li><strong>MR6C#1</strong> 4/6: C1←ТП К+Т №1·3 · C2←ТП В+Кух №4·15 · FREE ch3+ch6</li>
+          <li><strong>MR6C#2</strong> 5/6: C1 УЗО1 №48·53·56 · C2 УЗО4 №27·28 · FREE ch6</li>
+          <li><strong>MR6CU#1</strong> на полке: катушка контактора №5 сушилка (сухой NO)</li>
+          <li>ESB = MR6CU#2 · MDM×3 = 9/9</li>
+        </ul>
+      </div>
+      <div class="cols">
+        <div class="card">
+          <h3>MR6C #1 · только УЗО5</h3>
+          <table>
+            <tr><th>Канал</th><th>COM</th><th>Нагрузка</th></tr>
+            <tr><td>ch1</td><td>C1 ← ТП К+Т</td><td>№1 ТП коридор</td></tr>
+            <tr><td>ch2</td><td>C1 ← ТП К+Т</td><td>№3 ТП туалет</td></tr>
+            <tr style="background:#f9e79f"><td>ch3</td><td>C1</td><td>FREE</td></tr>
+            <tr><td>ch4</td><td>C2 ← ТП В+Кух</td><td>№4 ТП ванна</td></tr>
+            <tr><td>ch5</td><td>C2 ← ТП В+Кух</td><td>№15 ТП кухня</td></tr>
+            <tr style="background:#f9e79f"><td>ch6</td><td>C2</td><td>FREE</td></tr>
+          </table>
+        </div>
+        <div class="card">
+          <h3>MR6C #2 · карта</h3>
+          <table>
+            <tr><th>Канал</th><th>Статус</th><th>Нагрузка</th></tr>
+            <tr><td>ch1</td><td>занят · C1 УЗО1</td><td>№48 Бра кухня</td></tr>
+            <tr><td>ch2</td><td>занят · C1 УЗО1</td><td>№53 Подсветка кухни</td></tr>
+            <tr><td>ch3</td><td>занят · C1 УЗО1</td><td>№56 Вытяжка · B10 кух.реле</td></tr>
+            <tr><td>ch4</td><td>занят · C2 УЗО4</td><td>№27 Лента шкаф</td></tr>
+            <tr><td>ch5</td><td>занят · C2 УЗО4</td><td>№28 Свет кладовая</td></tr>
+            <tr style="background:#f9e79f"><td>ch6</td><td>FREE · C2</td><td>запас (B10 кладовая)</td></tr>
+          </table>
+          <p class="note" style="margin:.4rem 0 0;font-size:.75rem">MR6C#3 — 6/6 сан. №5 — контактор←CU#1. №56 — MR6C#2 ch3.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Отъезд · один ESB63 (без OT63 / без 2-го контактора)</h2>
+
+      <div class="flow">
+        <div class="box">ВА-103 2P C50<small>12294DEK · ввод</small></div><span class="arrow">→</span>
+        <div class="box">УЗМ-50Ц<small>сила L/N · вся квартира</small></div>
+      </div>
+      <div class="flow">
+        <div class="box" style="border-color:#1e7a45">УЗМ</div><span class="arrow">→</span>
+        <div class="box" style="border-color:#1e7a45">УЗО6 IT</div>
+        <span class="arrow">+</span>
+        <div class="box" style="border-color:#1e7a45">УЗО7 WB</div>
+        <span class="arrow">=</span>
+        <div class="box" style="border-color:#1e7a45">мимо ESB</div>
+      </div>
+      <div class="flow">
+        <div class="box">УЗМ</div><span class="arrow">→</span>
+        <div class="box" style="border-color:#c0392b">ESB63-20N-06<small>1–2 = L · 3–4 = N</small></div><span class="arrow">→</span>
+        <div class="box">УЗО1…5<small>быт</small></div>
+      </div>
+
+      <h3 style="margin:.9rem 0 .45rem">Катушка A1–A2 (кабельно)</h3>
+      <div class="flow">
+        <div class="box">L с УЗО7</div><span class="arrow">→</span>
+        <div class="box">ВА-103 C2<small>12265DEK</small></div><span class="arrow">→</span>
+        <div class="box">реле WB<small>MR6CU#2 · сухой NO</small></div><span class="arrow">→</span>
+        <div class="box">A1</div>
+      </div>
+      <div class="flow">
+        <div class="box">A2</div><span class="arrow">→</span>
+        <div class="box">N с УЗО7</div>
+      </div>
+      <div class="flow">
+        <div class="box">Мастер-выкл.<small>UTP Cat6 · сухой контакт</small></div><span class="arrow">→</span>
+        <div class="box">DI MR6C v3<small>не WB7 напрямую</small></div><span class="arrow">→</span>
+        <div class="box">WB7 сценарий</div><span class="arrow">→</span>
+        <div class="box">MR6CU#2</div>
+      </div>
+
+      <h3 style="margin:.9rem 0 .45rem">Статус в WB</h3>
+      <div class="flow">
+        <div class="box">EH04-11N<small>клип слева на ESB · 1NO+1NC</small></div><span class="arrow">→</span>
+        <div class="box">DI MR6C<small>«быт под напряжением»</small></div>
+      </div>
+
+      <div class="cols" style="margin-top:.75rem">
+        <div class="card">
+          <h3>BOM (вместо МК-103 + ДК)</h3>
+          <ul>
+            <li><strong>Купить:</strong> ESB63-20N-06 · EH04-11N (если ещё нет)</li>
+            <li><strong>Есть:</strong> C2 12265DEK · УЗМ-50Ц · MR6CU#2</li>
+            <li>Ввод: ВА-103 <strong>2P C50</strong> = `12294DEK` · катушка: ВА-103 <strong>1P C2</strong> = `12265DEK` (не путать)</li>
+            <li>OT63 / OA1G10 / МК на отъезд — <strong>нет</strong></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Ручной off</h3>
+          У `ESB63-20N-06` нет ручного `O/AUTO/I`.<br>
+          Локальный hard-off в щите: <strong>ВА50</strong> или <strong>УЗМ</strong>.
+        </div>
+        <div class="card">
+          <h3>WB</h3>
+          Сценарий «Уехал»: разомкнуть NO на катушке.<br>
+          DI с EH04 = фактический статус быта.
+        </div>
+        <div class="card">
+          <h3>Важно</h3>
+          Питание катушки и WB — <strong>до</strong> ESB (УЗО7), но <strong>после</strong> ВА50 и УЗМ.<br>
+          Авария УЗМ гасит всю квартиру, включая холод/кондей/WB. ВН-102 нет.
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Лицо щита · AT62 6×24</h2>
+      <div class="legend">
+        <span><i style="background:#e67e22"></i>УЗО1 кухня</span>
+        <span><i style="background:#2980b9"></i>УЗО2 сан</span>
+        <span><i style="background:#27ae60"></i>УЗО3 стирка</span>
+        <span><i style="background:#e74c3c"></i>УЗО4 жилые</span>
+        <span><i style="background:#c0392b"></i>УЗО5 полы</span>
+        <span><i style="background:#8e44ad"></i>УЗО6 IT всегда</span>
+        <span><i style="background:#148f77"></i>УЗО7 авт. всегда</span>
+        <span><i style="background:#922b21"></i>ESB / ввод</span>
+        <span><i style="background:#6c3483"></i>реле MR</span>
+        <span><i style="background:#0e6655"></i>диммер MDM</span>
+        <span><span class="tag" style="background:#0b3d32;color:#fff">DIM</span>диммер · DIM1/2/3 = MDM3 #1/#2/#3 · 1 B10 на модуль</span>
+        <span><span class="tag" style="background:#2c0a45;color:#fff">REL</span>реле MR6C · C1=K1–3 · C2=K4–6 · один автомат на COM</span>
+        <span><span class="tag" style="background:#1e8449;color:#fff">ALW</span>мимо ESB</span>
+        <span><span class="tag" style="background:#1a5276;color:#fff">BUS</span>BUSHUB</span>
+        <span><span class="tag" style="background:#f1c40f;color:#1a1a1a">FREE</span>свободные каналы — блок выше лица щита, не на DIN</span>
+      </div>
+
+      <div class="panel-wrap">
+        <div class="panel">
+          <div class="rail-title">▲ Над рядами · держатели ZK13 (N/PE) <em>· это НЕ DIN-рейка R1 — шинки сверху корпуса</em></div>
+          <div class="holder-row">
+            <div class="holder-label">ZK13↑<span>над R1</span></div>
+            <div class="holder-slot">
+              <div class="cap">↑A · верх-лево · 213/214 мм</div>
+              <div class="zk-chip n4 buy"><div class="t">ZK144B N УЗО4↑</div><div class="a">1SPE007715F9705</div><div class="u">12 жил · КУПИТЬ</div></div>
+              <div class="zk-chip n1 buy"><div class="t">ZK144B N УЗО1↑</div><div class="a">1SPE007715F9705</div><div class="u">кухня верх · КУПИТЬ · ↔↓</div></div>
+              <div class="zk-chip n6"><div class="t">ZK82B N УЗО6 ↓↑</div><div class="a">1SPE007715F9703</div><div class="u">5 жил IT</div></div>
+            </div>
+            <div class="holder-slot">
+              <div class="cap">↑B · верх-право · 210/214 мм</div>
+              <div class="zk-chip pe"><div class="t">ZK206G #2 PE↑</div><div class="a">1SPE007715F9717</div><div class="u">20×PE сверху</div></div>
+              <div class="zk-chip n2"><div class="t">ZK113B N УЗО2</div><div class="a">1SPE007715F9704</div><div class="u">сан + №58 N→25</div></div>
+              <div class="zk-chip x"><div class="t">PE DIN + N УЗО7</div><div class="a">VPR PE ×7 · счёт 1581</div><div class="u">хвост −2 · N ARV/WB</div></div>
+            </div>
+          </div>
+
+          <div class="rail-title">R1↑ DIN · только фазы L + UTP + BUSHUB <em>· N/PE сверху на ZK13, не на этой рейке</em></div>
+          <div class="din-note">Лицо DIN 24M · кабели №25+ фаза на клеммы L · нули/земля уходят на держатели ▲ выше</div>
+          <div class="scale">
+            <div></div>
+            <div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div>
+            <div>7</div><div>8</div><div>9</div><div>10</div><div>11</div><div>12</div>
+            <div>13</div><div>14</div><div>15</div><div>16</div><div>17</div><div>18</div>
+            <div>19</div><div>20</div><div>21</div><div>22</div><div>23</div><div>24</div>
+          </div>
+
+          <div class="rail">
+            <div class="rail-label">R1↑<span>24M DIN</span></div>
+            <div class="mod m-term" style="grid-column: span 10"><span class="rt">L DIN блоками</span><span class="nm">J6·свет·J5·кух·J3·сан·J4</span><span class="cab">JXB на розетки · VPRTT не сюда · N/PE → ZK↑ · <a href="shit_ABB_AT62_R1_klemmy_rasstanovka.html" style="color:inherit">расстановка</a></span><span class="ctl off">JXB</span></div>
+            <div class="mod m-term" style="grid-column: span 2"><span class="rt">L 6–10</span><span class="nm">№58</span><span class="cab">проточный</span><span class="ctl off">толстый</span></div>
+            <div class="mod m-term" style="grid-column: span 3"><span class="rt">UTP / PoE</span><span class="nm">клеммы ввода</span><span class="cab">→ внешний IT</span><span class="ctl off">не сила</span></div>
+            <div class="mod m-wb" style="grid-column: span 7"><span class="rt">BUSHUB · 1 шина</span><span class="nm">поле Modbus</span><span class="cab">MWAC · M1W2×2 · MSW · ONOKOM×2 · карнизы</span><span class="ctl bus">A/B+24В</span></div>
+            <div class="mod m-empty" style="grid-column: span 2"><span class="rt">запас</span><span class="nm">2M</span></div>
+          </div>
+
+          <div class="rail-title" style="margin-top:.45rem">R2 ввод + отъезд + УЗО1…5 <em>· C2 и EH04 слева от ESB · статус → DI · УЗМ после ВА50 на весь щит</em></div>
+          <div class="rail">
+            <div class="rail-label">R2<span>24M</span></div>
+            <div class="mod m-in" style="grid-column: span 2"><span class="rt">ВА50</span><span class="nm">ВА-103 2P C50</span><span class="cab">12294DEK · ввод</span><span class="ctl off">главный</span></div>
+            <div class="mod m-uzm" style="grid-column: span 3"><span class="rt">УЗМ-50Ц</span><span class="nm">сила L/N</span><span class="cab">вся квартира</span><span class="ctl off">развилка</span></div>
+            <div class="mod m-c2" style="grid-column: span 1"><span class="rt">C2</span><span class="nm">катушка</span><span class="cab">слева ESB</span><span class="ctl off">→MR6CU</span></div>
+            <div class="mod m-eh" style="grid-column: span 1"><span class="rt">EH04</span><span class="nm">9 мм · слева</span><span class="cab">статус → DI</span><span class="ctl rel">MR DI</span></div>
+            <div class="mod m-kont" style="grid-column: span 3"><span class="rt">ESB63</span><span class="nm">20N-06</span><span class="cab">быт L+N</span><span class="ctl off">без ручн. O/I</span></div>
+            <div class="mod m-uzo u1" style="grid-column: span 2"><span class="rt">УЗО1</span><span class="nm">кухня 63/30</span><span class="cab">→R3×8</span><span class="ctl off">после ESB</span></div>
+            <div class="mod m-uzo u2" style="grid-column: span 2"><span class="rt">УЗО2</span><span class="nm">санузлы</span><span class="cab">→R3×3</span><span class="ctl off">после ESB</span></div>
+            <div class="mod m-uzo u3" style="grid-column: span 2"><span class="rt">УЗО3</span><span class="nm">стирка</span><span class="cab">→R3×2</span><span class="ctl off">после ESB</span></div>
+            <div class="mod m-uzo u4" style="grid-column: span 2"><span class="rt">УЗО4</span><span class="nm">жилые</span><span class="cab">→R3×6</span><span class="ctl off">после ESB</span></div>
+            <div class="mod m-uzo u5" style="grid-column: span 2"><span class="rt">УЗО5</span><span class="nm">полы</span><span class="cab">→R3×2</span><span class="ctl off">после ESB</span></div>
+            <div class="mod m-empty" style="grid-column: span 4"><span class="rt">запас</span><span class="nm">4M</span></div>
+          </div>
+
+          <div class="rail-title" style="margin-top:.45rem">R3 сила по кустам УЗО <em>· сверху: кабель № · снизу: DIM/REL/прямо</em></div>
+          <div class="cluster-bar">
+            <div></div>
+            <span style="grid-column:span 8;background:#e67e22">УЗО1 кухня · 8M · гребенка</span>
+            <span style="grid-column:span 3;background:#2980b9">УЗО2 · 3M</span>
+            <span style="grid-column:span 2;background:#27ae60">УЗО3</span>
+            <span style="grid-column:span 6;background:#e74c3c">УЗО4 жилые · 6M · гребенка</span>
+            <span style="grid-column:span 2;background:#c0392b">УЗО5</span>
+            <span style="grid-column:span 3;background:#95a5a6">запас 3M</span>
+          </div>
+          <div class="rail">
+            <div class="rail-label">R3<span>24M</span></div>
+            <div class="mod u1 m-b32" style="grid-column: span 1"><span class="rt">B32</span><span class="nm">плита</span><span class="cab">№7</span><span class="ctl off">прямо</span></div>
+            <div class="mod u1" style="grid-column: span 1"><span class="rt">B16</span><span class="nm">духовка</span><span class="cab">№8</span><span class="ctl off">прямо</span></div>
+            <div class="mod u1" style="grid-column: span 1"><span class="rt">B16</span><span class="nm">ПММ</span><span class="cab">№9</span><span class="ctl off">прямо</span></div>
+            <div class="mod u1" style="grid-column: span 1"><span class="rt">B16</span><span class="nm">роз.кух</span><span class="cab">J3:47·54·55</span><span class="ctl off">JXB</span></div>
+            <div class="mod u1" style="grid-column: span 1"><span class="rt">B10</span><span class="nm">измельч</span><span class="cab">№10</span><span class="ctl off">прямо</span></div>
+            <div class="mod u1" style="grid-column: span 1"><span class="rt">B10</span><span class="nm">кух.дим</span><span class="cab">50·51·52</span><span class="ctl dim">DIM1</span></div>
+            <div class="mod u1" style="grid-column: span 1"><span class="rt">B10</span><span class="nm">кух.реле</span><span class="cab">48·53·56</span><span class="ctl rel">MR2.1/2/3</span></div>
+            <div class="mod u1" style="grid-column: span 1"><span class="rt">B10</span><span class="nm">карниз.к</span><span class="cab">№100</span><span class="ctl off">прямо</span></div>
+            <div class="mod u2 m-b32" style="grid-column: span 1"><span class="rt">B32</span><span class="nm">проточ.</span><span class="cab">№58</span><span class="ctl off">прямо</span></div>
+            <div class="mod u2" style="grid-column: span 1"><span class="rt">B16</span><span class="nm">роз.сан</span><span class="cab">J4:63·70</span><span class="ctl off">JXB</span></div>
+            <div class="mod u2" style="grid-column: span 1"><span class="rt">B10</span><span class="nm">свет.сан</span><span class="cab">61·62·64·69·71·72</span><span class="ctl rel">MR3.1–6</span></div>
+            <div class="mod u3" style="grid-column: span 1"><span class="rt">B16</span><span class="nm">стиралка</span><span class="cab">№6</span><span class="ctl off">прямо</span></div>
+            <div class="mod u3" style="grid-column: span 1"><span class="rt">B16</span><span class="nm">сушилка</span><span class="cab">№5</span><span class="ctl rel">CU#1→КТ</span></div>
+            <div class="mod u4" style="grid-column: span 1"><span class="rt">B16</span><span class="nm">роз.жилые</span><span class="cab">J1+J5</span><span class="ctl off">JXB</span></div>
+            <div class="mod u4" style="grid-column: span 1"><span class="rt">B16</span><span class="nm">роз.лоджия</span><span class="cab">J2:19·20</span><span class="ctl off">JXB</span></div>
+            <div class="mod u4" style="grid-column: span 1"><span class="rt">B10</span><span class="nm">комн.дим</span><span class="cab">30·31·37</span><span class="ctl dim">DIM2</span></div>
+            <div class="mod u4" style="grid-column: span 1"><span class="rt">B10</span><span class="nm">бра+кор</span><span class="cab">68·29·32</span><span class="ctl dim">DIM3</span></div>
+            <div class="mod u4" style="grid-column: span 1"><span class="rt">B10</span><span class="nm">карниз.ж</span><span class="cab">34·38</span><span class="ctl off">прямо</span></div>
+            <div class="mod u4" style="grid-column: span 1"><span class="rt">B10</span><span class="nm">кладовая</span><span class="cab">27·28</span><span class="ctl rel">MR2.4/5</span></div>
+            <div class="mod u5" style="grid-column: span 1"><span class="rt">B16</span><span class="nm">ТП К+Т</span><span class="cab">1·3</span><span class="ctl rel">MR1.C1</span></div>
+            <div class="mod u5" style="grid-column: span 1"><span class="rt">B16</span><span class="nm">ТП В+Кух</span><span class="cab">4·15</span><span class="ctl rel">MR1.C2</span></div>
+            <div class="mod m-empty" style="grid-column: span 3"><span class="rt">запас</span><span class="nm">3M</span></div>
+          </div>
+
+          <div class="rail-title" style="margin-top:.45rem">R4 неотключаемые + питание WB <em>· мимо ESB</em></div>
+          <div class="cluster-bar">
+            <div></div>
+            <span style="grid-column:span 6;background:#8e44ad">УЗО6 IT · всегда</span>
+            <span style="grid-column:span 3;background:#148f77">УЗО7 авт. · всегда</span>
+            <span style="grid-column:span 12;background:#9b59b6">24В · UPS · WB7</span>
+            <span style="grid-column:span 3;background:#6c3483">MR6C#1 · C1/C2 только УЗО5 ТП</span>
+          </div>
+          <div class="rail">
+            <div class="rail-label">R4<span>24M</span></div>
+            <div class="mod m-uzo u6" style="grid-column: span 2"><span class="rt">УЗО6</span><span class="nm">IT 63/30</span><span class="cab">мимо ESB</span><span class="ctl alw">ALW</span></div>
+            <div class="mod u6" style="grid-column: span 1"><span class="rt">B10</span><span class="nm">холод.</span><span class="cab">№11</span><span class="ctl alw">ALW</span></div>
+            <div class="mod u6" style="grid-column: span 1"><span class="rt">B16</span><span class="nm">кондей</span><span class="cab">№18</span><span class="ctl alw">ALW</span></div>
+            <div class="mod u6" style="grid-column: span 1"><span class="rt">B16</span><span class="nm">люк</span><span class="cab">№101</span><span class="ctl alw">ALW</span></div>
+            <div class="mod u6" style="grid-column: span 1"><span class="rt">B16</span><span class="nm">сервер+IT</span><span class="cab">J6:26·105</span><span class="ctl alw">JXB</span></div>
+            <div class="mod m-uzo u7" style="grid-column: span 2"><span class="rt">УЗО7</span><span class="nm">автомат.</span><span class="cab">мимо ESB</span><span class="ctl alw">ALW</span></div>
+            <div class="mod u7 m-d" style="grid-column: span 1"><span class="rt">D10</span><span class="nm">→WB</span><span class="cab">щит</span><span class="ctl alw">ALW</span></div>
+            <div class="mod m-psu" style="grid-column: span 4"><span class="rt">MORNSUN 24В</span><span class="nm">с D10</span><span class="cab">4M</span><span class="ctl off">шина+</span></div>
+            <div class="mod m-wb" style="grid-column: span 2"><span class="rt">UPS v3</span><span class="nm">2M DC · Modbus</span><span class="cab">Vin←MORNSUN · Vout→WB7</span><span class="ctl bus">RS-485</span></div>
+            <div class="mod m-wb" style="grid-column: span 6"><span class="rt">Wiren Board 7</span><span class="nm">контроллер 6M</span><span class="cab">Modbus master</span><span class="ctl bus">RS-485</span></div>
+            <div class="mod m-mr" style="grid-column: span 3"><span class="rt">MR6C #1</span><span class="nm">пит.24В UPS · 4/6</span><span class="cab">C1←ТП К+Т:1·3 · C2←ТП В+Кух:4·15 · ch3+ch6 FREE · N пусто</span><span class="ctl rel">REL</span></div>
+          </div>
+
+          <div class="rail-title" style="margin-top:.45rem">R5 реле · диммеры · WB-LED→D6→ARV <em>· MDM#1 слева (N УЗО1) · MDM#2+#3 справа (N УЗО4 перемычка) · MR 24В без N · CU#1 на полке · MR6C#1 на R4</em></div>
+          <div class="rail">
+            <div class="rail-label">R5<span>24M</span></div>
+            <div class="mod m-mr" style="grid-column: span 3"><span class="rt">MR6C #2</span><span class="nm">пит.24В UPS · 5/6</span><span class="cab">C1 УЗО1:48·53·56 · C2 УЗО4:27·28 · FREE ch6</span><span class="ctl rel">REL</span></div>
+            <div class="mod m-mr" style="grid-column: span 3"><span class="rt">MR6C #3</span><span class="nm">пит.24В UPS · 6/6</span><span class="cab">L УЗО2 сан 61·62·64·69·71·72</span><span class="ctl rel">REL+DI</span></div>
+            <div class="mod m-mr" style="grid-column: span 2"><span class="rt">MR6CU#2</span><span class="nm">пит.24В · 1/6</span><span class="cab">катушка ESB · не сила L</span><span class="ctl rel">отъезд</span></div>
+            <div class="mod m-mdm" style="grid-column: span 3"><span class="rt">MDM3 #1</span><span class="nm">L←B10 кух.дим</span><span class="cab">УЗО1 · 50·51·52 · свой N</span><span class="ctl dim">DIM1</span></div>
+            <div class="mod m-mdm" style="grid-column: span 3"><span class="rt">MDM3 #2</span><span class="nm">L←B10 комн.дим</span><span class="cab">УЗО4 · 30·31·37 · N↔#3</span><span class="ctl dim">DIM2</span></div>
+            <div class="mod m-mdm" style="grid-column: span 3"><span class="rt">MDM3 #3</span><span class="nm">L←B10 бра+кор</span><span class="cab">УЗО4 · 68·29·32 · N↔#2 · КУПИТЬ</span><span class="ctl dim">DIM3</span></div>
+            <div class="mod m-wb" style="grid-column: span 2"><span class="rt">WB-LED</span><span class="nm">пит.УЗО7 · 24В</span><span class="cab">D6/ARV · →№35</span><span class="ctl dim">DIM</span></div>
+            <div class="mod u7 m-d" style="grid-column: span 1"><span class="rt">D6</span><span class="nm">→ARV</span><span class="cab">230В</span><span class="ctl alw">LED</span></div>
+            <div class="mod m-psu" style="grid-column: span 4"><span class="rt">ARV-DR100-24</span><span class="nm">70мм · 4M</span><span class="cab">конец · 24В→LED</span><span class="ctl alw">LED</span></div>
+          </div>
+
+          <div class="rail-title" style="margin-top:.45rem">R6↓ DIN · фазы L блоками <em>· техника · J1 жилые 10pin · J2 лоджия · N/PE на ZK13 ▼</em></div>
+          <div class="din-note">Лицо DIN 24M · маркер = № кабеля · порядок по блокам JXB · нули/земля на держатели ▼</div>
+          <div class="rail">
+            <div class="rail-label">R6↓<span>24M DIN</span></div>
+            <div class="mod m-term" style="grid-column: span 12"><span class="rt">L DIN техника</span><span class="nm">1·3·4·15 · 5–11·18 +BU</span><span class="cab">№7 → L 6–10 · лок.N BU у 5·6·11·18 · <a href="shit_ABB_AT62_R6_klemmy_rasstanovka.html" style="color:inherit">расстановка</a></span><span class="ctl off">купить GY+BU</span></div>
+            <div class="mod m-term" style="grid-column: span 12"><span class="rt">L DIN розетки</span><span class="nm">J1 10pin · J2 2pin</span><span class="cab">J1:2·12–14·16·17·21–24 · J2:19·20 · JXB-ST-2.5 · N/PE → ZK↓</span><span class="ctl off">JXB</span></div>
+          </div>
+
+          <div class="rail-title" style="margin-top:.35rem">▼ Под рядами · держатели ZK13 (N/PE) <em>· это НЕ DIN-рейка R6 — шинки снизу корпуса</em></div>
+          <div class="holder-row below">
+            <div class="holder-label">ZK13↓<span>под R6</span></div>
+            <div class="holder-slot">
+              <div class="cap">↓A · низ-лево · 213/214 мм · N по УЗО · кабель N обрезан под лево</div>
+              <div class="zk-chip n4"><div class="t">ZK144B N УЗО4↓</div><div class="a">1SPE007715F9705</div><div class="u">12 каб · ≈15/18 слотов</div></div>
+              <div class="zk-chip n1"><div class="t">ZK82B N УЗО1↓</div><div class="a">1SPE007715F9703</div><div class="u">№7–10 · ≈7/10 · есть (вместо 144)</div></div>
+              <div class="zk-chip n5"><div class="t">ZK82B N УЗО5</div><div class="a">1SPE007715F9703</div><div class="u">ТП 1·3·4·15 · 5/10</div></div>
+            </div>
+            <div class="holder-slot">
+              <div class="cap">↓B · низ-право · 213/214 мм · PE</div>
+              <div class="zk-chip pe"><div class="t">ZK206G #1 PE↓</div><div class="a">1SPE007715F9717</div><div class="u">слоты 1–20 · №1–20</div></div>
+              <div class="zk-chip pe"><div class="t">ZK175G PE добор</div><div class="a">1SPE007715F9716</div><div class="u">4↓ №21–24 · +13↑</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="note">
+        <strong>Читать модуль:</strong> номинал → имя → № кабелей → тип (DIM / REL / ALW / прямо). BUS только у модуля BUSHUB, не у силовых автоматов.
+        <strong>Гребенки R3:</strong> УЗО1(8)·УЗО2(3)·УЗО3(2)·УЗО4(6)·УЗО5(2).
+        <strong>N/PE:</strong> полосы ▲ над R1 и ▼ под R6 — держатели ZK13, <em>не</em> модули на DIN.
+        <strong>R1 DIN:</strong> только L + UTP + BUSHUB · UTP → внешний IT · BUSHUB = поле Modbus.
+        <strong>R6 DIN:</strong> техника · J1 (10pin) · J2 (2pin). Маркер = № кабеля.
+        <strong>MDM:</strong> 1× B10 на вход L модуля. <b>#1</b> кух.дим→50·51·52 · <b>#2</b> комн.дим→30·31·37 · <b>#3</b> бра+кор→68·29·32. Карнизы 34·38 — отдельно (карниз.ж).
+        <strong>WB сила:</strong> D10→MORNSUN→UPS→WB7.
+        <strong>MR:</strong> питание модуля <strong>24В UPS</strong> (+V/GND), средний N MR6C <strong>не</strong> сажать. Коммутируемая L — с автомата своего УЗО.
+        <strong>MDM:</strong> 24В+RS с UPS/WB · L/N 230В — своего УЗО. <strong>MDM#1</strong> слева (N УЗО1). <strong>MDM#2+#3</strong> справа рядом: перемычка N (УЗО4) + 1× ПУГВ с ZK N УЗО4; не мостить с #1.
+        <strong>R5 лента:</strong> DIN MDM#1·#2·#3 → WB-LED→D6→ARV · 230В D6→ARV · 24В ARV→WB-LED→№35.
+      </p>
+    </section>
+
+    <section id="zk-map">
+      <h2>ABB шинки N / PE · на держателях ZK13 (над / под рядами)</h2>
+      <p class="note" style="margin-top:0">
+        <strong>Важно:</strong> блоки ZK <em>не стоят на DIN-рейках R1–R6</em>.
+        Они на держателях <strong>ZK13</strong> в углах корпуса — <strong>сверху</strong> (над R1) и <strong>снизу</strong> (под R6).
+        На лице DIN: только автоматы / УЗО / WB и <strong>фазные L</strong>.
+        <strong>Зелёный = PE</strong>, <strong>цвет УЗО = N</strong>. Фабричные N/PE AT62 снять.
+      </p>
+
+      <div class="zk-map">
+        <div class="zk-zone" style="grid-column:1;grid-row:1">
+          <div class="zh">↑A · над R1 слева <small>213 / 214 мм</small><span class="fit">ВЛЕЗЕТ</span></div>
+          <div class="zk-block zk-n u4 zk-buy">
+            <div class="bn">ZK144B · N УЗО4↑</div>
+            <div class="ba">1SPE007715F9705</div>
+            <div class="bu">12 жил сверху · жилые</div>
+            <div class="bw">82 мм · <b>КУПИТЬ #1</b></div>
+          </div>
+          <div class="zk-block zk-n u1 zk-buy">
+            <div class="bn">ZK144B · N УЗО1↑</div>
+            <div class="ba">1SPE007715F9705</div>
+            <div class="bu">кухня верх 47·48·50–56·100 · ↔↓</div>
+            <div class="bw">82 мм · <b>КУПИТЬ #2</b></div>
+          </div>
+          <div class="zk-block zk-n u6">
+            <div class="bn">ZK82B · N УЗО6 ↓↑</div>
+            <div class="ba">1SPE007715F9703</div>
+            <div class="bu">5 жил (11·18↓ + 101·26·105↑)</div>
+            <div class="bw">49 мм · есть · один блок на всё УЗО6</div>
+          </div>
+        </div>
+
+        <div class="zk-center">
+          <strong>AT62 · ZK не на DIN</strong>
+          <div>Держатель <b>ZK13</b> ≈214 мм / угол · <b>над</b> рядами и <b>под</b> ними</div>
+          <div class="art">
+            PE ZK206G · 1SPE007715F9717 · 20×4+6×25<br>
+            PE ZK175G · 1SPE007715F9716 · 17×4+5×25<br>
+            N&nbsp; ZK144B · 1SPE007715F9705 · 14×4+4×25<br>
+            N&nbsp; ZK113B · 1SPE007715F9704 · 11×4+3×25<br>
+            N&nbsp; ZK82B&nbsp; · 1SPE007715F9703 · 8×4+2×25
+          </div>
+          <div>На DIN R1/R6 — только <b>L</b> (и WB/UTP сверху).<br>
+            N цветные = свой УЗО · PE зелёные = общие.<br>
+            ↑A слева = N УЗО4↑·1↑·6 · ↑B справа = PE + УЗО2 + УЗО7</div>
+        </div>
+
+        <div class="zk-zone" style="grid-column:3;grid-row:1">
+          <div class="zh">↑B · над R1 справа <small>210 / 214 мм</small><span class="fit">ВЛЕЗЕТ</span></div>
+          <div class="zk-block zk-pe">
+            <div class="bn">ZK206G #2 · PE↑</div>
+            <div class="ba">1SPE007715F9717</div>
+            <div class="bu">20×4 мм² + 6×25 · PE кабели сверху</div>
+            <div class="bw">115 мм · есть ×1 из 2</div>
+          </div>
+          <div class="zk-block zk-n u2">
+            <div class="bn">ZK113B · N УЗО2</div>
+            <div class="ba">1SPE007715F9704</div>
+            <div class="bu">11×4 + 3×25 · сан + №58 N→25</div>
+            <div class="bw">65 мм · есть</div>
+          </div>
+          <div class="zk-block zk-extra">
+            <div class="bn">PE DIN (1581) + N УЗО7</div>
+            <div class="ba">DKC VPR PE ×7 · есть</div>
+            <div class="bu">хвост PE↑ (−2) закрыт · №35 N</div>
+            <div class="bw">~30 мм · не покупать PE</div>
+          </div>
+        </div>
+
+        <div class="zk-zone" style="grid-column:1;grid-row:2">
+          <div class="zh">↓A · под R6 слева · N <small>180 / 214 мм</small><span class="fit">ВЛЕЗЕТ</span></div>
+          <div class="zk-block zk-n u4">
+            <div class="bn">ZK144B · N УЗО4↓</div>
+            <div class="ba">1SPE007715F9705</div>
+            <div class="bu">12 каб · ≈15/18 (ПУГВ+↔↑+MDM)</div>
+            <div class="bw">82 мм · <b>есть ×1</b></div>
+          </div>
+          <div class="zk-block zk-n u1">
+            <div class="bn">ZK82B · N УЗО1↓</div>
+            <div class="ba">1SPE007715F9703</div>
+            <div class="bu">№7–10 · ≈7/10 · плита+ПУГВ→25 · ↔↑ в 4</div>
+            <div class="bw">49 мм · <b>есть</b> (вместо 144/113)</div>
+          </div>
+          <div class="zk-block zk-n u5">
+            <div class="bn">ZK82B · N УЗО5</div>
+            <div class="ba">1SPE007715F9703</div>
+            <div class="bu">ТП №1·3·4·15 · 5/10 (+ПУГВ)</div>
+            <div class="bw">49 мм · есть</div>
+          </div>
+        </div>
+
+        <div class="zk-zone" style="grid-column:3;grid-row:2">
+          <div class="zh">↓B · под R6 справа · PE <small>213 / 214 мм</small><span class="fit">ВЛЕЗЕТ</span></div>
+          <div class="zk-block zk-pe">
+            <div class="bn">ZK206G #1 · PE↓</div>
+            <div class="ba">1SPE007715F9717</div>
+            <div class="bu">слоты 1–20 → кабели №1–20</div>
+            <div class="bw">115 мм · есть</div>
+          </div>
+          <div class="zk-block zk-pe">
+            <div class="bn">ZK175G · PE добор ↓↑</div>
+            <div class="ba">1SPE007715F9716</div>
+            <div class="bu">4 слота↓ → №21–24 · 13 слотов↑</div>
+            <div class="bw">98 мм · есть · общий с верхом</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="zk-legend-row">
+        <span><b>▲ над R1 / ▼ под R6</b> — держатели ZK13</span>
+        <span><b>Зелёный</b> — PE</span>
+        <span><b>Цвет УЗО</b> — N</span>
+        <span><b>Пунктир</b> — купить ZK144B ×2 (УЗО4↑ · УЗО1↑) · УЗО1↓ = ZK82B есть</span>
+        <span><b>DIN R1/R6</b> — только L (не N/PE)</span>
+      </div>
+
+      <table class="inv" style="margin-top:.85rem">
+        <thead>
+          <tr>
+            <th>Модель</th>
+            <th>Артикул ABB</th>
+            <th>Слоты</th>
+            <th>Ширина</th>
+            <th>Роль в щите</th>
+            <th>Статус</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>ZK206G</strong> PE</td>
+            <td><code>1SPE007715F9717</code></td>
+            <td>20×4 + 6×25</td>
+            <td>115 мм</td>
+            <td>#1 PE↓ · #2 PE↑</td>
+            <td><span class="pill-have">есть ×2</span></td>
+          </tr>
+          <tr>
+            <td><strong>ZK175G</strong> PE</td>
+            <td><code>1SPE007715F9716</code></td>
+            <td>17×4 + 5×25</td>
+            <td>98 мм</td>
+            <td>4↓ (№21–24) + 13↑</td>
+            <td><span class="pill-have">есть ×1</span></td>
+          </tr>
+          <tr>
+            <td><strong>ZK144B</strong> N</td>
+            <td><code>1SPE007715F9705</code></td>
+            <td>14×4 + 4×25</td>
+            <td>82 мм</td>
+            <td>УЗО4↓ (есть) · УЗО4↑ · УЗО1↑</td>
+            <td><span class="pill-have">есть ×1</span> <span class="pill-no">+купить ×2</span></td>
+          </tr>
+          <tr>
+            <td><strong>ZK113B</strong> N</td>
+            <td><code>1SPE007715F9704</code></td>
+            <td>11×4 + 3×25</td>
+            <td>65 мм</td>
+            <td>УЗО2↑ (+№58) · 2-й в запас</td>
+            <td><span class="pill-have">есть ×2</span></td>
+          </tr>
+          <tr>
+            <td><strong>ZK82B</strong> N</td>
+            <td><code>1SPE007715F9703</code></td>
+            <td>8×4 + 2×25</td>
+            <td>49 мм</td>
+            <td>УЗО5 · УЗО6 · УЗО1↓ · запас/УЗО7 <em>(УЗО3 без ZK)</em></td>
+            <td><span class="pill-have">есть ×4</span></td>
+          </tr>
+          <tr>
+            <td>PE DIN добор</td>
+            <td>DKC VPR PE 2.5</td>
+            <td>×7</td>
+            <td>—</td>
+            <td>хвост PE↑ (59−57=−2) · счёт 1581</td>
+            <td><span class="pill-have">есть</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="klemme-shiny">
+      <h2>Клеммы и шинки · отдельно верх / низ</h2>
+      <p class="note" style="margin-top:0">
+        <strong>Правило:</strong> PE — общая. <strong>N — только внутри одного УЗО</strong> (не мостить N разных УЗО).
+        Кабель 3×2.5 → зажимы 4&nbsp;мм². Плита / №58 → зажимы 25&nbsp;мм² (или отдельные силовые L).
+        Цвета как у УЗО на лице щита.
+      </p>
+
+      <div class="flow-mini">
+        <span class="b">кабель</span><span class="arrow">→</span>
+        <span class="b">клемма L / N-группа / PE</span><span class="arrow">→</span>
+        <span class="b">ПУГВ</span><span class="arrow">→</span>
+        <span class="b">автомат (L) · N-блок УЗО · PE-блок</span>
+      </div>
+
+      <div class="term-scheme">
+        <!-- НИЗ -->
+        <div class="term-panel">
+          <h3>↓ Низ R6 · №1–24</h3>
+          <p class="sub">24 силовых · почти все 3×2.5 · исключение: плита №7 (толстый)</p>
+
+          <div class="bus n4">
+            <div class="ttl">↓A слева · N УЗО4 жилые · ZK144B <span class="pill-have">есть ×1</span></div>
+            <div class="ba">1SPE007715F9705 · 14×4+4×25</div>
+            <div class="meta">синий · как раз на 12 кабелей · держатель слева (кабель N обрезан под лево)</div>
+            <div class="use">№2,12–14,16,17,19–24 → 4 мм² · вход N с УЗО4 → 25 мм² · + N MDM#2↔#3 (перемычка)</div>
+          </div>
+
+          <div class="bus n1">
+            <div class="ttl">↓A слева · N УЗО1 кухня низ · ZK82B <span class="pill-have">есть</span></div>
+            <div class="ba">1SPE007715F9703 · 8×4+2×25 · ≈7/10 хватает</div>
+            <div class="meta">4 кабеля №7–10 · +ПУГВ · ↔↑ · MDM#1 · вместо 144/113</div>
+            <div class="use"><strong>2×25:</strong> №7 плита + ПУГВ с УЗО1 · <strong>4 мм²:</strong> 8·9·10 · MDM#1 · ↔↑ (4 мм²)</div>
+          </div>
+
+          <div class="bus n5">
+            <div class="ttl">↓A слева · N УЗО5 полы · ZK82B <span class="pill-have">есть</span></div>
+            <div class="ba">1SPE007715F9703 · 8×4+2×25</div>
+            <div class="meta">ТП×4</div>
+            <div class="use">№1,3,4,15 · вход N с УЗО5 → 25 мм²</div>
+          </div>
+
+          <div class="bus pe">
+            <div class="ttl">↓B справа · PE низ · ZK206G #1 + 4 слота ZK175G <span class="pill-have">есть</span></div>
+            <div class="ba">ZK206G 1SPE007715F9717 · ZK175G 1SPE007715F9716</div>
+            <div class="meta">24× PE · один ZK206G(20) <strong>не вмещает</strong> 24</div>
+            <div class="use">20 на ZK206G #1 + 4 с ZK175G · питающая PE → 25 мм²</div>
+          </div>
+
+          <div class="bus n3">
+            <div class="ttl">N УЗО3 стирка · без ZK <span class="pill-have">на R6 BU</span></div>
+            <div class="ba">не ZK82B — всего 2 нуля</div>
+            <div class="meta">№5·6</div>
+            <div class="use">N с УЗО3 → ПУГВ → синие VPR-2.5-BU у L №5 и №6 (перемычка между BU)</div>
+          </div>
+
+          <div class="bus n6">
+            <div class="ttl">N УЗО6 IT · ZK82B <span class="pill-have">есть</span></div>
+            <div class="ba">1SPE007715F9703 · 8×4+2×25</div>
+            <div class="meta">общий ↓↑ на всё УЗО6</div>
+            <div class="use">№11 холод · №18 кондей · №101 люк · №26·105 IT · вход N с УЗО6 → 25 мм²</div>
+          </div>
+
+          <div class="bus l">
+            <div class="ttl">L фазы · отдельные клеммы <span class="pill-no">купить</span></div>
+            <div class="meta">серые / фазные 2.5 (или dual L) · не из вашего списка ZK N/PE</div>
+            <div class="use">≈24 шт на низ · <strong>№7 плита L → клемма 6–10 мм²</strong> · далее ПУГВ на автомат</div>
+          </div>
+
+          <div class="bus">
+            <div class="ttl">Гребенки L на R3 (низ питает через ПУГВ вверх)</div>
+            <div class="use">Короткие гребенки по кустам: УЗО1×8 · УЗО2×3 · УЗО3×2 · УЗО4×6 · УЗО5×2 на R3;
+              УЗО6×4 на R4. D10 — короткая/ПУГВ у УЗО7 на R4. <strong>D6 на R5</strong> — только ПУГВ с УЗО7, не гребёнка через ряды.
+              Питание гребёнки — с выхода УЗО вниз ПУГВ 6–10 мм² на вход гребёнки.</div>
+          </div>
+        </div>
+
+        <!-- ВЕРХ -->
+        <div class="term-panel">
+          <h3>↑ Верх R1 · №25+</h3>
+          <p class="sub">Сила сверху по УЗО + UTP к внешнему коммутатору + BUSHUB (не N/PE сила)</p>
+
+          <div class="bus pe">
+            <div class="ttl">PE верх · ZK206G #2 + 13× ZK175G + VPR PE <span class="pill-have">−2 закрыт</span></div>
+            <div class="ba">ZK206G 1SPE007715F9717 · ZK175G 1SPE007715F9716 · VPR PE ×7 (1581)</div>
+            <div class="meta">35× PE · слотов ZK на верх 33 → добор VPR PE из счёта (не покупать)</div>
+            <div class="use">№58 PE → 25 мм² · связь с низом ПУГВ 10–16 · см. лист Докупить</div>
+          </div>
+
+          <div class="bus n2">
+            <div class="ttl">N УЗО2 сан · ZK113B <span class="pill-have">есть</span></div>
+            <div class="ba">1SPE007715F9704 · 11×4+3×25</div>
+            <div class="meta">9 кабелей + запас · №58 N → 25 мм²</div>
+            <div class="use">9 жил УЗО2: №58 + свет 61·62·64·69·71·72 + роз. 63·70 · №58 N→25 мм² · вход N с УЗО2 → 25 мм²</div>
+          </div>
+
+          <div class="bus n1 buy">
+            <div class="ttl">N УЗО1 кухня верх · ZK144B ↑ <span class="pill-no">докупить ×1</span></div>
+            <div class="ba">1SPE007715F9705</div>
+            <div class="meta">10 кабелей сверху: 47,48,50–56,100 · низ = ZK82B есть</div>
+            <div class="use"><strong>ZK82B↓</strong> №7–10 (есть) · <strong>ZK144B↑</strong> кухня (купить) · перемычка ↓↔↑</div>
+          </div>
+
+          <div class="bus n4 buy">
+            <div class="ttl">N УЗО4 жилые верх · ZK144B <span class="pill-no">докупить</span></div>
+            <div class="ba">1SPE007715F9705</div>
+            <div class="meta">12 кабелей: 27–32,34,37,38,41,43,68</div>
+            <div class="use"><strong>Докупить ZK144B ×1</strong> на верх УЗО4 (низ уже занял ваш единственный)</div>
+          </div>
+
+          <div class="bus n6">
+            <div class="ttl">N УЗО6 верх · ZK82B (оставшийся) <span class="pill-have">есть</span></div>
+            <div class="meta">№101 люк · №26·105 IT (+ запас)</div>
+            <div class="use">Можно тот же N УЗО6, что низ (11,18): низ2+верх3=5 → один ZK82B на всё УЗО6 удобнее</div>
+          </div>
+
+          <div class="bus n7 buy">
+            <div class="ttl">N УЗО7 · ARV + WB <span class="pill-have">отводы</span></div>
+            <div class="meta">N ARV/MORNSUN/D10 с УЗО7 · №35 в поле = 24В (не N 230В)</div>
+            <div class="use">Не сажать на N бытовых УЗО</div>
+          </div>
+
+          <div class="bus l buy">
+            <div class="ttl">L фазы верх <span class="pill-no">купить</span></div>
+            <div class="meta">≈35 силовых L 2.5 + №58 проточный L в 6–10 мм²</div>
+            <div class="use">Серые клеммы / dual · ПУГВ вниз на автоматы R3/R4</div>
+          </div>
+
+          <div class="bus soft">
+            <div class="ttl">UTP / PoE · только клеммы <span class="pill-yes">не ZK N/PE</span></div>
+            <div class="meta">выключатели · планшеты · камеры · Eth</div>
+            <div class="use">→ <strong>внешний коммутатор IT</strong> (не в AT62) · не путать с BUSHUB</div>
+          </div>
+
+          <div class="bus soft">
+            <div class="ttl">BUSHUB · одна шина Modbus</div>
+            <div class="meta">MWAC · M1W2×2 · MSW · ONOKOM×2 · карнизы 39/49/U-CR</div>
+            <div class="use">Все лучи A/B+24В <strong>в порты BUSHUB</strong> · не N/PE силовые клеммы</div>
+          </div>
+        </div>
+      </div>
+
+      <h3 style="margin-top:1rem">Ваши ZK · куда лучше</h3>
+      <table class="inv">
+        <thead>
+          <tr>
+            <th>Модель</th>
+            <th>Артикул</th>
+            <th>Кол-во</th>
+            <th>Лучшее назначение</th>
+            <th>Статус</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ZK206G PE 20×4+6×25</td>
+            <td><code>1SPE007715F9717</code></td>
+            <td>2</td>
+            <td>#1 низ 20 + 4 с ZK175G; #2 верх 20</td>
+            <td><span class="pill-yes">хватит</span></td>
+          </tr>
+          <tr>
+            <td>ZK175G PE 17×4+5×25</td>
+            <td><code>1SPE007715F9716</code></td>
+            <td>1</td>
+            <td>4 слота↓ + 13↑; хвост −2 закрыт VPR PE ×7 из счёта 1581</td>
+            <td><span class="pill-yes">OK + DIN PE</span></td>
+          </tr>
+          <tr>
+            <td>ZK144B N 14×4+4×25</td>
+            <td><code>1SPE007715F9705</code></td>
+            <td>1</td>
+            <td>N УЗО4 <strong>низ</strong> (12 кабелей)</td>
+            <td><span class="pill-yes">низ OK</span></td>
+          </tr>
+          <tr>
+            <td>ZK113B N 11×4+3×25</td>
+            <td><code>1SPE007715F9704</code></td>
+            <td>2</td>
+            <td>1)× N УЗО2 верх (9 + №58) · 1)× запас / кросс</td>
+            <td><span class="pill-have">есть ×2</span></td>
+          </tr>
+          <tr>
+            <td>ZK82B N 8×4+2×25</td>
+            <td><code>1SPE007715F9703</code></td>
+            <td>4</td>
+            <td>УЗО5 · УЗО6 · УЗО1↓ №7–10 · 1× запас/УЗО7 · <em>УЗО3 без ZK</em></td>
+            <td><span class="pill-yes">хватит</span></td>
+          </tr>
+          <tr>
+            <td>Фазные L 2.5 · VPR-2.5-GY</td>
+            <td>DKC VPR-2.5-GY (не VPRTT)</td>
+            <td>≈14 есть</td>
+            <td>нужно 56 (R6×23 + R1×33) · купить GY×50 + BU×6 + D-VPR×20 + <b>JXB-ST-2.5-10pin уп.20</b></td>
+            <td><span class="pill-no">купить ×50</span></td>
+          </tr>
+          <tr>
+            <td>ZK144B N дополнительно</td>
+            <td><code>1SPE007715F9705</code></td>
+            <td>0</td>
+            <td>×2: УЗО4↑ · УЗО1↑ (УЗО1↓ = ZK82B есть)</td>
+            <td><span class="pill-no">докупить ×2</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="cols" style="margin-top:.75rem">
+        <div class="card">
+          <h3>Оптимальная сборка N (рекомендация)</h3>
+          <ul>
+            <li><strong>ZK144B #есть</strong> → УЗО4 низ</li>
+            <li><strong>ZK144B #купить</strong> → УЗО4 верх</li>
+            <li><strong>ZK82B #есть</strong> → УЗО1↓ (№7–10 · ≈7/10; 2×25 = плита+ПУГВ, ↔↑ в 4)</li>
+            <li><strong>ZK144B #купить</strong> → УЗО1↑ (кухня верх) · перемычка ↓↔↑</li>
+            <li><strong>ZK113B #есть</strong> → УЗО2 верх (+ №58 в 25)</li>
+            <li><strong>ZK82B ×2</strong> → УЗО5 · УЗО6</li>
+            <li><strong>УЗО3:</strong> без ZK — N с УЗО3 → синие BU №5·6 на R6</li>
+            <li><strong>ZK82B / клеммы</strong> → УЗО7 (N ARV/WB; №35=24В наружу)</li>
+            <li>Лишний ZK113B → запас / кросс</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Шинки / гребенки (сила)</h3>
+          <ul>
+            <li><strong>PE:</strong> с шины PE щита → 25 мм² на ZK PE · добор DIN из 1581</li>
+            <li><strong>N:</strong> выход N каждого УЗО → 25 мм² своего ZK (ПУГВ 6–10)</li>
+            <li><strong>L:</strong> короткие гребёнки DEKraft pin 1P по кустам R3 и УЗО6 на R4 — <em>купить</em> (в 1581 нет). D6 на R5 — ПУГВ с УЗО7, не общая гребёнка</li>
+            <li>Между N-блоками разных УЗО — <strong>никаких перемычек</strong></li>
+            <li><strong>НШВИ</strong> на все концы ПУГВ · лист «НШВИ ПУГВ»</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Не путать</h3>
+          <ul>
+            <li>UTP/PoE ≠ BUSHUB ≠ N/PE</li>
+            <li>Коммутатор — вне щита</li>
+            <li>BUSHUB — только Modbus A/B+24В</li>
+            <li>ZK синие = N, зелёные = PE, фазы — отдельно</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Одна шина Modbus · BUSHUB (поле)</h2>
+      <p class="note" style="margin-top:0">
+        Это <strong>не несколько шин</strong>: WB7 → BUSHUB → лучи. A/B+24В на клеммах R1 — разводка той же шины.
+        Ethernet/PoE к этому блоку не относится — уходит на внешний коммутатор.
+      </p>
+      <div class="flow">
+        <div class="box">WB7<small>RS-485</small></div><span class="arrow">→</span>
+        <div class="box">BUSHUB<small>R1 · все лучи сюда</small></div><span class="arrow">→</span>
+        <div class="box">MWAC · M1W2×2 · MSW · ONOKOM×2 · карнизы<small>A/B+24В в порты BUSHUB</small></div>
+      </div>
+      <div class="cols" style="margin-top:.75rem">
+        <div class="card">
+          <h3>На этой шине</h3>
+          <ul>
+            <li>MWAC ×1</li>
+            <li>M1W2 ×2</li>
+            <li>WB-MSW v.4 ×1 (климат)</li>
+            <li>ONOKOM ×2 (кондеи)</li>
+            <li>Упр. карнизов Modbus</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Не на BUSHUB</h3>
+          <ul>
+            <li>Сила карнизов №34/38 — <b>карниз.ж</b> · №100 — <b>карниз.к</b></li>
+            <li>Лента DIN: <strong>WB-LED → D6 → ARV</strong> · 230В D6→ARV · 24В ARV→WB-LED · <strong>№35 = 24В</strong></li>
+            <li>MR6C / MDM3 / MR6CU — DIN, свой RS-485 от WB7</li>
+            <li>UTP/PoE → внешний коммутатор IT</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Сила кондея</h3>
+          B16 · УЗО6 · мимо ESB<br>
+          Упр. — <strong>ONOKOM×2</strong> Modbus на BUSHUB
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Питание автоматики</h2>
+      <div class="flow">
+        <div class="box">D10<small>УЗО7</small></div><span class="arrow">→</span>
+        <div class="box">MORNSUN 24В</div><span class="arrow">→</span>
+        <div class="box">UPS 2M</div><span class="arrow">→</span>
+        <div class="box">WB7</div>
+      </div>
+      <div class="flow">
+        <div class="box">24В + RS-485</div><span class="arrow">→</span>
+        <div class="box">BUSHUB</div><span class="arrow">→</span>
+        <div class="box">MWAC · M1W2×2 · MSW · ONOKOM×2 · карнизы</div>
+      </div>
+      <div class="flow">
+        <div class="box">D10 / УЗО7</div><span class="arrow">→</span>
+        <div class="box">230В</div><span class="arrow">→</span>
+        <div class="box">MR6C ×3<small>в щите</small></div>
+      </div>
+      <div class="flow">
+        <div class="box">DIN R5<small>MDM#1·#2·#3→WB-LED→D6→ARV</small></div>
+      </div>
+      <div class="flow">
+        <div class="box">D6<small>УЗО7 · 230В</small></div><span class="arrow">→</span>
+        <div class="box">ARV-DR100-24<small>R5 · конец · 4M</small></div><span class="arrow">→</span>
+        <div class="box">24В<small>через 1M D6</small></div><span class="arrow">→</span>
+        <div class="box">WB-LED<small>R5 · после MDM</small></div><span class="arrow">→</span>
+        <div class="box">№35<small>24В+/0В</small></div><span class="arrow">→</span>
+        <div class="box">лента<small>карниз</small></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Цепочка: УЗО → автомат → кабели</h2>
+      <p class="note" style="margin-top:0">Полные таблицы (прямой и обратный порядок) — в <code>shit_tsepochki_vvod_uzo_avtomat.xlsx</code>. Здесь сводка.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>УЗО</th>
+            <th>Автомат</th>
+            <th>Кабели / нагрузки</th>
+            <th>Ввод</th>
+            <th>WB</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="g-k"><td>1 кухня</td><td>B32 плита</td><td>№7</td><td>снизу</td><td>через ESB</td></tr>
+          <tr class="g-k"><td>1 кухня</td><td>B16 духовка / ПММ / роз.кух</td><td>№8, №9, <b>J3:</b> №47·54·55</td><td>8–9↓ · J3↑</td><td>ESB · розетки JXB 3pin</td></tr>
+          <tr class="g-k"><td>1 кухня</td><td>B10 измельч / кух.дим / кух.реле / карниз.к</td><td>№10, №48, №50, №51, №52, №53, №56, №100</td><td>10↓ · остальное↑</td><td>ESB · №10 прямо · №50/51/52 <strong>DIM1.1/2/3</strong> · №48/53/56 <strong>MR2.1/2/3</strong> · №100 прямо; упр.№49→BUSHUB</td></tr>
+          <tr class="g-s"><td>2 санузлы</td><td>B32 проточный</td><td>№58</td><td>сверху</td><td>через ESB · прямо</td></tr>
+          <tr class="g-s"><td>2 санузлы</td><td>B16 роз.сан · B10 свет.сан</td><td><b>J4:</b> №63·70 / №61, №62, №64, №69, №71, №72</td><td>сверху</td><td>ESB · розетки JXB 2pin; свет <strong>MR3.1–6</strong></td></tr>
+          <tr class="g-w"><td>3 стирка</td><td>B16 стиралка / сушилка</td><td>№6 / №5</td><td>снизу</td><td>ESB · №6 прямо · №5 <strong>контактор←CU#1</strong></td></tr>
+          <tr class="g-z"><td>4 жилые</td><td>B16 роз.жилые / лоджия</td><td><b>J1:</b> 2·12–14·16·17·21–24 · <b>J5:</b> 41·43 / <b>J2:</b> 19·20</td><td>J1↓ · J5↑ · J2↓</td><td>ESB · JXB: J1=10pin · J5←с J1 · J2=2pin</td></tr>
+          <tr class="g-z"><td>4 жилые</td><td>B16 роз · B10 комн.дим / бра+кор / карниз.ж / кладовая</td><td>роз J1+J5+J2 · <b>DIM2:</b> 30·31·37 · <b>DIM3:</b> 68·29·32 · <b>прямо:</b> 34·38 · MR: 27·28</td><td>↓/↑</td><td>ESB · <strong>1 автомат = 1 MDM</strong> · карнизы отдельно от диммера</td></tr>
+          <tr class="g-p"><td>5 полы</td><td>B16 ТП К+Т / ТП В+Кух</td><td>№1, №3 / №4, №15</td><td>снизу</td><td>ESB · <strong>C1</strong> MR6C#1: №1·3 · <strong>C2</strong>: №4·15 · ch3+ch6 FREE; датчики→M1W2→BUSHUB</td></tr>
+          <tr class="g-i"><td>6 IT</td><td>B10 холод · B16 кондей · B16 люк · B16 сервер+IT</td><td>№11 · №18 · <strong>№101</strong> · <b>J6:</b> 26·105</td><td>11/18↓ · 101↑ · J6↑</td><td>мимо ESB · J6 JXB 2pin · люк отдельно</td></tr>
+          <tr class="g-a"><td>7 автомат.</td><td>D10 · D6 · C2 катушка</td><td>щит WB · DIN WB-LED→D6→ARV · <strong>№35=24В</strong> к ленте · катушка ESB</td><td>щит / №35↑ 24В</td><td>мимо ESB · всегда</td></tr>
+        </tbody>
+      </table>
+      <p class="note">Сверка: каждый силовой № из Excel есть в таблице выше; лицо DIN (R3/R4) = те же автоматы. <strong>MR1.C1/C2</strong> = ТП на MR6C#1 · <strong>DIM1.1</strong> = MDM3#1 канал 1. Полные цепочки — <code>shit_ABB_AT62_polnaya_tsepochka.html</code>.</p>
+    </section>
+
+    <section>
+      <h2>Обратный пример</h2>
+      <div class="cols">
+        <div class="card">
+          <h3>№7 Плита</h3>
+          снизу → R6 → <strong>B32</strong> → УЗО1 → <strong>ESB63</strong> → УЗМ → ВА50
+        </div>
+        <div class="card">
+          <h3>№30 Люстра</h3>
+          сверху → <strong>B10 комн.дим</strong> → MDM3#2 ch1 → УЗО4 → <strong>ESB63</strong> → УЗМ → ВА50
+        </div>
+        <div class="card">
+          <h3>Диммеры (9)</h3>
+          R5: <strong>MDM#1 · MDM#2 · MDM#3</strong><br>
+          #1 слева: кух.дим 50/51/52 · <strong>N УЗО1</strong><br>
+          #2+#3 справа: комн.дим / бра+кор · 30/31/37 · 68/29/32 · оба <strong>N УЗО4</strong> (перемычка N)<br>
+          <small>купить MDM#3 · N #2/#3 не мостить с #1</small>
+        </div>
+        <div class="card">
+          <h3>№18 Кондей</h3>
+          снизу → <strong>B16</strong> → УЗО6 → <strong>мимо ESB</strong> → УЗМ → ВА50 · упр. ONOKOM Modbus
+        </div>
+        <div class="card">
+          <h3>№27 Лента шкафа</h3>
+          сверху → <strong>B10 кладовая</strong> → MR6C#2 → №27 230В → <strong>БП 24В у шкафа</strong> → лента<br>
+          <small>не D6 · гаснет при отъезде с бытом</small>
+        </div>
+        <div class="card">
+          <h3>№35 Лента карниза</h3>
+          DIN: MDM → <strong>WB-LED</strong> → <strong>D6</strong> → <strong>ARV</strong>. Сила: УЗО7 → D6 → ARV 230В; ARV 24В → WB-LED → №35<br>
+          <small>шина не через ARV · №36 упр. опц.</small>
+        </div>
+        <div class="card">
+          <h3>Отъезд</h3>
+          WB размыкает катушку ESB → УЗО1…5 off · УЗО6/7 живут · EH04 слева → DI MR6C
+        </div>
+      </div>
+      <p class="note">
+        Полный обратный порядок по каждому кабелю — лист
+        «Кабель → автомат → УЗО → ввод» в Excel.
+      </p>
+    </section>
+
+    <section>
+      <h2>Мастер-выключатель (UTP Cat6) · документация</h2>
+      <p class="note" style="margin-top:0">
+        ID в Excel: <code>U-MST</code> · листы «Слаботочка не в цепях» и «Мастер-выключатель».
+        Подключение <strong>не в WB7 напрямую</strong> и <strong>не в катушку 230В</strong>.
+      </p>
+
+      <div class="flow">
+        <div class="box">Мастер-выкл. на стене<small>1 пара Cat6 · сухой контакт SELV</small></div>
+        <span class="arrow">→</span>
+        <div class="box">клеммы UTP на R1<small>сверху</small></div>
+        <span class="arrow">→</span>
+        <div class="box">DI WB-MR6C v3<small>свободный вход · не MR6CU</small></div>
+        <span class="arrow">→</span>
+        <div class="box">WB7<small>сценарий «Быт ON/OFF»</small></div>
+        <span class="arrow">→</span>
+        <div class="box">MR6CU #2<small>реле NO</small></div>
+        <span class="arrow">→</span>
+        <div class="box">катушка ESB A1</div>
+      </div>
+
+      <table style="margin-top:.75rem">
+        <thead>
+          <tr>
+            <th>Элемент</th>
+            <th>Роль</th>
+            <th>Не делать</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>UTP Cat6</td>
+            <td>Только слаботочка: 1 пара = сухой контакт мастер-выкл.</td>
+            <td>Не вести 230В катушки ESB по Cat6</td>
+          </tr>
+          <tr>
+            <td>WB-MR6C v3</td>
+            <td>Дискретный вход DI (MR6C×3 с входами)</td>
+            <td>Не путать с MR6CU — у CU нет DI</td>
+          </tr>
+          <tr>
+            <td>Wiren Board 7</td>
+            <td>Логика сценария по Modbus от MR6C</td>
+            <td>Не сажать стенной выкл. прямо на GPIO WB7</td>
+          </tr>
+          <tr>
+            <td>MR6CU #2</td>
+            <td>Силовое реле катушки ESB</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>EH04-11N слева на ESB</td>
+            <td>Клип без винтов, слева. NO → DI MR6C: факт «быт под напряжением»</td>
+            <td>Не справа. Не путать со статусом мастер-выкл.</td>
+          </tr>
+          <tr>
+            <td>Hard-off в щите</td>
+            <td>ВА50 или УЗМ-50Ц. C2 гасит только катушку ESB</td>
+            <td>У ESB63 нет рычага O/AUTO/I</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="cols" style="margin-top:.75rem">
+        <div class="card">
+          <h3>Логика сценария</h3>
+          <ul>
+            <li>Мастер = ON и WB «дома» → MR6CU#2 замкнут → быт питается</li>
+            <li>Мастер = OFF или «уехал» → реле разомкнуто → УЗО1…5 off</li>
+            <li>УЗО6/7 (холод, кондей, WB) живут при отъезде; авария УЗМ гасит и их</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Запас пар Cat6</h3>
+          <ul>
+            <li>Пара 1 — мастер-выкл. (обязательно)</li>
+            <li>Пара 2 — опц. LED «быт on»</li>
+            <li>Остальные — резерв</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Неразмеченные кабели · к щиту</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Кабель</th>
+            <th>Куда</th>
+            <th>Примечание</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>U-MST</td><td>Мастер-выкл. Cat6</td><td>DI MR6C v3 → WB7 → MR6CU#2 → ESB</td><td>SELV · раздел выше</td></tr>
+          <tr><td>U-PE</td><td>Заземление туалет</td><td>шина PE / NLPE</td><td>общее заземление щита</td></tr>
+          <tr><td>U-TP1</td><td>Датчик ТП кухня+ванна</td><td>→ M1W2 → BUSHUB</td><td>1-Wire на M1W2; M1W2 на шине</td></tr>
+          <tr><td>U-TP2</td><td>Датчик ТП туалет+коридор</td><td>→ M1W2 → BUSHUB</td><td>вторая M1W2 на шине</td></tr>
+          <tr><td>U-AC1</td><td>Упр. кондей кухня</td><td>BUSHUB · ONOKOM в блоке</td><td>шлюз ONOKOM → A/B+24В · onokom.ru</td></tr>
+          <tr><td>U-AC2</td><td>Упр. кондей комната</td><td>BUSHUB · ONOKOM в блоке</td><td>шлюз ONOKOM → A/B+24В · onokom.ru</td></tr>
+          <tr><td>U-CR</td><td>Упр. карниз комната</td><td>BUSHUB</td><td>как №39/49 · сила №34</td></tr>
+          <tr><td>U-DOOR</td><td>Открытие двери</td><td>DI MR6C</td><td>геркон / замок</td></tr>
+          <tr><td>U-DOM</td><td>Домофон → Beward B102S</td><td>B102S → коммутатор (IT)</td><td>не DIN силы</td></tr>
+          <tr><td>U-CAM</td><td>Камера у двери</td><td>PoE-коммутатор</td><td>может = №60</td></tr>
+          <tr><td>U-FIB</td><td>Оптоволокно</td><td>роутер · питание №105</td><td>IT</td></tr>
+          <tr><td>U-IN</td><td>Вводной силовой</td><td>ВА50 → УЗМ-50Ц</td><td>уже в силовой схеме · ВН-102 нет</td></tr>
+          <tr><td>U-LK</td><td>Протечка / MWAC в люке</td><td>BUSHUB → MWAC</td><td>роз. люк №101 на УЗО6</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin:.85rem 0 .4rem">Домофон · Beward B102S</h3>
+      <div class="flow">
+        <div class="box">Вызывная / дверь</div><span class="arrow">→</span>
+        <div class="box">B102S<small>видеокодер</small></div><span class="arrow">→</span>
+        <div class="box">UTP</div><span class="arrow">→</span>
+        <div class="box">коммутатор</div><span class="arrow">→</span>
+        <div class="box">роутер / клиенты</div>
+      </div>
+      <p class="note">Питание B102S и коммутатора — ветка IT (УЗО6, №105). В силовом DIN ABB места не занимает.</p>
+    </section>
+
+    <section>
+      <h2>Файлы документации</h2>
+      <span class="pill">shit_ABB_AT62_shema.html — схема + мастер-выкл. + слаботочка</span>
+      <span class="pill">shit_ABB_AT62_vnutri_sheita.html — подключения блоков внутри щита</span>
+      <span class="pill">shit_ABB_AT62_uzo_vyhody.html — выходы L/N всех УЗО куда идут</span>
+      <span class="pill"><a href="shit_ABB_AT62_avtomaty_pugv.html" style="color:inherit">shit_ABB_AT62_avtomaty_pugv.html</a> — от автоматов куда ПУГВ</span>
+      <span class="pill">xlsx → Мастер-выключатель · Слаботочка · ESB отъезд · Покрытие 1–72</span>
+      <span class="pill">shit_ABB_AT62_144_raskladka.xlsx — Wiren Board / BOM</span>
+      <span class="pill">shit_ABB_144_kabeli.xlsx — кабели</span>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,1944 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ABB AT62 — полная цепочка · каждый кабель</title>
+<style>
+:root { --bg:#eef1f4; --ink:#15202b; --muted:#5a6570; --card:#fff; --line:#cfd6dd; }
+* { box-sizing:border-box; }
+body { margin:0; font-family:"Segoe UI",system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.35; }
+header.top {
+  background:linear-gradient(120deg,#143a5c,#1f4e79 55%,#2a6f97);
+  color:#fff; padding:1.2rem 1.5rem 1rem; position:sticky; top:0; z-index:20;
+  box-shadow:0 2px 12px rgba(0,0,0,.15);
+}
+header.top h1 { margin:0 0 .3rem; font-size:1.25rem; }
+header.top p { margin:0; opacity:.92; font-size:.88rem; max-width:1100px; }
+.nav { display:flex; flex-wrap:wrap; gap:.4rem; margin:.55rem 0 0; }
+.nav a {
+  color:#fff; text-decoration:none; background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.28); border-radius:8px;
+  padding:.3rem .65rem; font-size:.8rem;
+}
+.toolbar { display:flex; flex-wrap:wrap; gap:.45rem; align-items:center; margin-top:.65rem; }
+.toolbar input[type=search] {
+  flex:1; min-width:180px; max-width:320px; border:0; border-radius:8px;
+  padding:.45rem .7rem; font-size:.88rem;
+}
+.toolbar button, .toolbar label.pill {
+  border:1px solid rgba(255,255,255,.35); background:rgba(255,255,255,.12);
+  color:#fff; border-radius:999px; padding:.28rem .65rem; font-size:.75rem; cursor:pointer;
+}
+.toolbar button.active, .toolbar label.pill.active { background:#fff; color:#143a5c; font-weight:700; }
+.toolbar label.pill { display:inline-flex; align-items:center; gap:.25rem; }
+.toolbar label.pill input { display:none; }
+main { max-width:1280px; margin:0 auto; padding:1rem 1.1rem 3rem; }
+section {
+  background:var(--card); border:1px solid var(--line); border-radius:14px;
+  padding:1rem 1.05rem; margin-bottom:1rem;
+}
+h2 { margin:0 0 .5rem; font-size:1.05rem; }
+.note { color:var(--muted); font-size:.84rem; margin:0 0 .75rem; }
+.legend { display:flex; flex-wrap:wrap; gap:.35rem .7rem; font-size:.75rem; color:var(--muted); margin-bottom:.6rem; }
+.chip {
+  display:inline-block; font-size:.72rem; font-weight:650; padding:.22rem .45rem;
+  border-radius:6px; background:#e8eef4; max-width:100%;
+}
+.chip.in { background:#dbe4ee; }
+.chip.esb { background:#fde8e8; color:#922b21; }
+.chip.alw { background:#d5f5e3; color:#1e8449; }
+.chip.uzo { background:#fef3c7; color:#92400e; }
+.chip.brk { background:#e0e7ff; color:#3730a3; }
+.chip.wb { background:#f3e8ff; color:#6b21a8; }
+.chip.L { background:#e5e7eb; color:#374151; }
+.chip.N { background:#dbeafe; color:#1d4ed8; }
+.chip.PE { background:#dcfce7; color:#166534; }
+.chip.cab { background:#ffedd5; color:#9a3412; }
+.chip.load { background:#1f4e79; color:#fff; }
+.chip.out { background:#f1f5f9; color:#475569; }
+.arr { color:#94a3b8; margin:0 .12rem; font-weight:700; }
+.cable, .soft {
+  border:1px solid var(--line); border-radius:12px; padding:.7rem .8rem;
+  margin-bottom:.55rem; background:#fafbfc;
+}
+.cable.jump { border-left:4px solid #f59e0b; }
+.cable.thick { border-left:4px solid #7c3aed; }
+.cable.selv { border-left:4px solid #0891b2; }
+.cable.alw { background:#f3faf6; }
+.cable header { display:flex; flex-wrap:wrap; justify-content:space-between; gap:.4rem; margin-bottom:.45rem; }
+.cable .left { display:flex; gap:.45rem; align-items:baseline; flex-wrap:wrap; }
+.cable .num { font-weight:800; font-size:1.05rem; }
+.cable .name { font-weight:650; }
+.tags { display:flex; flex-wrap:wrap; gap:.25rem; }
+.tag {
+  font-size:.68rem; font-weight:700; padding:.12rem .4rem; border-radius:999px;
+  background:#e8eef4; color:var(--muted);
+}
+.tag.uzo { background:#fef3c7; color:#92400e; }
+.tag.esb { background:#fde8e8; color:#922b21; }
+.tag.alw { background:#d5f5e3; color:#1e8449; }
+.tag.wb { background:#f3e8ff; color:#6b21a8; }
+.tag.ok { background:#dcfce7; color:#166534; }
+.tag.warn { background:#ffedd5; color:#9a3412; }
+.chain {
+  display:flex; flex-wrap:wrap; align-items:center; gap:.15rem .05rem;
+  margin-bottom:.45rem; line-height:1.8;
+}
+.meta { font-size:.78rem; color:#334155; display:grid; gap:.15rem; }
+.meta .muted { color:var(--muted); font-size:.72rem; }
+.remark { margin:.4rem 0 0; font-size:.78rem; color:#9a3412; background:#fff7ed; padding:.35rem .5rem; border-radius:6px; }
+.soft .num { font-weight:800; margin-right:.4rem; }
+.stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:.5rem; margin-bottom:.7rem; }
+.stats div { background:#f7f9fb; border:1px solid var(--line); border-radius:10px; padding:.5rem .65rem; font-size:.82rem; }
+.stats b { display:block; font-size:1.1rem; }
+.hidden { display:none !important; }
+.foot { font-size:.78rem; color:var(--muted); }
+.foot code { background:#e8eef4; padding:.05rem .3rem; border-radius:3px; font-size:.74rem; }
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Полная цепочка · от ввода до потребителя · каждый кабель</h1>
+  <p>Шаблон: <b>ВА50 → УЗМ-50Ц → [ESB63 | мимо] → УЗО → автомат → [реле/диммер?] → клеммы L/N/PE → кабель № → потребитель</b>.
+  УЗМ общий на всю квартиру. УЗО1–5 через ESB. УЗО6+7 всегда (но после УЗМ).</p>
+  <nav class="nav">
+    <a href="#power">Сила 59</a>
+    <a href="#shield">В щите</a>
+    <a href="#soft">Слаботочка</a>
+    <a href="shit_ABB_AT62_R1_R6_klemmy.html">Клеммы R1/R6</a>
+    <a href="shit_ABB_AT62_shema.html">Схема</a>
+    <a href="shit_ABB_AT62_vnutri_sheita.html">Внутри щита</a>
+  </nav>
+  <div class="toolbar" id="toolbar">
+    <input type="search" id="q" placeholder="Поиск № / название / модуль…" />
+    <button type="button" data-f="all" class="active">Все</button>
+    <button type="button" data-f="esb">через ESB</button>
+    <button type="button" data-f="alw">мимо ESB</button>
+    <button type="button" data-f="bot">снизу R6</button>
+    <button type="button" data-f="top">сверху R1</button>
+    <label class="pill"><input type="checkbox" data-uzo="1" checked/>УЗО1 <b>14</b></label><label class="pill"><input type="checkbox" data-uzo="2" checked/>УЗО2 <b>9</b></label><label class="pill"><input type="checkbox" data-uzo="3" checked/>УЗО3 <b>2</b></label><label class="pill"><input type="checkbox" data-uzo="4" checked/>УЗО4 <b>24</b></label><label class="pill"><input type="checkbox" data-uzo="5" checked/>УЗО5 <b>4</b></label><label class="pill"><input type="checkbox" data-uzo="6" checked/>УЗО6 <b>5</b></label><label class="pill"><input type="checkbox" data-uzo="7" checked/>УЗО7 <b>1</b></label>
+  </div>
+</header>
+<main>
+<section>
+  <h2>Как читать</h2>
+  <div class="legend">
+    <span><span class="chip in">ввод</span> ВА50 / УЗМ</span>
+    <span><span class="chip esb">ESB</span> отключаемый быт</span>
+    <span><span class="chip alw">мимо</span> всегда</span>
+    <span><span class="chip uzo">УЗО</span></span>
+    <span><span class="chip brk">автомат</span></span>
+    <span><span class="chip wb">WB</span> реле / диммер / ARV</span>
+    <span><span class="chip L">L</span> <span class="chip N">N</span> <span class="chip PE">PE</span></span>
+    <span><span class="chip cab">кабель</span> → <span class="chip load">потребитель</span></span>
+  </div>
+  <div class="stats">
+    <div><b>59</b>силовых</div>
+    <div><b>53</b>через ESB</div>
+    <div><b>6</b>мимо ESB</div>
+    <div><b>24↓ + 35↑</b>ввод</div>
+    <div><b>32</b>слаботочка</div>
+  </div>
+  <p class="note">Жёлтая полоса = N-перемычка на DIN (только R6: 5·6·11·18). Кухня без BU — N сразу в ZK УЗО1↑. Фиолетовая = L 6–10. Бирюзовая = №35 (24В). <b>Розеточные L одного автомата</b> — блок с <b>JXB-ST-2.5-10pin</b> (J1–J6): см. <a href="shit_ABB_AT62_klemmy_na_reyki.html">клеммы на рейки</a> · ПУГВ одна жила в блок.</p>
+</section>
+
+<section id="power">
+  <h2>Силовые · полная цепочка по каждому кабелю</h2>
+  <div id="list">
+<article class="cable u5 esb" data-n="1" data-uzo="5" data-entry="снизу" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№1</span><span class="name">Тёплый пол коридор</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО5</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">снизу → R6</span>
+      <span class="tag auto">B16 ТП К+Т</span>
+      <span class="tag wb">MR6C#1 ch1</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО5 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 ТП К+Т</span><span class="arr">→</span><span class="chip wb">MR6C#1 ch1 → кабель</span><span class="arr">→</span><span class="chip L">R6↓: L 2.5 мм² DIN (фаза, серая)</span><span class="arr">→</span><span class="chip N">ZK82B УЗО5 (есть)</span><span class="arr">→</span><span class="chip PE">ZK206G#1 / слот 1</span><span class="arr">→</span><span class="chip cab">кабель №1</span><span class="arr">→</span><span class="chip load">Тёплый пол коридор</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО5 63А 30мА → B16 ТП К+Т</div>
+    <div><b>После автомата:</b> MR6C#1 ch1 → кабель</div>
+    <div><b>Потребитель:</b> Тёплый пол коридор</div>
+    <div><b>L:</b> L 2.5 мм² DIN (фаза, серая) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK82B УЗО5 (есть) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#1 / слот 1</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО5 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u4 esb" data-n="2" data-uzo="4" data-entry="снизу" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№2</span><span class="name">Розетка коридор</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО4</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">снизу → R6</span>
+      <span class="tag auto">B16 роз.жилые</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО4 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 роз.жилые</span><span class="arr">→</span><span class="chip out">J1 JXB 10pin</span><span class="arr">→</span><span class="chip L">R6↓: L блок J1 (фаза, серая)</span><span class="arr">→</span><span class="chip N">ZK144B (есть ×1)</span><span class="arr">→</span><span class="chip PE">ZK206G#1 / слот 2</span><span class="arr">→</span><span class="chip cab">кабель №2</span><span class="arr">→</span><span class="chip load">Розетка коридор</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО4 63А 30мА → B16 роз.жилые</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Розетка коридор</div>
+    <div><b>L:</b> L 2.5 мм² DIN (фаза, серая) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK144B (есть ×1) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#1 / слот 2</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО4 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u5 esb" data-n="3" data-uzo="5" data-entry="снизу" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№3</span><span class="name">Тёплый пол туалет</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО5</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">снизу → R6</span>
+      <span class="tag auto">B16 ТП К+Т</span>
+      <span class="tag wb">MR6C#1 ch2</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО5 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 ТП К+Т</span><span class="arr">→</span><span class="chip wb">MR6C#1 ch2 → кабель</span><span class="arr">→</span><span class="chip L">R6↓: L 2.5 мм² DIN (фаза, серая)</span><span class="arr">→</span><span class="chip N">ZK82B УЗО5 (есть)</span><span class="arr">→</span><span class="chip PE">ZK206G#1 / слот 3</span><span class="arr">→</span><span class="chip cab">кабель №3</span><span class="arr">→</span><span class="chip load">Тёплый пол туалет</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО5 63А 30мА → B16 ТП К+Т</div>
+    <div><b>После автомата:</b> MR6C#1 ch2 → кабель</div>
+    <div><b>Потребитель:</b> Тёплый пол туалет</div>
+    <div><b>L:</b> L 2.5 мм² DIN (фаза, серая) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK82B УЗО5 (есть) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#1 / слот 3</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО5 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u5 esb" data-n="4" data-uzo="5" data-entry="снизу" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№4</span><span class="name">Тёплый пол ванна</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО5</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">снизу → R6</span>
+      <span class="tag auto">B16 ТП В+Кух</span>
+      <span class="tag wb">MR6C#1 ch4</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО5 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 ТП В+Кух</span><span class="arr">→</span><span class="chip wb">MR6C#1 ch4 → кабель</span><span class="arr">→</span><span class="chip L">R6↓: L 2.5 мм² DIN (фаза, серая)</span><span class="arr">→</span><span class="chip N">ZK82B УЗО5 (есть)</span><span class="arr">→</span><span class="chip PE">ZK206G#1 / слот 4</span><span class="arr">→</span><span class="chip cab">кабель №4</span><span class="arr">→</span><span class="chip load">Тёплый пол ванна</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО5 63А 30мА → B16 ТП В+Кух</div>
+    <div><b>После автомата:</b> MR6C#1 ch4 → кабель</div>
+    <div><b>Потребитель:</b> Тёплый пол ванна</div>
+    <div><b>L:</b> L 2.5 мм² DIN (фаза, серая) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK82B УЗО5 (есть) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#1 / слот 4</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО5 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u3 esb jump" data-n="5" data-uzo="3" data-entry="снизу" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№5</span><span class="name">Сушилка</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО3</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">снизу → R6</span>
+      <span class="tag auto">B16 сушилка</span>
+      <span class="tag wb">CU#1→контактор</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО3 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 сушилка</span><span class="arr">→</span><span class="chip wb">контактор ←MR6CU#1</span><span class="arr">→</span><span class="chip L">R6↓: L 2.5 мм² DIN (фаза, серая)</span><span class="arr">→</span><span class="chip N">лок.N BU ← ПУГВ с N УЗО3 · перемычка BU↔BU · без ZK</span><span class="arr">→</span><span class="chip PE">ZK206G#1 / слот 5</span><span class="arr">→</span><span class="chip cab">кабель №5</span><span class="arr">→</span><span class="chip load">Сушилка</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО3 63А 30мА → B16 сушилка</div>
+    <div><b>После автомата:</b> контактор (катушка MR6CU#1) → кабель · не на C1/C2 MR6C#1</div>
+    <div><b>Потребитель:</b> Сушилка</div>
+    <div><b>L:</b> L 2.5 мм² DIN (фаза, серая) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> лок.N BU ← ПУГВ с N УЗО3 · перемычка BU↔BU · без ZK · N DIN у R6 · VPR-2.5-BU</div>
+    <div><b>PE:</b> ZK206G#1 / слот 5</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО3 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u3 esb jump" data-n="6" data-uzo="3" data-entry="снизу" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№6</span><span class="name">Стиралка</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО3</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">снизу → R6</span>
+      <span class="tag auto">B16 стиралка</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО3 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 стиралка</span><span class="arr">→</span><span class="chip out">напрямую на кабель</span><span class="arr">→</span><span class="chip L">R6↓: L 2.5 мм² DIN (фаза, серая)</span><span class="arr">→</span><span class="chip N">лок.N BU ← ПУГВ с N УЗО3 · перемычка BU↔BU · без ZK</span><span class="arr">→</span><span class="chip PE">ZK206G#1 / слот 6</span><span class="arr">→</span><span class="chip cab">кабель №6</span><span class="arr">→</span><span class="chip load">Стиралка</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО3 63А 30мА → B16 стиралка</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Стиралка</div>
+    <div><b>L:</b> L 2.5 мм² DIN (фаза, серая) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> лок.N BU ← ПУГВ с N УЗО3 · перемычка BU↔BU · без ZK · N DIN у R6 · VPR-2.5-BU</div>
+    <div><b>PE:</b> ZK206G#1 / слот 6</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО3 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u1 esb thick" data-n="7" data-uzo="1" data-entry="снизу" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№7</span><span class="name">Плита</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО1</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">снизу → R6</span>
+      <span class="tag auto">B32 плита</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО1 63А 30мА</span><span class="arr">→</span><span class="chip brk">B32 плита</span><span class="arr">→</span><span class="chip out">напрямую на кабель</span><span class="arr">→</span><span class="chip L">R6↓: L 6–10 мм² DIN (UT 10 / Wago 2010)</span><span class="arr">→</span><span class="chip N">ZK82B УЗО1↓ (есть) · ↔↑</span><span class="arr">→</span><span class="chip PE">ZK206G#1 / слот 7</span><span class="arr">→</span><span class="chip cab">кабель №7</span><span class="arr">→</span><span class="chip load">Плита</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО1 63А 30мА → B32 плита</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Плита</div>
+    <div><b>L:</b> L 6–10 мм² DIN (UT 10 / Wago 2010) <span class="muted">DKC/винт L 6–10 · счёт 1581</span></div>
+    <div><b>N:</b> ZK82B УЗО1↓ (есть) · ↔↑ · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#1 / слот 7</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО1 (гребёнка L)</div>
+  </div>
+  <p class="remark">Толстый кабель → клеммы 6/10 мм² на R6.</p>
+</article>
+<article class="cable u1 esb" data-n="8" data-uzo="1" data-entry="снизу" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№8</span><span class="name">Духовка</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО1</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">снизу → R6</span>
+      <span class="tag auto">B16 духовка</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО1 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 духовка</span><span class="arr">→</span><span class="chip out">напрямую на кабель</span><span class="arr">→</span><span class="chip L">R6↓: L 2.5 мм² DIN (фаза, серая)</span><span class="arr">→</span><span class="chip N">ZK82B УЗО1↓ (есть) · ↔↑</span><span class="arr">→</span><span class="chip PE">ZK206G#1 / слот 8</span><span class="arr">→</span><span class="chip cab">кабель №8</span><span class="arr">→</span><span class="chip load">Духовка</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО1 63А 30мА → B16 духовка</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Духовка</div>
+    <div><b>L:</b> L 2.5 мм² DIN (фаза, серая) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK82B УЗО1↓ (есть) · ↔↑ · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#1 / слот 8</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО1 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u1 esb" data-n="9" data-uzo="1" data-entry="снизу" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№9</span><span class="name">Посудомойка</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО1</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">снизу → R6</span>
+      <span class="tag auto">B16 ПММ</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО1 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 ПММ</span><span class="arr">→</span><span class="chip out">напрямую на кабель</span><span class="arr">→</span><span class="chip L">R6↓: L 2.5 мм² DIN (фаза, серая)</span><span class="arr">→</span><span class="chip N">ZK82B УЗО1↓ (есть) · ↔↑</span><span class="arr">→</span><span class="chip PE">ZK206G#1 / слот 9</span><span class="arr">→</span><span class="chip cab">кабель №9</span><span class="arr">→</span><span class="chip load">Посудомойка</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО1 63А 30мА → B16 ПММ</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Посудомойка</div>
+    <div><b>L:</b> L 2.5 мм² DIN (фаза, серая) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK82B УЗО1↓ (есть) · ↔↑ · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#1 / слот 9</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО1 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u1 esb" data-n="10" data-uzo="1" data-entry="снизу" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№10</span><span class="name">Измельчитель</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО1</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">снизу → R6</span>
+      <span class="tag auto">B10 измельч.</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО1 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 измельч.</span><span class="arr">→</span><span class="chip out">напрямую на кабель</span><span class="arr">→</span><span class="chip L">R6↓: L 2.5 мм² DIN (фаза, серая)</span><span class="arr">→</span><span class="chip N">ZK82B УЗО1↓ (есть) · ↔↑</span><span class="arr">→</span><span class="chip PE">ZK206G#1 / слот 10</span><span class="arr">→</span><span class="chip cab">кабель №10</span><span class="arr">→</span><span class="chip load">Измельчитель</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО1 63А 30мА → B10 измельч.</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Измельчитель</div>
+    <div><b>L:</b> L 2.5 мм² DIN (фаза, серая) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK82B УЗО1↓ (есть) · ↔↑ · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#1 / слот 10</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО1 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u6 alw jump" data-n="11" data-uzo="6" data-entry="снизу" data-esb="alw">
+  <header>
+    <div class="left"><span class="num">№11</span><span class="name">Холодильник</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО6</span>
+      <span class="tag alw">мимо ESB</span>
+      <span class="tag entry">снизу → R6</span>
+      <span class="tag auto">B10 холод.</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip alw">мимо ESB</span><span class="arr">→</span><span class="chip uzo">УЗО6 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 холод.</span><span class="arr">→</span><span class="chip out">напрямую на кабель</span><span class="arr">→</span><span class="chip L">R6↓: L 2.5 мм² DIN (фаза, серая)</span><span class="arr">→</span><span class="chip N">лок.N→ПУГВ→лок. N-клемма 2.5 → ↑ ПУГВ 2.5 → ZK82B УЗО6 · зона ↑A</span><span class="arr">→</span><span class="chip PE">ZK206G#1 / слот 11</span><span class="arr">→</span><span class="chip cab">кабель №11</span><span class="arr">→</span><span class="chip load">Холодильник</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → мимо ESB → УЗО6 63А 30мА → B10 холод.</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Холодильник</div>
+    <div><b>L:</b> L 2.5 мм² DIN (фаза, серая) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> лок. N-клемма 2.5 → ↑ ПУГВ 2.5 → ZK82B УЗО6 · зона ↑A · ДА · чужая высота · N DIN у R6 · VPR-2.5-BU</div>
+    <div><b>PE:</b> ZK206G#1 / слот 11</div>
+    <div><b>Гребёнка L:</b> R4 куст УЗО6 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u4 esb" data-n="12" data-uzo="4" data-entry="снизу" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№12</span><span class="name">Розетка диван</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО4</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">снизу → R6</span>
+      <span class="tag auto">B16 роз.жилые</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО4 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 роз.жилые</span><span class="arr">→</span><span class="chip out">J1 JXB 10pin</span><span class="arr">→</span><span class="chip L">R6↓: L блок J1 (фаза, серая)</span><span class="arr">→</span><span class="chip N">ZK144B (есть ×1)</span><span class="arr">→</span><span class="chip PE">ZK206G#1 / слот 12</span><span class="arr">→</span><span class="chip cab">кабель №12</span><span class="arr">→</span><span class="chip load">Розетка диван</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО4 63А 30мА → B16 роз.жилые</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Розетка диван</div>
+    <div><b>L:</b> L 2.5 мм² DIN (фаза, серая) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK144B (есть ×1) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#1 / слот 12</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО4 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u4 esb" data-n="13" data-uzo="4" data-entry="снизу" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№13</span><span class="name">Розетка под тумбой</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО4</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">снизу → R6</span>
+      <span class="tag auto">B16 роз.жилые</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО4 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 роз.жилые</span><span class="arr">→</span><span class="chip out">J1 JXB 10pin</span><span class="arr">→</span><span class="chip L">R6↓: L блок J1 (фаза, серая)</span><span class="arr">→</span><span class="chip N">ZK144B (есть ×1)</span><span class="arr">→</span><span class="chip PE">ZK206G#1 / слот 13</span><span class="arr">→</span><span class="chip cab">кабель №13</span><span class="arr">→</span><span class="chip load">Розетка под тумбой</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО4 63А 30мА → B16 роз.жилые</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Розетка под тумбой</div>
+    <div><b>L:</b> L 2.5 мм² DIN (фаза, серая) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK144B (есть ×1) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#1 / слот 13</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО4 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u4 esb" data-n="14" data-uzo="4" data-entry="снизу" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№14</span><span class="name">Розетка под ТВ (комната)</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО4</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">снизу → R6</span>
+      <span class="tag auto">B16 роз.жилые</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО4 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 роз.жилые</span><span class="arr">→</span><span class="chip out">J1 JXB 10pin</span><span class="arr">→</span><span class="chip L">R6↓: L блок J1 (фаза, серая)</span><span class="arr">→</span><span class="chip N">ZK144B (есть ×1)</span><span class="arr">→</span><span class="chip PE">ZK206G#1 / слот 14</span><span class="arr">→</span><span class="chip cab">кабель №14</span><span class="arr">→</span><span class="chip load">Розетка под ТВ (комната)</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО4 63А 30мА → B16 роз.жилые</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Розетка под ТВ (комната)</div>
+    <div><b>L:</b> L 2.5 мм² DIN (фаза, серая) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK144B (есть ×1) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#1 / слот 14</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО4 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u5 esb" data-n="15" data-uzo="5" data-entry="снизу" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№15</span><span class="name">Тёплый пол кухня</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО5</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">снизу → R6</span>
+      <span class="tag auto">B16 ТП В+Кух</span>
+      <span class="tag wb">MR6C#1 ch5</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО5 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 ТП В+Кух</span><span class="arr">→</span><span class="chip wb">MR6C#1 ch5 → кабель</span><span class="arr">→</span><span class="chip L">R6↓: L 2.5 мм² DIN (фаза, серая)</span><span class="arr">→</span><span class="chip N">ZK82B УЗО5 (есть)</span><span class="arr">→</span><span class="chip PE">ZK206G#1 / слот 15</span><span class="arr">→</span><span class="chip cab">кабель №15</span><span class="arr">→</span><span class="chip load">Тёплый пол кухня</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО5 63А 30мА → B16 ТП В+Кух</div>
+    <div><b>После автомата:</b> MR6C#1 ch5 → кабель</div>
+    <div><b>Потребитель:</b> Тёплый пол кухня</div>
+    <div><b>L:</b> L 2.5 мм² DIN (фаза, серая) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK82B УЗО5 (есть) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#1 / слот 15</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО5 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u4 esb" data-n="16" data-uzo="4" data-entry="снизу" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№16</span><span class="name">Розетка под ТВ (зона 2)</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО4</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">снизу → R6</span>
+      <span class="tag auto">B16 роз.жилые</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО4 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 роз.жилые</span><span class="arr">→</span><span class="chip out">J1 JXB 10pin</span><span class="arr">→</span><span class="chip L">R6↓: L блок J1 (фаза, серая)</span><span class="arr">→</span><span class="chip N">ZK144B (есть ×1)</span><span class="arr">→</span><span class="chip PE">ZK206G#1 / слот 16</span><span class="arr">→</span><span class="chip cab">кабель №16</span><span class="arr">→</span><span class="chip load">Розетка под ТВ (зона 2)</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО4 63А 30мА → B16 роз.жилые</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Розетка под ТВ (зона 2)</div>
+    <div><b>L:</b> L 2.5 мм² DIN (фаза, серая) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK144B (есть ×1) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#1 / слот 16</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО4 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u4 esb" data-n="17" data-uzo="4" data-entry="снизу" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№17</span><span class="name">Розетка под столом</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО4</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">снизу → R6</span>
+      <span class="tag auto">B16 роз.жилые</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО4 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 роз.жилые</span><span class="arr">→</span><span class="chip out">J1 JXB 10pin</span><span class="arr">→</span><span class="chip L">R6↓: L блок J1 (фаза, серая)</span><span class="arr">→</span><span class="chip N">ZK144B (есть ×1)</span><span class="arr">→</span><span class="chip PE">ZK206G#1 / слот 17</span><span class="arr">→</span><span class="chip cab">кабель №17</span><span class="arr">→</span><span class="chip load">Розетка под столом</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО4 63А 30мА → B16 роз.жилые</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Розетка под столом</div>
+    <div><b>L:</b> L 2.5 мм² DIN (фаза, серая) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK144B (есть ×1) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#1 / слот 17</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО4 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u6 alw jump" data-n="18" data-uzo="6" data-entry="снизу" data-esb="alw">
+  <header>
+    <div class="left"><span class="num">№18</span><span class="name">Кондиционер · внешний блок (один)</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО6</span>
+      <span class="tag alw">мимо ESB</span>
+      <span class="tag entry">снизу → R6</span>
+      <span class="tag auto">B16 кондей</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip alw">мимо ESB</span><span class="arr">→</span><span class="chip uzo">УЗО6 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 кондей</span><span class="arr">→</span><span class="chip out">напрямую на кабель</span><span class="arr">→</span><span class="chip L">R6↓: L 2.5 мм² DIN (фаза, серая)</span><span class="arr">→</span><span class="chip N">лок.N→ПУГВ→лок. N-клемма 2.5 → ↑ ПУГВ 2.5 → ZK82B УЗО6 · зона ↑A</span><span class="arr">→</span><span class="chip PE">ZK206G#1 / слот 18</span><span class="arr">→</span><span class="chip cab">кабель №18</span><span class="arr">→</span><span class="chip load">Кондиционер · внешний блок (один)</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → мимо ESB → УЗО6 63А 30мА → B16 кондей</div>
+    <div><b>После автомата:</b> напрямую сила; упр. Modbus ONOKOM → BUSHUB</div>
+    <div><b>Потребитель:</b> Кондиционер · внешний блок (один)</div>
+    <div><b>L:</b> L 2.5 мм² DIN (фаза, серая) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> лок. N-клемма 2.5 → ↑ ПУГВ 2.5 → ZK82B УЗО6 · зона ↑A · ДА · чужая высота · N DIN у R6 · VPR-2.5-BU</div>
+    <div><b>PE:</b> ZK206G#1 / слот 18</div>
+    <div><b>Гребёнка L:</b> R4 куст УЗО6 (гребёнка L)</div>
+  </div>
+  <p class="remark">Сила 1× внешний блок. Упр. 2× ONOKOM Modbus → BUSHUB (onokom.ru). MSW только климат.</p>
+</article>
+<article class="cable u4 esb" data-n="19" data-uzo="4" data-entry="снизу" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№19</span><span class="name">Розетка лоджия верх</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО4</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">снизу → R6</span>
+      <span class="tag auto">B16 лоджия</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО4 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 лоджия</span><span class="arr">→</span><span class="chip out">J2 JXB 2pin</span><span class="arr">→</span><span class="chip L">R6↓: L блок J2 (19·20)</span><span class="arr">→</span><span class="chip N">ZK144B (есть ×1)</span><span class="arr">→</span><span class="chip PE">ZK206G#1 / слот 19</span><span class="arr">→</span><span class="chip cab">кабель №19</span><span class="arr">→</span><span class="chip load">Розетка лоджия верх</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО4 63А 30мА → B16 лоджия</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Розетка лоджия верх</div>
+    <div><b>L:</b> L 2.5 мм² DIN (фаза, серая) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK144B (есть ×1) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#1 / слот 19</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО4 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u4 esb" data-n="20" data-uzo="4" data-entry="снизу" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№20</span><span class="name">Розетка лоджия низ</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО4</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">снизу → R6</span>
+      <span class="tag auto">B16 лоджия</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО4 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 лоджия</span><span class="arr">→</span><span class="chip out">J2 JXB 2pin</span><span class="arr">→</span><span class="chip L">R6↓: L блок J2 (19·20)</span><span class="arr">→</span><span class="chip N">ZK144B (есть ×1)</span><span class="arr">→</span><span class="chip PE">ZK206G#1 / слот 20</span><span class="arr">→</span><span class="chip cab">кабель №20</span><span class="arr">→</span><span class="chip load">Розетка лоджия низ</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО4 63А 30мА → B16 лоджия</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Розетка лоджия низ</div>
+    <div><b>L:</b> L 2.5 мм² DIN (фаза, серая) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK144B (есть ×1) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#1 / слот 20</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО4 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u4 esb" data-n="21" data-uzo="4" data-entry="снизу" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№21</span><span class="name">Розетка правая кровать</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО4</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">снизу → R6</span>
+      <span class="tag auto">B16 роз.жилые</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО4 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 роз.жилые</span><span class="arr">→</span><span class="chip out">J1 JXB 10pin</span><span class="arr">→</span><span class="chip L">R6↓: L блок J1 (фаза, серая)</span><span class="arr">→</span><span class="chip N">ZK144B (есть ×1)</span><span class="arr">→</span><span class="chip PE">ZK175G / слот ↓1</span><span class="arr">→</span><span class="chip cab">кабель №21</span><span class="arr">→</span><span class="chip load">Розетка правая кровать</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО4 63А 30мА → B16 роз.жилые</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Розетка правая кровать</div>
+    <div><b>L:</b> L 2.5 мм² DIN (фаза, серая) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK144B (есть ×1) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK175G / слот ↓1</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО4 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u4 esb" data-n="22" data-uzo="4" data-entry="снизу" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№22</span><span class="name">Розетка левая кровать</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО4</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">снизу → R6</span>
+      <span class="tag auto">B16 роз.жилые</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО4 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 роз.жилые</span><span class="arr">→</span><span class="chip out">J1 JXB 10pin</span><span class="arr">→</span><span class="chip L">R6↓: L блок J1 (фаза, серая)</span><span class="arr">→</span><span class="chip N">ZK144B (есть ×1)</span><span class="arr">→</span><span class="chip PE">ZK175G / слот ↓2</span><span class="arr">→</span><span class="chip cab">кабель №22</span><span class="arr">→</span><span class="chip load">Розетка левая кровать</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО4 63А 30мА → B16 роз.жилые</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Розетка левая кровать</div>
+    <div><b>L:</b> L 2.5 мм² DIN (фаза, серая) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK144B (есть ×1) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK175G / слот ↓2</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО4 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u4 esb" data-n="23" data-uzo="4" data-entry="снизу" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№23</span><span class="name">Розетка угол левый</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО4</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">снизу → R6</span>
+      <span class="tag auto">B16 роз.жилые</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО4 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 роз.жилые</span><span class="arr">→</span><span class="chip out">J1 JXB 10pin</span><span class="arr">→</span><span class="chip L">R6↓: L блок J1 (фаза, серая)</span><span class="arr">→</span><span class="chip N">ZK144B (есть ×1)</span><span class="arr">→</span><span class="chip PE">ZK175G / слот ↓3</span><span class="arr">→</span><span class="chip cab">кабель №23</span><span class="arr">→</span><span class="chip load">Розетка угол левый</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО4 63А 30мА → B16 роз.жилые</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Розетка угол левый</div>
+    <div><b>L:</b> L 2.5 мм² DIN (фаза, серая) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK144B (есть ×1) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK175G / слот ↓3</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО4 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u4 esb" data-n="24" data-uzo="4" data-entry="снизу" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№24</span><span class="name">Розетка кладовая низ</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО4</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">снизу → R6</span>
+      <span class="tag auto">B16 роз.жилые</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО4 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 роз.жилые</span><span class="arr">→</span><span class="chip out">J1 JXB 10pin</span><span class="arr">→</span><span class="chip L">R6↓: L блок J1 (фаза, серая)</span><span class="arr">→</span><span class="chip N">ZK144B (есть ×1)</span><span class="arr">→</span><span class="chip PE">ZK175G / слот ↓4</span><span class="arr">→</span><span class="chip cab">кабель №24</span><span class="arr">→</span><span class="chip load">Розетка кладовая низ</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО4 63А 30мА → B16 роз.жилые</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Розетка кладовая низ</div>
+    <div><b>L:</b> L 2.5 мм² DIN (фаза, серая) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK144B (есть ×1) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK175G / слот ↓4</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО4 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u6 alw" data-n="26" data-uzo="6" data-entry="сверху" data-esb="alw">
+  <header>
+    <div class="left"><span class="num">№26</span><span class="name">Розетка верх кладовая / сервер</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО6</span>
+      <span class="tag alw">мимо ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B16 сервер+IT</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip alw">мимо ESB</span><span class="arr">→</span><span class="chip uzo">УЗО6 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 сервер+IT</span><span class="arr">→</span><span class="chip out">J6 JXB 2pin</span><span class="arr">→</span><span class="chip L">R1↑: L блок J6 (26·105)</span><span class="arr">→</span><span class="chip N">ZK82B (есть) · общий ↓↑</span><span class="arr">→</span><span class="chip PE">ZK206G#2 / слот 1</span><span class="arr">→</span><span class="chip cab">кабель №26</span><span class="arr">→</span><span class="chip load">Розетка верх кладовая / сервер</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → мимо ESB → УЗО6 63А 30мА → B16 сервер+IT</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Розетка верх кладовая / сервер</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK82B (есть) · общий ↓↑ · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#2 / слот 1</div>
+    <div><b>Гребёнка L:</b> R4 куст УЗО6 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u4 esb" data-n="27" data-uzo="4" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№27</span><span class="name">Лента шкаф/кладовая (230В → локальный БП 24В у шкафа)</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО4</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B10 кладовая</span>
+      <span class="tag wb">MR6C#2 ch4</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО4 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 кладовая</span><span class="arr">→</span><span class="chip wb">MR6C#2 ch4 → кабель</span><span class="arr">→</span><span class="chip L">R1↑: L 2.5 мм² DIN R1↑ (серая feed-through)</span><span class="arr">→</span><span class="chip N">ZK144B (купить #1)</span><span class="arr">→</span><span class="chip PE">ZK206G#2 / слот 2</span><span class="arr">→</span><span class="chip cab">кабель №27</span><span class="arr">→</span><span class="chip load">лента подсветки шкафа/кладовой</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО4 63А 30мА → B10 кладовая</div>
+    <div><b>После автомата:</b> MR6C#2 ch4 → №27 230В → локальный БП 24В у шкафа → лента</div>
+    <div><b>Потребитель:</b> лента подсветки шкафа/кладовой</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK144B (купить #1) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#2 / слот 2</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО4 (гребёнка L)</div>
+  </div>
+  <p class="remark">Решение: сила только B10 кладовая → MR6C#2 → №27 → БП у шкафа → лента. D6 НЕ использовать (D6 = карнизная лента УЗО7).</p>
+</article>
+<article class="cable u4 esb" data-n="28" data-uzo="4" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№28</span><span class="name">Свет кладовая</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО4</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B10 кладовая</span>
+      <span class="tag wb">MR6C#2 ch5</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО4 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 кладовая</span><span class="arr">→</span><span class="chip wb">MR6C#2 ch5 → кабель</span><span class="arr">→</span><span class="chip L">R1↑: L 2.5 мм² DIN R1↑ (серая feed-through)</span><span class="arr">→</span><span class="chip N">ZK144B (купить #1)</span><span class="arr">→</span><span class="chip PE">ZK206G#2 / слот 3</span><span class="arr">→</span><span class="chip cab">кабель №28</span><span class="arr">→</span><span class="chip load">Свет кладовая</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО4 63А 30мА → B10 кладовая</div>
+    <div><b>После автомата:</b> MR6C#2 ch5 → кабель</div>
+    <div><b>Потребитель:</b> Свет кладовая</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK144B (купить #1) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#2 / слот 3</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО4 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u4 esb" data-n="29" data-uzo="4" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№29</span><span class="name">Бра левая кровать (диммер)</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО4</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B10 бра+кор</span>
+      <span class="tag wb">MDM3#3 ch2</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО4 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 бра+кор</span><span class="arr">→</span><span class="chip wb">MDM3#3 ch2 → кабель</span><span class="arr">→</span><span class="chip L">R1↑: L 2.5 мм² DIN R1↑ (серая feed-through)</span><span class="arr">→</span><span class="chip N">ZK144B (купить #1)</span><span class="arr">→</span><span class="chip PE">ZK206G#2 / слот 4</span><span class="arr">→</span><span class="chip cab">кабель №29</span><span class="arr">→</span><span class="chip load">Бра левая кровать (диммер)</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО4 63А 30мА → B10 бра+кор</div>
+    <div><b>После автомата:</b> MDM3#3 ch2 → кабель</div>
+    <div><b>Потребитель:</b> Бра левая кровать (диммер)</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK144B (купить #1) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#2 / слот 4</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО4 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u4 esb" data-n="30" data-uzo="4" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№30</span><span class="name">Основная люстра</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО4</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B10 комн.дим</span>
+      <span class="tag wb">MDM3#2 ch1</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО4 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 комн.дим</span><span class="arr">→</span><span class="chip wb">MDM3#2 ch1 → кабель</span><span class="arr">→</span><span class="chip L">R1↑: L 2.5 мм² DIN R1↑ (серая feed-through)</span><span class="arr">→</span><span class="chip N">ZK144B (купить #1)</span><span class="arr">→</span><span class="chip PE">ZK206G#2 / слот 5</span><span class="arr">→</span><span class="chip cab">кабель №30</span><span class="arr">→</span><span class="chip load">Основная люстра</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО4 63А 30мА → B10 комн.дим</div>
+    <div><b>После автомата:</b> MDM3#2 ch1 → кабель</div>
+    <div><b>Потребитель:</b> Основная люстра</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK144B (купить #1) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#2 / слот 5</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО4 (гребёнка L)</div>
+  </div>
+  <p class="remark">Диммер по ТЗ: коридор·лоджия·комната осн/доп·кухня L/R</p>
+</article>
+<article class="cable u4 esb" data-n="31" data-uzo="4" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№31</span><span class="name">Точки у люстры</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО4</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B10 комн.дим</span>
+      <span class="tag wb">MDM3#2 ch2</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО4 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 комн.дим</span><span class="arr">→</span><span class="chip wb">MDM3#2 ch2 → кабель</span><span class="arr">→</span><span class="chip L">R1↑: L 2.5 мм² DIN R1↑ (серая feed-through)</span><span class="arr">→</span><span class="chip N">ZK144B (купить #1)</span><span class="arr">→</span><span class="chip PE">ZK206G#2 / слот 6</span><span class="arr">→</span><span class="chip cab">кабель №31</span><span class="arr">→</span><span class="chip load">Точки у люстры</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО4 63А 30мА → B10 комн.дим</div>
+    <div><b>После автомата:</b> MDM3#2 ch2 → кабель</div>
+    <div><b>Потребитель:</b> Точки у люстры</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK144B (купить #1) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#2 / слот 6</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО4 (гребёнка L)</div>
+  </div>
+  <p class="remark">Диммер по ТЗ: коридор·лоджия·комната осн/доп·кухня L/R</p>
+</article>
+<article class="cable u4 esb" data-n="32" data-uzo="4" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№32</span><span class="name">Бра правая кровать (диммер)</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО4</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B10 бра+кор</span>
+      <span class="tag wb">MDM3#3 ch3</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО4 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 бра+кор</span><span class="arr">→</span><span class="chip wb">MDM3#3 ch3 → кабель</span><span class="arr">→</span><span class="chip L">R1↑: L 2.5 мм² DIN R1↑ (серая feed-through)</span><span class="arr">→</span><span class="chip N">ZK144B (купить #1)</span><span class="arr">→</span><span class="chip PE">ZK206G#2 / слот 7</span><span class="arr">→</span><span class="chip cab">кабель №32</span><span class="arr">→</span><span class="chip load">Бра правая кровать (диммер)</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО4 63А 30мА → B10 бра+кор</div>
+    <div><b>После автомата:</b> MDM3#3 ch3 → кабель</div>
+    <div><b>Потребитель:</b> Бра правая кровать (диммер)</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK144B (купить #1) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#2 / слот 7</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО4 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u4 esb" data-n="34" data-uzo="4" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№34</span><span class="name">Питание карниза комната</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО4</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B10 карниз.ж</span>
+      
+      <span class="tag warn">OK·внимание</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО4 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 карниз.ж</span><span class="arr">→</span><span class="chip out">постоянно с автомата (без реле)</span><span class="arr">→</span><span class="chip L">R1↑: L 2.5 мм² DIN R1↑ (серая feed-through)</span><span class="arr">→</span><span class="chip N">ZK144B (купить #1)</span><span class="arr">→</span><span class="chip PE">ZK206G#2 / слот 8</span><span class="arr">→</span><span class="chip cab">кабель №34</span><span class="arr">→</span><span class="chip load">Питание карниза комната</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО4 63А 30мА → B10 карниз.ж</div>
+    <div><b>После автомата:</b> постоянно с автомата (без реле); упр. Modbus отдельно</div>
+    <div><b>Потребитель:</b> Питание карниза комната</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK144B (купить #1) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#2 / слот 8</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО4 (гребёнка L)</div>
+  </div>
+  <p class="remark">B10 карниз.ж: постоянно №34·38 (без MDM). Свет лоджии №37 — с <b>B10 комн.дим → MDM3#2 ch3</b>.</p>
+</article>
+<article class="cable u7 alw selv" data-n="35" data-uzo="7" data-entry="сверху" data-esb="alw">
+  <header>
+    <div class="left"><span class="num">№35</span><span class="name">Лента карниза · WB-LED в щите (R5: WB-LED→D6→ARV)</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО7</span>
+      <span class="tag alw">мимо ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">DIN WB-LED→D6→ARV</span>
+      
+      <span class="tag warn">OK·внимание</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip alw">мимо ESB</span><span class="arr">→</span><span class="chip uzo">УЗО7 63А 30мА</span><span class="arr">→</span><span class="chip brk">D6</span><span class="arr">→</span><span class="chip wb">ПУГВ → ARV 230В (конец R5)</span><span class="arr">→</span><span class="chip wb">24В через D6 → WB-LED (после MDM)</span><span class="arr">→</span><span class="chip L">+24В / 0В WB-LED → кабель №35</span><span class="arr">→</span><span class="chip N">0В (не ZK N 230В)</span><span class="arr">→</span><span class="chip PE">PE кабеля №35 → PE ZK (если жила есть) / иначе без</span><span class="arr">→</span><span class="chip cab">кабель №35</span><span class="arr">→</span><span class="chip load">лента у карниза</span></div>
+  <div class="meta">
+    <div><b>DIN R5:</b> MDM3 → WB-LED → D6 → ARV (шина не через ARV)</div>
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → мимо ESB → УЗО7 → D6 → ARV 230В</div>
+    <div><b>После автомата:</b> D6→ПУГВ→ARV 230В; ARV +24/0 через 1M D6 → WB-LED; WB-LED → кабель №35 → лента</div>
+    <div><b>Потребитель:</b> лента у карниза (диммер WB-LED в щите)</div>
+    <div><b>L:</b> не L 230В DIN · WB-LED → +24/0 на №35 <span class="muted">WB-LED после MDM, не после ARV</span></div>
+    <div><b>N:</b> 0В (не ZK N 230В) · нет · 24В</div>
+    <div><b>PE:</b> PE кабеля №35 → PE ZK (если жила есть) / иначе без</div>
+    <div><b>Гребёнка L:</b> D6 на R5 — ПУГВ с УЗО7, не гребёнка с R4</div>
+  </div>
+  <p class="remark">DIN R5: MDM#1·#2·#3→WB-LED→D6→ARV. 230В: УЗО7→D6→ARV. 24В: ARV→WB-LED через один модуль D6. RS-485 на WB-LED, не через ARV. Полевой №35: только 24В+/0В(+PE) с WB-LED. Не сажать №35 как 230В на D6.</p>
+</article>
+<article class="cable u4 esb" data-n="37" data-uzo="4" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№37</span><span class="name">Свет лоджия</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО4</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B10 комн.дим</span>
+      <span class="tag wb">MDM3#2 ch3</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО4 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 комн.дим</span><span class="arr">→</span><span class="chip wb">MDM3#2 ch3 → кабель</span><span class="arr">→</span><span class="chip L">R1↑: L 2.5 мм² DIN R1↑ (серая feed-through)</span><span class="arr">→</span><span class="chip N">ZK144B (купить #1)</span><span class="arr">→</span><span class="chip PE">ZK206G#2 / слот 10</span><span class="arr">→</span><span class="chip cab">кабель №37</span><span class="arr">→</span><span class="chip load">Свет лоджия</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО4 63А 30мА → B10 комн.дим</div>
+    <div><b>После автомата:</b> MDM3#2 ch3 → кабель</div>
+    <div><b>Потребитель:</b> Свет лоджия</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK144B (купить #1) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#2 / слот 10</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО4 (гребёнка L)</div>
+  </div>
+  <p class="remark">Диммер по ТЗ: коридор·лоджия·комната осн/доп·кухня L/R</p>
+</article>
+<article class="cable u4 esb" data-n="38" data-uzo="4" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№38</span><span class="name">Питание карниза лоджия</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО4</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B10 карниз.ж</span>
+      
+      <span class="tag warn">OK·внимание</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО4 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 карниз.ж</span><span class="arr">→</span><span class="chip out">постоянно с автомата (без реле)</span><span class="arr">→</span><span class="chip L">R1↑: L 2.5 мм² DIN R1↑ (серая feed-through)</span><span class="arr">→</span><span class="chip N">ZK144B (купить #1)</span><span class="arr">→</span><span class="chip PE">ZK206G#2 / слот 11</span><span class="arr">→</span><span class="chip cab">кабель №38</span><span class="arr">→</span><span class="chip load">Питание карниза лоджия</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО4 63А 30мА → B10 карниз.ж</div>
+    <div><b>После автомата:</b> постоянно с автомата (без реле); упр. Modbus отдельно</div>
+    <div><b>Потребитель:</b> Питание карниза лоджия</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK144B (купить #1) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#2 / слот 11</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО4 (гребёнка L)</div>
+  </div>
+  <p class="remark">B10 карниз.ж: постоянно, как №34. Не через MDM.</p>
+</article>
+<article class="cable u4 esb" data-n="41" data-uzo="4" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№41</span><span class="name">Питание розетка стол</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО4</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B16 роз.жилые</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО4 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 роз.жилые</span><span class="arr">→</span><span class="chip out">J5←с J1</span><span class="arr">→</span><span class="chip L">R1↑: L блок J5 (41·43)</span><span class="arr">→</span><span class="chip N">ZK144B (купить #1)</span><span class="arr">→</span><span class="chip PE">ZK206G#2 / слот 12</span><span class="arr">→</span><span class="chip cab">кабель №41</span><span class="arr">→</span><span class="chip load">Питание розетка стол</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО4 63А 30мА → B16 роз.жилые</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Питание розетка стол</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK144B (купить #1) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#2 / слот 12</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО4 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u4 esb" data-n="43" data-uzo="4" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№43</span><span class="name">Розетка ТВ комната</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО4</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B16 роз.жилые</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО4 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 роз.жилые</span><span class="arr">→</span><span class="chip out">J5←с J1</span><span class="arr">→</span><span class="chip L">R1↑: L блок J5 (41·43)</span><span class="arr">→</span><span class="chip N">ZK144B (купить #1)</span><span class="arr">→</span><span class="chip PE">ZK206G#2 / слот 13</span><span class="arr">→</span><span class="chip cab">кабель №43</span><span class="arr">→</span><span class="chip load">Розетка ТВ комната</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО4 63А 30мА → B16 роз.жилые</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Розетка ТВ комната</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK144B (купить #1) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK206G#2 / слот 13</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО4 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u1 esb" data-n="47" data-uzo="1" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№47</span><span class="name">Розетка ТВ кухня</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО1</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B16 роз.кух</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО1 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 роз.кух</span><span class="arr">→</span><span class="chip out">J3 JXB 3pin</span><span class="arr">→</span><span class="chip L">R1↑: L блок J3 (47·54·55)</span><span class="arr">→</span><span class="chip N">сразу → ZK144B УЗО1↑ · зона ↑A</span><span class="arr">→</span><span class="chip PE">ZK206G#2 / слот 14</span><span class="arr">→</span><span class="chip cab">кабель №47</span><span class="arr">→</span><span class="chip load">Розетка ТВ кухня</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО1 63А 30мА → B16 роз.кух</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Розетка ТВ кухня</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> сразу → ZK144B УЗО1↑ · зона ↑A · без лок.N на DIN</div>
+    <div><b>PE:</b> ZK206G#2 / слот 14</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО1 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u1 esb" data-n="48" data-uzo="1" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№48</span><span class="name">Бра кухня</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО1</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B10 кух.реле</span>
+      <span class="tag wb">MR6C#2 ch1</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО1 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 кух.реле</span><span class="arr">→</span><span class="chip wb">MR6C#2 ch1 → кабель</span><span class="arr">→</span><span class="chip L">R1↑: L 2.5 мм² DIN R1↑ (серая feed-through)</span><span class="arr">→</span><span class="chip N">сразу → ZK144B УЗО1↑ · зона ↑A</span><span class="arr">→</span><span class="chip PE">ZK206G#2 / слот 15</span><span class="arr">→</span><span class="chip cab">кабель №48</span><span class="arr">→</span><span class="chip load">Бра кухня</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО1 63А 30мА → B10 кух.реле</div>
+    <div><b>После автомата:</b> MR6C#2 ch1 → кабель</div>
+    <div><b>Потребитель:</b> Бра кухня</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> сразу → ZK144B УЗО1↑ · зона ↑A · без лок.N на DIN</div>
+    <div><b>PE:</b> ZK206G#2 / слот 15</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО1 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u1 esb" data-n="50" data-uzo="1" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№50</span><span class="name">Основной свет кухня (диммер)</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО1</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B10 кух.дим</span>
+      <span class="tag wb">MDM3#1 ch1</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО1 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 кух.дим</span><span class="arr">→</span><span class="chip wb">MDM3#1 ch1 → кабель</span><span class="arr">→</span><span class="chip L">R1↑: L 2.5 мм² DIN R1↑ (серая feed-through)</span><span class="arr">→</span><span class="chip N">сразу → ZK144B УЗО1↑ · зона ↑A</span><span class="arr">→</span><span class="chip PE">ZK206G#2 / слот 16</span><span class="arr">→</span><span class="chip cab">кабель №50</span><span class="arr">→</span><span class="chip load">Основной свет кухня (диммер)</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО1 63А 30мА → B10 кух.дим</div>
+    <div><b>После автомата:</b> MDM3#1 ch1 → кабель</div>
+    <div><b>Потребитель:</b> Основной свет кухня (диммер)</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> сразу → ZK144B УЗО1↑ · зона ↑A · без лок.N на DIN</div>
+    <div><b>PE:</b> ZK206G#2 / слот 16</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО1 (гребёнка L)</div>
+  </div>
+  <p class="remark">Диммер MDM3#1 ch1 · один B10 кух.дим на №50·51·52. №48·53·56 — один B10 кух.реле (MR6C#2 C1: ch1/2/3).</p>
+</article>
+<article class="cable u1 esb" data-n="51" data-uzo="1" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№51</span><span class="name">Левый свет кухня</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО1</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B10 кух.дим</span>
+      <span class="tag wb">MDM3#1 ch2</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО1 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 кух.дим</span><span class="arr">→</span><span class="chip wb">MDM3#1 ch2 → кабель</span><span class="arr">→</span><span class="chip L">R1↑: L 2.5 мм² DIN R1↑ (серая feed-through)</span><span class="arr">→</span><span class="chip N">сразу → ZK144B УЗО1↑ · зона ↑A</span><span class="arr">→</span><span class="chip PE">ZK206G#2 / слот 17</span><span class="arr">→</span><span class="chip cab">кабель №51</span><span class="arr">→</span><span class="chip load">Левый свет кухня</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО1 63А 30мА → B10 кух.дим</div>
+    <div><b>После автомата:</b> MDM3#1 ch2 → кабель</div>
+    <div><b>Потребитель:</b> Левый свет кухня</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> сразу → ZK144B УЗО1↑ · зона ↑A · без лок.N на DIN</div>
+    <div><b>PE:</b> ZK206G#2 / слот 17</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО1 (гребёнка L)</div>
+  </div>
+  <p class="remark">Диммер по ТЗ: коридор·лоджия·комната осн/доп·кухня L/R</p>
+</article>
+<article class="cable u1 esb" data-n="52" data-uzo="1" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№52</span><span class="name">Правый свет кухня</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО1</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B10 кух.дим</span>
+      <span class="tag wb">MDM3#1 ch3</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО1 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 кух.дим</span><span class="arr">→</span><span class="chip wb">MDM3#1 ch3 → кабель</span><span class="arr">→</span><span class="chip L">R1↑: L 2.5 мм² DIN R1↑ (серая feed-through)</span><span class="arr">→</span><span class="chip N">сразу → ZK144B УЗО1↑ · зона ↑A</span><span class="arr">→</span><span class="chip PE">ZK206G#2 / слот 18</span><span class="arr">→</span><span class="chip cab">кабель №52</span><span class="arr">→</span><span class="chip load">Правый свет кухня</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО1 63А 30мА → B10 кух.дим</div>
+    <div><b>После автомата:</b> MDM3#1 ch3 → кабель</div>
+    <div><b>Потребитель:</b> Правый свет кухня</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> сразу → ZK144B УЗО1↑ · зона ↑A · без лок.N на DIN</div>
+    <div><b>PE:</b> ZK206G#2 / слот 18</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО1 (гребёнка L)</div>
+  </div>
+  <p class="remark">Диммер по ТЗ: коридор·лоджия·комната осн/доп·кухня L/R</p>
+</article>
+<article class="cable u1 esb" data-n="53" data-uzo="1" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№53</span><span class="name">Подсветка кухни</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО1</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B10 кух.реле</span>
+      <span class="tag wb">MR6C#2 ch2</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО1 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 кух.реле</span><span class="arr">→</span><span class="chip wb">MR6C#2 ch2 → кабель</span><span class="arr">→</span><span class="chip L">R1↑: L 2.5 мм² DIN R1↑ (серая feed-through)</span><span class="arr">→</span><span class="chip N">сразу → ZK144B УЗО1↑ · зона ↑A</span><span class="arr">→</span><span class="chip PE">ZK206G#2 / слот 19</span><span class="arr">→</span><span class="chip cab">кабель №53</span><span class="arr">→</span><span class="chip load">Подсветка кухни</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО1 63А 30мА → B10 кух.реле</div>
+    <div><b>После автомата:</b> MR6C#2 ch2 → кабель</div>
+    <div><b>Потребитель:</b> Подсветка кухни</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> сразу → ZK144B УЗО1↑ · зона ↑A · без лок.N на DIN</div>
+    <div><b>PE:</b> ZK206G#2 / слот 19</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО1 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u1 esb" data-n="54" data-uzo="1" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№54</span><span class="name">Левая розетка кухни</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО1</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B16 роз.кух</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО1 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 роз.кух</span><span class="arr">→</span><span class="chip out">J3 JXB 3pin</span><span class="arr">→</span><span class="chip L">R1↑: L блок J3 (47·54·55)</span><span class="arr">→</span><span class="chip N">сразу → ZK144B УЗО1↑ · зона ↑A</span><span class="arr">→</span><span class="chip PE">ZK206G#2 / слот 20</span><span class="arr">→</span><span class="chip cab">кабель №54</span><span class="arr">→</span><span class="chip load">Левая розетка кухни</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО1 63А 30мА → B16 роз.кух</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Левая розетка кухни</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> сразу → ZK144B УЗО1↑ · зона ↑A · без лок.N на DIN</div>
+    <div><b>PE:</b> ZK206G#2 / слот 20</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО1 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u1 esb" data-n="55" data-uzo="1" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№55</span><span class="name">Правая розетка кухни</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО1</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B16 роз.кух</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО1 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 роз.кух</span><span class="arr">→</span><span class="chip out">J3 JXB 3pin</span><span class="arr">→</span><span class="chip L">R1↑: L блок J3 (47·54·55)</span><span class="arr">→</span><span class="chip N">сразу → ZK144B УЗО1↑ · зона ↑A</span><span class="arr">→</span><span class="chip PE">ZK175G / слот ↑1</span><span class="arr">→</span><span class="chip cab">кабель №55</span><span class="arr">→</span><span class="chip load">Правая розетка кухни</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО1 63А 30мА → B16 роз.кух</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Правая розетка кухни</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> сразу → ZK144B УЗО1↑ · зона ↑A · без лок.N на DIN</div>
+    <div><b>PE:</b> ZK175G / слот ↑1</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО1 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u1 esb" data-n="56" data-uzo="1" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№56</span><span class="name">Вытяжка кухня</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО1</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B10 кух.реле</span>
+      <span class="tag wb">MR2.3</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО1 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 кух.реле</span><span class="arr">→</span><span class="chip wb">MR6C#2 ch3 → кабель</span><span class="arr">→</span><span class="chip L">R1↑: L 2.5 мм² DIN R1↑ (серая feed-through)</span><span class="arr">→</span><span class="chip N">сразу → ZK144B УЗО1↑ · зона ↑A</span><span class="arr">→</span><span class="chip PE">ZK175G / слот ↑2</span><span class="arr">→</span><span class="chip cab">кабель №56</span><span class="arr">→</span><span class="chip load">Вытяжка кухня</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО1 63А 30мА → B10 кух.реле</div>
+    <div><b>После автомата:</b> MR6C#2 C1 ch3 (тот же COM/B10, что №48·53) → кабель</div>
+    <div><b>Потребитель:</b> Вытяжка кухня</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> сразу → ZK144B УЗО1↑ · зона ↑A · без лок.N на DIN</div>
+    <div><b>PE:</b> ZK175G / слот ↑2</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО1 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u2 esb thick" data-n="58" data-uzo="2" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№58</span><span class="name">Проточный водонагреватель</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО2</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B32 проточный</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО2 63А 30мА</span><span class="arr">→</span><span class="chip brk">B32 проточный</span><span class="arr">→</span><span class="chip out">напрямую на кабель</span><span class="arr">→</span><span class="chip L">R1↑: L 6–10 мм² DIN (UT 10 / Wago 2010)</span><span class="arr">→</span><span class="chip N">ZK113B (есть)</span><span class="arr">→</span><span class="chip PE">ZK175G / слот ↑3</span><span class="arr">→</span><span class="chip cab">кабель №58</span><span class="arr">→</span><span class="chip load">Проточный водонагреватель</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО2 63А 30мА → B32 проточный</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Проточный водонагреватель</div>
+    <div><b>L:</b> L 6–10 мм² DIN (UT 10 / Wago 2010) <span class="muted">DKC/винт L 6–10 · счёт 1581</span></div>
+    <div><b>N:</b> ZK113B (есть) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK175G / слот ↑3</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО2 (гребёнка L)</div>
+  </div>
+  <p class="remark">Толстый кабель → клеммы 10 мм² на R1.</p>
+</article>
+<article class="cable u2 esb" data-n="61" data-uzo="2" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№61</span><span class="name">Свет ванна</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО2</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B10 свет.сан</span>
+      <span class="tag wb">MR6C#3 ch1</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО2 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 свет.сан</span><span class="arr">→</span><span class="chip wb">MR6C#3 ch1 → кабель</span><span class="arr">→</span><span class="chip L">R1↑: L 2.5 мм² DIN R1↑ (серая feed-through)</span><span class="arr">→</span><span class="chip N">ZK113B (есть)</span><span class="arr">→</span><span class="chip PE">ZK175G / слот ↑4</span><span class="arr">→</span><span class="chip cab">кабель №61</span><span class="arr">→</span><span class="chip load">Свет ванна</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО2 63А 30мА → B10 свет.сан</div>
+    <div><b>После автомата:</b> MR6C#3 ch1 → кабель</div>
+    <div><b>Потребитель:</b> Свет ванна</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK113B (есть) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK175G / слот ↑4</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО2 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u2 esb" data-n="62" data-uzo="2" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№62</span><span class="name">Зеркало ванна</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО2</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B10 свет.сан</span>
+      <span class="tag wb">MR6C#3 ch2</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО2 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 свет.сан</span><span class="arr">→</span><span class="chip wb">MR6C#3 ch2 → кабель</span><span class="arr">→</span><span class="chip L">R1↑: L 2.5 мм² DIN R1↑ (серая feed-through)</span><span class="arr">→</span><span class="chip N">ZK113B (есть)</span><span class="arr">→</span><span class="chip PE">ZK175G / слот ↑5</span><span class="arr">→</span><span class="chip cab">кабель №62</span><span class="arr">→</span><span class="chip load">Зеркало ванна</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО2 63А 30мА → B10 свет.сан</div>
+    <div><b>После автомата:</b> MR6C#3 ch2 → кабель</div>
+    <div><b>Потребитель:</b> Зеркало ванна</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK113B (есть) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK175G / слот ↑5</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО2 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u2 esb" data-n="63" data-uzo="2" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№63</span><span class="name">Розетка ванна</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО2</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B16 роз.сан</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО2 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 роз.сан</span><span class="arr">→</span><span class="chip out">J4 JXB 2pin</span><span class="arr">→</span><span class="chip L">R1↑: L блок J4 (63·70)</span><span class="arr">→</span><span class="chip N">ZK113B (есть)</span><span class="arr">→</span><span class="chip PE">ZK175G / слот ↑6</span><span class="arr">→</span><span class="chip cab">кабель №63</span><span class="arr">→</span><span class="chip load">Розетка ванна</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО2 63А 30мА → B16 роз.сан</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Розетка ванна</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK113B (есть) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK175G / слот ↑6</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО2 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u2 esb" data-n="64" data-uzo="2" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№64</span><span class="name">Вытяжка ванна</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО2</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B10 свет.сан</span>
+      <span class="tag wb">MR6C#3 ch3</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО2 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 свет.сан</span><span class="arr">→</span><span class="chip wb">MR6C#3 ch3 → кабель</span><span class="arr">→</span><span class="chip L">R1↑: L 2.5 мм² DIN R1↑ (серая feed-through)</span><span class="arr">→</span><span class="chip N">ZK113B (есть)</span><span class="arr">→</span><span class="chip PE">ZK175G / слот ↑7</span><span class="arr">→</span><span class="chip cab">кабель №64</span><span class="arr">→</span><span class="chip load">Вытяжка ванна</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО2 63А 30мА → B10 свет.сан</div>
+    <div><b>После автомата:</b> MR6C#3 ch3 → кабель</div>
+    <div><b>Потребитель:</b> Вытяжка ванна</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK113B (есть) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK175G / слот ↑7</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО2 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u4 esb" data-n="68" data-uzo="4" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№68</span><span class="name">Свет коридор</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО4</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B10 бра+кор</span>
+      <span class="tag wb">MDM3#3 ch1</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО4 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 бра+кор</span><span class="arr">→</span><span class="chip wb">MDM3#3 ch1 → кабель</span><span class="arr">→</span><span class="chip L">R1↑: L 2.5 мм² DIN R1↑ (серая feed-through)</span><span class="arr">→</span><span class="chip N">ZK144B (купить #1)</span><span class="arr">→</span><span class="chip PE">ZK175G / слот ↑8</span><span class="arr">→</span><span class="chip cab">кабель №68</span><span class="arr">→</span><span class="chip load">Свет коридор</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО4 63А 30мА → B10 бра+кор</div>
+    <div><b>После автомата:</b> MDM3#3 ch1 → кабель</div>
+    <div><b>Потребитель:</b> Свет коридор</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK144B (купить #1) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK175G / слот ↑8</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО4 (гребёнка L)</div>
+  </div>
+  <p class="remark">Диммер по ТЗ: коридор·лоджия·комната осн/доп·кухня L/R</p>
+</article>
+<article class="cable u2 esb" data-n="69" data-uzo="2" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№69</span><span class="name">Зеркало туалет</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО2</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B10 свет.сан</span>
+      <span class="tag wb">MR6C#3 ch4</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО2 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 свет.сан</span><span class="arr">→</span><span class="chip wb">MR6C#3 ch4 → кабель</span><span class="arr">→</span><span class="chip L">R1↑: L 2.5 мм² DIN R1↑ (серая feed-through)</span><span class="arr">→</span><span class="chip N">ZK113B (есть)</span><span class="arr">→</span><span class="chip PE">ZK175G / слот ↑9</span><span class="arr">→</span><span class="chip cab">кабель №69</span><span class="arr">→</span><span class="chip load">Зеркало туалет</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО2 63А 30мА → B10 свет.сан</div>
+    <div><b>После автомата:</b> MR6C#3 ch4 → кабель</div>
+    <div><b>Потребитель:</b> Зеркало туалет</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK113B (есть) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK175G / слот ↑9</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО2 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u2 esb" data-n="70" data-uzo="2" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№70</span><span class="name">Розетка туалет</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО2</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B16 роз.сан</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО2 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 роз.сан</span><span class="arr">→</span><span class="chip out">J4 JXB 2pin</span><span class="arr">→</span><span class="chip L">R1↑: L блок J4 (63·70)</span><span class="arr">→</span><span class="chip N">ZK113B (есть)</span><span class="arr">→</span><span class="chip PE">ZK175G / слот ↑10</span><span class="arr">→</span><span class="chip cab">кабель №70</span><span class="arr">→</span><span class="chip load">Розетка туалет</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО2 63А 30мА → B16 роз.сан</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Розетка туалет</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK113B (есть) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK175G / слот ↑10</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО2 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u2 esb" data-n="71" data-uzo="2" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№71</span><span class="name">Свет туалет</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО2</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B10 свет.сан</span>
+      <span class="tag wb">MR6C#3 ch5</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО2 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 свет.сан</span><span class="arr">→</span><span class="chip wb">MR6C#3 ch5 → кабель</span><span class="arr">→</span><span class="chip L">R1↑: L 2.5 мм² DIN R1↑ (серая feed-through)</span><span class="arr">→</span><span class="chip N">ZK113B (есть)</span><span class="arr">→</span><span class="chip PE">ZK175G / слот ↑11</span><span class="arr">→</span><span class="chip cab">кабель №71</span><span class="arr">→</span><span class="chip load">Свет туалет</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО2 63А 30мА → B10 свет.сан</div>
+    <div><b>После автомата:</b> MR6C#3 ch5 → кабель</div>
+    <div><b>Потребитель:</b> Свет туалет</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK113B (есть) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK175G / слот ↑11</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО2 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u2 esb" data-n="72" data-uzo="2" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№72</span><span class="name">Вытяжка туалет</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО2</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B10 свет.сан</span>
+      <span class="tag wb">MR6C#3 ch6</span>
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО2 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 свет.сан</span><span class="arr">→</span><span class="chip wb">MR6C#3 ch6 → кабель</span><span class="arr">→</span><span class="chip L">R1↑: L 2.5 мм² DIN R1↑ (серая feed-through)</span><span class="arr">→</span><span class="chip N">ZK113B (есть)</span><span class="arr">→</span><span class="chip PE">ZK175G / слот ↑12</span><span class="arr">→</span><span class="chip cab">кабель №72</span><span class="arr">→</span><span class="chip load">Вытяжка туалет</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО2 63А 30мА → B10 свет.сан</div>
+    <div><b>После автомата:</b> MR6C#3 ch6 → кабель</div>
+    <div><b>Потребитель:</b> Вытяжка туалет</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK113B (есть) · нет · сразу в ZK</div>
+    <div><b>PE:</b> ZK175G / слот ↑12</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО2 (гребёнка L)</div>
+  </div>
+  
+</article>
+<article class="cable u1 esb" data-n="100" data-uzo="1" data-entry="сверху" data-esb="esb">
+  <header>
+    <div class="left"><span class="num">№100</span><span class="name">Питание карниза кухня</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО1</span>
+      <span class="tag esb">через ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B10 карниз.к</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip esb">через ESB63</span><span class="arr">→</span><span class="chip uzo">УЗО1 63А 30мА</span><span class="arr">→</span><span class="chip brk">B10 карниз.к</span><span class="arr">→</span><span class="chip out">постоянно с автомата (без реле)</span><span class="arr">→</span><span class="chip L">R1↑: L 2.5 мм² DIN R1↑ (серая feed-through)</span><span class="arr">→</span><span class="chip N">сразу → ZK144B УЗО1↑ · зона ↑A</span><span class="arr">→</span><span class="chip PE">ZK175G / слот ↑13</span><span class="arr">→</span><span class="chip cab">кабель №100</span><span class="arr">→</span><span class="chip load">Питание карниза кухня</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → через ESB63 → УЗО1 63А 30мА → B10 карниз.к</div>
+    <div><b>После автомата:</b> постоянно с автомата (без реле); упр. Modbus отдельно</div>
+    <div><b>Потребитель:</b> Питание карниза кухня</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> сразу → ZK144B УЗО1↑ · зона ↑A · без лок.N на DIN</div>
+    <div><b>PE:</b> ZK175G / слот ↑13</div>
+    <div><b>Гребёнка L:</b> R3 куст УЗО1 (гребёнка L)</div>
+  </div>
+  <p class="remark">Сила постоянно с B10 карниз.к; упр. №49 → BUSHUB.</p>
+</article>
+<article class="cable u6 alw" data-n="101" data-uzo="6" data-entry="сверху" data-esb="alw">
+  <header>
+    <div class="left"><span class="num">№101</span><span class="name">Розетка люк туалет (неоткл.)</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО6</span>
+      <span class="tag alw">мимо ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B16 люк</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip alw">мимо ESB</span><span class="arr">→</span><span class="chip uzo">УЗО6 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 люк</span><span class="arr">→</span><span class="chip out">напрямую на кабель</span><span class="arr">→</span><span class="chip L">R1↑: L 2.5 мм² DIN R1↑ (серая feed-through)</span><span class="arr">→</span><span class="chip N">ZK82B (есть) · общий ↓↑</span><span class="arr">→</span><span class="chip PE">PE-докуп клемма #1</span><span class="arr">→</span><span class="chip cab">кабель №101</span><span class="arr">→</span><span class="chip load">Розетка люк туалет (неоткл.)</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → мимо ESB → УЗО6 63А 30мА → B16 люк</div>
+    <div><b>После автомата:</b> напрямую на кабель</div>
+    <div><b>Потребитель:</b> Розетка люк туалет (неоткл.)</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK82B (есть) · общий ↓↑ · нет · сразу в ZK</div>
+    <div><b>PE:</b> PE-докуп клемма #1</div>
+    <div><b>Гребёнка L:</b> R4 куст УЗО6 (гребёнка L)</div>
+  </div>
+  <p class="remark">Неоткл. на B16 люк (УЗО6), осознанно.</p>
+</article>
+<article class="cable u6 alw" data-n="105" data-uzo="6" data-entry="сверху" data-esb="alw">
+  <header>
+    <div class="left"><span class="num">№105</span><span class="name">Роутер/коммутатор</span></div>
+    <div class="tags">
+      <span class="tag uzo">УЗО6</span>
+      <span class="tag alw">мимо ESB</span>
+      <span class="tag entry">сверху → R1</span>
+      <span class="tag auto">B16 сервер+IT</span>
+      
+      <span class="tag ok">OK</span>
+    </div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip alw">мимо ESB</span><span class="arr">→</span><span class="chip uzo">УЗО6 63А 30мА</span><span class="arr">→</span><span class="chip brk">B16 сервер+IT</span><span class="arr">→</span><span class="chip out">J6 JXB 2pin</span><span class="arr">→</span><span class="chip L">R1↑: L блок J6 (26·105)</span><span class="arr">→</span><span class="chip N">ZK82B (есть) · общий ↓↑</span><span class="arr">→</span><span class="chip PE">PE-докуп клемма #2</span><span class="arr">→</span><span class="chip cab">кабель №105</span><span class="arr">→</span><span class="chip load">Роутер/коммутатор</span></div>
+  <div class="meta">
+    <div><b>Сила от ввода:</b> ВА50 → УЗМ-50Ц → мимо ESB → УЗО6 63А 30мА → B16 сервер+IT</div>
+    <div><b>После автомата:</b> напрямую на кабель (параллель если несколько №)</div>
+    <div><b>Потребитель:</b> Роутер/коммутатор</div>
+    <div><b>L:</b> L 2.5 мм² DIN R1↑ (серая feed-through) <span class="muted">DKC VPR-2.5-GY · не VPRTT</span></div>
+    <div><b>N:</b> ZK82B (есть) · общий ↓↑ · нет · сразу в ZK</div>
+    <div><b>PE:</b> PE-докуп клемма #2</div>
+    <div><b>Гребёнка L:</b> R4 куст УЗО6 (гребёнка L)</div>
+  </div>
+  
+</article>
+  </div>
+</section>
+
+<section id="shield">
+  <h2>Внутри щита</h2>
+  <p class="note">Питание автоматики с УЗО7 (не квартирный силовой кабель).</p>
+<article class="cable alw shield">
+  <header>
+    <div class="left"><span class="num">D10</span><span class="name">MORNSUN→UPS→WB7; 24В на MR/MDM/CU</span></div>
+    <div class="tags"><span class="tag alw">мимо ESB</span><span class="tag uzo">УЗО7 63А 30мА</span><span class="tag auto">D10 WB</span></div>
+  </header>
+  <div class="chain"><span class="chip in">ВА50</span><span class="arr">→</span><span class="chip in">УЗМ-50Ц</span><span class="arr">→</span><span class="chip alw">мимо ESB</span><span class="arr">→</span><span class="chip uzo">УЗО7 63А 30мА</span><span class="arr">→</span><span class="chip brk">D10 WB</span><span class="arr">→</span><span class="chip brk">D10 → MORNSUN → UPS → WB7; 24В на MR/MDM в щите</span><span class="arr">→</span><span class="chip load">потребитель на конце кабеля</span></div>
+  
+</article>
+</section>
+
+<section id="soft">
+  <h2>Слаботочка / управление</h2>
+  <p class="note">Не через УЗО/автоматы силы → BUSHUB / коммутатор / DI / IT.</p>
+<article class="soft">
+  <header><span class="num">25</span><span class="name">Выключатель кладовая</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">входы MR / NSPanel Wi‑Fi</span>
+    <span class="arr">→</span><span class="chip load">Выключатель кладовая</span>
+  </div>
+  <p class="remark">не сила</p>
+</article>
+<article class="soft">
+  <header><span class="num">33</span><span class="name">Бывший кабель кондея / резерв</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">клеммы RESERVE</span>
+    <span class="arr">→</span><span class="chip load">Бывший кабель кондея / резерв</span>
+  </div>
+  <p class="remark">сила кондея = №18</p>
+</article>
+<article class="soft">
+  <header><span class="num">36</span><span class="name">Управление лентой карниза</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">опц. к WB-LED (R5) или сценарий WB7</span>
+    <span class="arr">→</span><span class="chip load">Управление лентой карниза</span>
+  </div>
+  <p class="remark">сила №35 через WB-LED в щите; №36 опционально</p>
+</article>
+<article class="soft">
+  <header><span class="num">39</span><span class="name">Упр. карниза лоджия</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">шина BUSHUB (R1)</span>
+    <span class="arr">→</span><span class="chip load">Упр. карниза лоджия</span>
+  </div>
+  <p class="remark">упр. карниза на шине; сила отдельно B10</p>
+</article>
+<article class="soft">
+  <header><span class="num">40</span><span class="name">Ethernet стол</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">коммутатор / клеммы UTP</span>
+    <span class="arr">→</span><span class="chip load">Ethernet стол</span>
+  </div>
+  
+</article>
+<article class="soft">
+  <header><span class="num">42</span><span class="name">Планшет управления</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">коммутатор</span>
+    <span class="arr">→</span><span class="chip load">Планшет управления</span>
+  </div>
+  
+</article>
+<article class="soft">
+  <header><span class="num">44</span><span class="name">Ethernet ТВ</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">коммутатор</span>
+    <span class="arr">→</span><span class="chip load">Ethernet ТВ</span>
+  </div>
+  
+</article>
+<article class="soft">
+  <header><span class="num">45</span><span class="name">Выключатель комната</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">NSPanel / входы MR</span>
+    <span class="arr">→</span><span class="chip load">Выключатель комната</span>
+  </div>
+  
+</article>
+<article class="soft">
+  <header><span class="num">46</span><span class="name">Ethernet кухня</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">коммутатор</span>
+    <span class="arr">→</span><span class="chip load">Ethernet кухня</span>
+  </div>
+  
+</article>
+<article class="soft">
+  <header><span class="num">49</span><span class="name">Упр. карниза кухня</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">шина BUSHUB (R1)</span>
+    <span class="arr">→</span><span class="chip load">Упр. карниза кухня</span>
+  </div>
+  <p class="remark">упр. карниза на шине; сила отдельно B10</p>
+</article>
+<article class="soft">
+  <header><span class="num">57</span><span class="name">Выключатель кухня</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">NSPanel / входы MR</span>
+    <span class="arr">→</span><span class="chip load">Выключатель кухня</span>
+  </div>
+  
+</article>
+<article class="soft">
+  <header><span class="num">59</span><span class="name">Датчик темп/влажн. коридор</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">BUSHUB / M1W2</span>
+    <span class="arr">→</span><span class="chip load">Датчик темп/влажн. коридор</span>
+  </div>
+  <p class="remark">поле</p>
+</article>
+<article class="soft">
+  <header><span class="num">60</span><span class="name">Камера</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">коммутатор</span>
+    <span class="arr">→</span><span class="chip load">Камера</span>
+  </div>
+  <p class="remark">см. также камера у двери</p>
+</article>
+<article class="soft">
+  <header><span class="num">65</span><span class="name">Выключатель ванной</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">NSPanel / входы MR</span>
+    <span class="arr">→</span><span class="chip load">Выключатель ванной</span>
+  </div>
+  
+</article>
+<article class="soft">
+  <header><span class="num">66</span><span class="name">Планшет коридор</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">коммутатор</span>
+    <span class="arr">→</span><span class="chip load">Планшет коридор</span>
+  </div>
+  
+</article>
+<article class="soft">
+  <header><span class="num">67</span><span class="name">Выключатель туалета</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">NSPanel / входы MR</span>
+    <span class="arr">→</span><span class="chip load">Выключатель туалета</span>
+  </div>
+  
+</article>
+<article class="soft">
+  <header><span class="num">MSW</span><span class="name">WB-MSW v.4</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">шина BUSHUB (R1)</span>
+    <span class="arr">→</span><span class="chip load">WB-MSW v.4</span>
+  </div>
+  <p class="remark">на шине · климат; кондеи = ONOKOM</p>
+</article>
+<article class="soft">
+  <header><span class="num">M1W2</span><span class="name">M1W2 ×2 (модули у датчиков)</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">шина BUSHUB (R1)</span>
+    <span class="arr">→</span><span class="chip load">M1W2 ×2 (модули у датчиков)</span>
+  </div>
+  <p class="remark">модули у датчиков · на шине; 1-Wire локально</p>
+</article>
+<article class="soft">
+  <header><span class="num">MWAC</span><span class="name">MWAC контроллер протечки</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">шина BUSHUB (R1)</span>
+    <span class="arr">→</span><span class="chip load">MWAC контроллер протечки</span>
+  </div>
+  <p class="remark">люк/санузел · на шине</p>
+</article>
+<article class="soft">
+  <header><span class="num">U-PE</span><span class="name">Заземление туалет</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R6↓</span>
+    <span class="arr">→</span><span class="chip wb">шина PE / NLPE R6</span>
+    <span class="arr">→</span><span class="chip load">Заземление туалет</span>
+  </div>
+  <p class="remark">на общее заземление щита</p>
+</article>
+<article class="soft">
+  <header><span class="num">U-TP1</span><span class="name">Датчик темп. полов кухня+ванна</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">M1W2 уже на шине BUSHUB</span>
+    <span class="arr">→</span><span class="chip load">Датчик темп. полов кухня+ванна</span>
+  </div>
+  <p class="remark">датчики не в BUSHUB напрямую</p>
+</article>
+<article class="soft">
+  <header><span class="num">U-TP2</span><span class="name">Датчик темп. туалет+коридор</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">M1W2 уже на шине BUSHUB</span>
+    <span class="arr">→</span><span class="chip load">Датчик темп. туалет+коридор</span>
+  </div>
+  <p class="remark">датчики не в BUSHUB напрямую</p>
+</article>
+<article class="soft">
+  <header><span class="num">U-AC1</span><span class="name">Кондиционер упр. кухня</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">ONOKOM в блоке → BUSHUB</span>
+    <span class="arr">→</span><span class="chip load">Кондиционер упр. кухня</span>
+  </div>
+  <p class="remark">шлюз ONOKOM в блоке → BUSHUB · onokom.ru</p>
+</article>
+<article class="soft">
+  <header><span class="num">U-AC2</span><span class="name">Кондиционер упр. комната</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">ONOKOM в блоке → BUSHUB</span>
+    <span class="arr">→</span><span class="chip load">Кондиционер упр. комната</span>
+  </div>
+  <p class="remark">шлюз ONOKOM в блоке → BUSHUB · onokom.ru</p>
+</article>
+<article class="soft">
+  <header><span class="num">U-DOOR</span><span class="name">Открытие двери (геркон/замок)</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">DI MR6C → WB7</span>
+    <span class="arr">→</span><span class="chip load">Открытие двери (геркон/замок)</span>
+  </div>
+  <p class="remark">перепроверить тип датчика</p>
+</article>
+<article class="soft">
+  <header><span class="num">U-DOM</span><span class="name">Домофон → Beward B102S</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">B102S + коммутатор (IT)</span>
+    <span class="arr">→</span><span class="chip load">Домофон → Beward B102S</span>
+  </div>
+  <p class="remark">не в DIN ABB; у сервера</p>
+</article>
+<article class="soft">
+  <header><span class="num">U-FIB</span><span class="name">Интернет оптоволокно</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">роутер (IT / №105)</span>
+    <span class="arr">→</span><span class="chip load">Интернет оптоволокно</span>
+  </div>
+  <p class="remark">не DIN щита силы</p>
+</article>
+<article class="soft">
+  <header><span class="num">U-IN</span><span class="name">Вводной силовой</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">по месту</span>
+    <span class="arr">→</span><span class="chip wb">ВА50 → УЗМ-50Ц</span>
+    <span class="arr">→</span><span class="chip load">Вводной силовой</span>
+  </div>
+  <p class="remark">уже в схеме ввода</p>
+</article>
+<article class="soft">
+  <header><span class="num">U-CR</span><span class="name">Упр. карнизом комната</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">шина BUSHUB (R1)</span>
+    <span class="arr">→</span><span class="chip load">Упр. карнизом комната</span>
+  </div>
+  <p class="remark">упр. карниза на шине; сила отдельно B10</p>
+</article>
+<article class="soft">
+  <header><span class="num">U-CAM</span><span class="name">Камера у двери</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">коммутатор</span>
+    <span class="arr">→</span><span class="chip load">Камера у двери</span>
+  </div>
+  <p class="remark">может = №60 или отдельно</p>
+</article>
+<article class="soft">
+  <header><span class="num">U-LK</span><span class="name">Кабель контроллера протечки в люке</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">шина BUSHUB → MWAC</span>
+    <span class="arr">→</span><span class="chip load">Кабель контроллера протечки в люке</span>
+  </div>
+  <p class="remark">MWAC на шине</p>
+</article>
+<article class="soft">
+  <header><span class="num">U-MST</span><span class="name">Мастер-выключатель (UTP Cat6)</span></header>
+  <div class="chain">
+    <span class="chip cab">линия</span>
+    <span class="arr">→</span><span class="chip L">R1↑</span>
+    <span class="arr">→</span><span class="chip wb">DI MR6C v3 → WB7 → MR6CU#2 → катушка ESB</span>
+    <span class="arr">→</span><span class="chip load">Мастер-выключатель (UTP Cat6)</span>
+  </div>
+  <p class="remark">См. лист «Мастер-выключатель». НЕ 230В по Cat6. НЕ напрямую в WB7.</p>
+</article>
+</section>
+
+<section>
+  <p class="foot">Excel: «Полная цепочка» + «Монтаж на кабель» + «Каналы реле диммеры» · <code>shit_ABB_AT62_polnaya_tsepochka.html</code></p>
+</section>
+</main>
+<script>
+(function(){
+  const cards=[...document.querySelectorAll('#list .cable')];
+  const q=document.getElementById('q');
+  const btns=[...document.querySelectorAll('#toolbar button[data-f]')];
+  const uzos=[...document.querySelectorAll('#toolbar input[data-uzo]')];
+  let mode='all';
+  function apply(){
+    const term=(q.value||'').trim().toLowerCase();
+    const onU=new Set(uzos.filter(x=>x.checked).map(x=>x.dataset.uzo));
+    cards.forEach(c=>{
+      let ok=true;
+      if(mode==='esb' && c.dataset.esb!=='esb') ok=false;
+      if(mode==='alw' && c.dataset.esb!=='alw') ok=false;
+      if(mode==='bot' && c.dataset.entry!=='снизу') ok=false;
+      if(mode==='top' && c.dataset.entry!=='сверху') ok=false;
+      if(!onU.has(c.dataset.uzo)) ok=false;
+      if(term && !c.textContent.toLowerCase().includes(term)) ok=false;
+      c.classList.toggle('hidden', !ok);
+    });
+  }
+  btns.forEach(b=>b.addEventListener('click',()=>{
+    btns.forEach(x=>x.classList.remove('active'));
+    b.classList.add('active'); mode=b.dataset.f; apply();
+  }));
+  uzos.forEach(u=>{
+    u.parentElement.classList.add('active');
+    u.addEventListener('change',()=>{ u.parentElement.classList.toggle('active', u.checked); apply(); });
+  });
+  q.addEventListener('input', apply);
+})();
+</script>
+</body>
+</html>

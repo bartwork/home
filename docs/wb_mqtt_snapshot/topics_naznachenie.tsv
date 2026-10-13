@@ -1,0 +1,27 @@
+cable	purpose	schema	uzo_auto	mqtt_device	mqtt_topic	control	confidence
+1	Тёплый пол коридор	MR6C#1 ch1	УЗО5 / B16 ТП К+Т	wb-mr6cv3_225	/devices/wb-mr6cv3_225/controls/K1	K1	medium
+3	Тёплый пол туалет	MR6C#1 ch2	УЗО5 / B16 ТП К+Т	wb-mr6cv3_225	/devices/wb-mr6cv3_225/controls/K2	K2	medium
+4	Тёплый пол ванна	MR6C#1 ch4	УЗО5 / B16 ТП В+Кух	wb-mr6cv3_225	/devices/wb-mr6cv3_225/controls/K4	K4	medium
+5	Сушилка	CU#1→контактор	УЗО3 / B16 сушилка	wb-mr6cu_43	/devices/wb-mr6cu_43/controls/K? (уточнить)	K? (уточнить)	low
+15	Тёплый пол кухня	MR6C#1 ch5	УЗО5 / B16 ТП В+Кух	wb-mr6cv3_225	/devices/wb-mr6cv3_225/controls/K5	K5	medium
+27	Лента шкаф/кладовая (230В → локальный БП 24В у шкафа)	MR6C#2 ch4	УЗО4 / B10 кладовая	wb-mr6cv3_227	/devices/wb-mr6cv3_227/controls/K4	K4	medium
+28	Свет кладовая	MR6C#2 ch5	УЗО4 / B10 кладовая	wb-mr6cv3_227	/devices/wb-mr6cv3_227/controls/K5	K5	medium
+29	Бра левая кровать (диммер)	MDM3#3 ch2	УЗО4 / B10 бра+кор	wb-mdm3_76	/devices/wb-mdm3_76/controls/Channel 2	Channel 2	medium
+30	Основная люстра	MDM3#2 ch1	УЗО4 / B10 комн.дим	wb-mdm3_75	/devices/wb-mdm3_75/controls/Channel 1	Channel 1	medium
+31	Точки у люстры	MDM3#2 ch2	УЗО4 / B10 комн.дим	wb-mdm3_75	/devices/wb-mdm3_75/controls/Channel 2	Channel 2	medium
+32	Бра правая кровать (диммер)	MDM3#3 ch3	УЗО4 / B10 бра+кор	wb-mdm3_76	/devices/wb-mdm3_76/controls/Channel 3	Channel 3	medium
+35	Лента карниза (24В)	WB-LED	УЗО7 / D6→ARV	wb-led_221	/devices/wb-led_221/controls/RGB Strip	RGB Strip	high
+37	Свет лоджия	MDM3#2 ch3	УЗО4 / B10 комн.дим	wb-mdm3_75	/devices/wb-mdm3_75/controls/Channel 3	Channel 3	medium
+48	Бра кухня	MR6C#2 ch1	УЗО1 / B10 кух.реле	wb-mr6cv3_227	/devices/wb-mr6cv3_227/controls/K1	K1	medium
+50	Основной свет кухня (диммер)	MDM3#1 ch1	УЗО1 / B10 кух.дим	wb-mdm3_218	/devices/wb-mdm3_218/controls/Channel 1	Channel 1	medium
+51	Левый свет кухня	MDM3#1 ch2	УЗО1 / B10 кух.дим	wb-mdm3_218	/devices/wb-mdm3_218/controls/Channel 2	Channel 2	medium
+52	Правый свет кухня	MDM3#1 ch3	УЗО1 / B10 кух.дим	wb-mdm3_218	/devices/wb-mdm3_218/controls/Channel 3	Channel 3	medium
+53	Подсветка кухни	MR6C#2 ch2	УЗО1 / B10 кух.реле	wb-mr6cv3_227	/devices/wb-mr6cv3_227/controls/K2	K2	medium
+56	Вытяжка кухня	MR6C#2 ch3	УЗО1 / B10 кух.реле	wb-mr6cv3_227	/devices/wb-mr6cv3_227/controls/K3	K3	medium
+61	Свет ванна	MR6C#3 ch1	УЗО2 / B10 свет.сан	wb-mr6cv3_239	/devices/wb-mr6cv3_239/controls/K1	K1	medium
+62	Зеркало ванна	MR6C#3 ch2	УЗО2 / B10 свет.сан	wb-mr6cv3_239	/devices/wb-mr6cv3_239/controls/K2	K2	medium
+64	Вытяжка ванна	MR6C#3 ch3	УЗО2 / B10 свет.сан	wb-mr6cv3_239	/devices/wb-mr6cv3_239/controls/K3	K3	medium
+68	Свет коридор	MDM3#3 ch1	УЗО4 / B10 бра+кор	wb-mdm3_76	/devices/wb-mdm3_76/controls/Channel 1	Channel 1	medium
+69	Зеркало туалет	MR6C#3 ch4	УЗО2 / B10 свет.сан	wb-mr6cv3_239	/devices/wb-mr6cv3_239/controls/K4	K4	medium
+71	Свет туалет	MR6C#3 ch5	УЗО2 / B10 свет.сан	wb-mr6cv3_239	/devices/wb-mr6cv3_239/controls/K5	K5	medium
+72	Вытяжка туалет	MR6C#3 ch6	УЗО2 / B10 свет.сан	wb-mr6cv3_239	/devices/wb-mr6cv3_239/controls/K6	K6	medium

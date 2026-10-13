@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ABB AT62 — клеммы на рейки R6 / R1</title>
+<style>
+:root {
+  --ink:#15202b; --muted:#5a6570; --line:#c5ced6;
+  --gy:#d5d8dc; --gyink:#2b3340;
+  --bu:#7eb6e8; --buink:#0b3d6e;
+  --th:#c4b5fd; --think:#3b0764;
+  --sk:#e2e8f0; --skink:#64748b;
+  --ut:#e9d5ff; --hub:#f9a8d4;
+  --j1:#fde68a; --j2:#bbf7d0; --j3:#fdba74; --j4:#93c5fd; --j5:#f9a8d4; --j6:#c4b5fd;
+}
+* { box-sizing:border-box; }
+body { margin:0; font-family:"Segoe UI",system-ui,sans-serif; background:#e8ecf0; color:var(--ink); }
+header {
+  background:#1a3d5c; color:#fff; padding:1rem 1.2rem;
+}
+header h1 { margin:0 0 .3rem; font-size:1.2rem; }
+header p { margin:0; font-size:.88rem; opacity:.92; max-width:1100px; }
+.nav { display:flex; flex-wrap:wrap; gap:.4rem; margin:.55rem 0 0; }
+.nav a {
+  color:#fff; text-decoration:none; border:1px solid rgba(255,255,255,.3);
+  border-radius:7px; padding:.28rem .6rem; font-size:.8rem; background:rgba(255,255,255,.1);
+}
+main { max-width:1180px; margin:0 auto; padding:1rem 1rem 2.5rem; }
+.take {
+  background:#fff; border:1px solid var(--line); border-radius:12px;
+  padding:.85rem 1rem; margin-bottom:.9rem;
+}
+.take h2 { margin:0 0 .45rem; font-size:1.05rem; }
+.take table { width:100%; border-collapse:collapse; font-size:.86rem; }
+.take th, .take td { text-align:left; padding:.28rem .4rem; border-bottom:1px solid #e6ebef; vertical-align:top; }
+.take th { color:var(--muted); font-weight:600; font-size:.75rem; }
+.note { font-size:.8rem; color:var(--muted); margin:.5rem 0 0; }
+.rail {
+  background:#fff; border:1px solid var(--line); border-radius:12px;
+  padding:.85rem 1rem 1rem; margin-bottom:.9rem;
+}
+.rail h2 { margin:0 0 .2rem; font-size:1.1rem; }
+.rail .dir { font-size:.8rem; color:var(--muted); margin:0 0 .65rem; }
+.bar {
+  display:flex; align-items:stretch; gap:0;
+  background:#8a939c; padding:6px 6px 8px; border-radius:6px;
+  overflow-x:auto;
+}
+.cell {
+  flex:0 0 auto; width:34px; min-height:72px;
+  border:1px solid #4b5560; margin-left:-1px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; line-height:1.05; padding:4px 2px 3px;
+}
+.cell:first-child { margin-left:0; border-radius:3px 0 0 3px; }
+.cell:last-child { border-radius:0 3px 3px 0; }
+.cell .n { font-weight:800; font-size:.78rem; }
+.cell .k { font-size:.58rem; font-weight:800; letter-spacing:.02em; }
+.cell .m { font-size:.52rem; color:inherit; opacity:.8; margin-top:1px; }
+.L { background:var(--gy); color:var(--gyink); }
+.N { background:var(--bu); color:var(--buink); }
+.T { background:var(--th); color:var(--think); }
+.S { background:var(--sk); color:var(--skink); border-style:dashed; }
+.U { background:var(--ut); color:#5b21b6; width:52px; }
+.H { background:var(--hub); color:#831843; width:52px; }
+.j1 { background:var(--j1); color:#78350f; box-shadow:inset 0 0 0 2px #b45309; }
+.j2 { background:var(--j2); color:#14532d; box-shadow:inset 0 0 0 2px #15803d; }
+.j3 { background:var(--j3); color:#7c2d12; box-shadow:inset 0 0 0 2px #c2410c; }
+.j4 { background:var(--j4); color:#1e3a8a; box-shadow:inset 0 0 0 2px #1d4ed8; }
+.j5 { background:var(--j5); color:#831843; box-shadow:inset 0 0 0 2px #be185d; }
+.j6 { background:var(--j6); color:#4c1d95; box-shadow:inset 0 0 0 2px #7c3aed; }
+.half { font-size:.72rem; font-weight:700; color:#fff; background:#5b6772; padding:2px 8px; margin:8px 0 4px; display:inline-block; border-radius:4px; }
+.legend { display:flex; flex-wrap:wrap; gap:.45rem .8rem; font-size:.78rem; margin:.55rem 0 0; color:var(--muted); }
+.sw { display:inline-block; width:.85rem; height:.85rem; border:1px solid #666; vertical-align:middle; margin-right:.25rem; }
+.rule {
+  background:#fff8e6; border:1px solid #e8c96a; border-radius:10px;
+  padding:.7rem .9rem; margin-bottom:.9rem; font-size:.88rem;
+}
+.rule ul { margin:.35rem 0 0; padding-left:1.15rem; }
+@media print {
+  header { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .nav { display:none; }
+  .rail, .take, .rule { break-inside:avoid; }
+  .bar { overflow:visible; flex-wrap:wrap; background:#6b7280; }
+  .cell { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Втыкай клеммы · R6 низ и R1 верх</h1>
+  <p>Слева → направо. Маркер = номер кабеля (не позиция). Розеточные L одного автомата стоят рядом и закрыты центральной перемычкой <b>JXB-ST-2.5-10pin</b>. N/PE ABB ZK — не сюда.</p>
+  <nav class="nav">
+    <a href="#take">Взять со стола</a>
+    <a href="#jump">Перемычки L</a>
+    <a href="#r6">R6↓</a>
+    <a href="shit_ABB_AT62_R6_klemmy_rasstanovka.html">R6↓ подробно</a>
+    <a href="shit_ABB_AT62_R1_klemmy_rasstanovka.html">R1↑ подробно</a>
+    <a href="shit_ABB_AT62_R6_nuli_kabely.html">R6↓ нули</a>
+    <a href="#r1">R1↑</a>
+    <a href="shit_ABB_AT62_R1_R6_poryadok.html">Порядок с именами</a>
+    <a href="shit_ABB_AT62_avtomaty_pugv.html">ПУГВ с автоматов</a>
+  </nav>
+</header>
+<main>
+
+<section class="take" id="take">
+  <h2>Зафиксировано · GY + перемычки JXB</h2>
+  <p class="note" style="margin:0 0 .55rem">Серая <b>VPR-2.5-GY</b> (или совместимая ЗНИ 2.5). Синяя <b>VPR-2.5-BU</b> — только R6 (№5·6·11·18). На R1 синих нет. <b>VPRTT / QUATTRO не на рейку</b>. Торцы: D-VPR-2.5. Центральная перемычка L: <b>JXB-ST-2.5-10pin</b> (упак. 20 шт).</p>
+  <table>
+    <tr><th></th><th>Модель</th><th>Нужно</th><th>Есть 1581</th><th>Купить</th></tr>
+    <tr><td>L 2.5</td><td>DKC VPR-2.5-GY / ЗНИ 2.5</td><td>56 (R6×23 + R1×33)</td><td>≈14</td><td><b>50</b></td></tr>
+    <tr><td>N лок.</td><td>VPR-2.5-BU</td><td>4 (только R6)</td><td>0 BU</td><td><b>6</b></td></tr>
+    <tr><td>Торец</td><td>D-VPR-2.5</td><td>края рядов</td><td>коробка</td><td><b>20</b></td></tr>
+    <tr><td><b>Перемычка L</b></td><td><b>JXB-ST-2.5-10pin</b></td><td>6 шт в работу (+обрезки)</td><td>0</td><td><b>уп. 20</b></td></tr>
+    <tr><td>L 6–10</td><td>винт / UT10</td><td>2 (№7 · №58)</td><td>есть</td><td>0</td></tr>
+  </table>
+  <p class="note">Лишние полюса 10pin откусывать/обламывать до нужной длины. D-VPR = торец, не перемычка.</p>
+  <table>
+    <tr><th>Рейка</th><th>Втыкать</th><th>Шт</th></tr>
+    <tr><td>R6</td><td>GY + BU + L6–10</td><td>23 GY · 4 BU · 1 толстая · порядок по блокам ниже</td></tr>
+    <tr><td>R1</td><td>GY + L6–10</td><td>33 GY · 1 толстая · без BU · потом UTP + BUSHUB</td></tr>
+  </table>
+</section>
+
+<section class="take" id="jump">
+  <h2>Розеточные блоки · JXB-ST-2.5-10pin</h2>
+  <div class="rule">
+    <b>Правило:</b> один автомат → одна жила ПУГВ в <em>любую</em> клемму блока → перемычка разводит L на весь блок.
+    <ul>
+      <li>Не несколько жил из зажима автомата.</li>
+      <li>Жилые R6 (J1) и стол/ТВ R1 (J5) — один B16: ПУГВ с J1 → J5 (между рейками), не вторая жила с автомата.</li>
+      <li>N/PE по-прежнему каждый кабель в свой ZK — перемычка только L.</li>
+    </ul>
+  </div>
+  <table>
+    <tr><th>Блок</th><th>Автомат</th><th>Кабели</th><th>Перемычка</th><th>ПУГВ L с автомата</th></tr>
+    <tr style="background:#fef3c7"><td><b>J1</b> жилые R6</td><td>B16 роз.жилые · УЗО4</td><td>2·12·13·14·16·17·21·22·23·24</td><td>10pin целиком</td><td>в №2 (левый край блока)</td></tr>
+    <tr style="background:#dcfce7"><td><b>J2</b> лоджия</td><td>B16 роз.лоджия · УЗО4</td><td>19·20</td><td>обрезать до 2</td><td>в №19</td></tr>
+    <tr style="background:#ffedd5"><td><b>J3</b> кухня</td><td>B16 роз.кух · УЗО1</td><td>47·54·55</td><td>обрезать до 3</td><td>в №47</td></tr>
+    <tr style="background:#dbeafe"><td><b>J4</b> сан</td><td>B16 роз.сан · УЗО2</td><td>63·70</td><td>обрезать до 2</td><td>в №63</td></tr>
+    <tr style="background:#fce7f3"><td><b>J5</b> стол/ТВ</td><td>тот же B16 роз.жилые</td><td>41·43</td><td>обрезать до 2</td><td>с J1 (ПУГВ R6→R1), не с автомата</td></tr>
+    <tr style="background:#ede9fe"><td><b>J6</b> IT</td><td>B16 сервер+IT · УЗО6</td><td>26·105</td><td>обрезать до 2</td><td>в №26</td></tr>
+  </table>
+  <p class="note">Итого 6 перемычек из уп. 20. Остальное — запас / обрезки.</p>
+</section>
+
+<section class="rail" id="r6">
+  <h2>R6 · низ · слева → направо</h2>
+  <p class="dir">Порядок <b>не</b> по номеру кабеля. Сначала ТП/техника, потом розеточный куст J1 (10pin), потом лоджия J2.</p>
+
+  <div class="half">ТП + техника + лок.N</div>
+  <div class="bar">
+    <div class="cell L"><span class="n">1</span><span class="k">L</span><span class="m">ТП</span></div>
+    <div class="cell L"><span class="n">3</span><span class="k">L</span><span class="m">ТП</span></div>
+    <div class="cell L"><span class="n">4</span><span class="k">L</span><span class="m">ТП</span></div>
+    <div class="cell L"><span class="n">15</span><span class="k">L</span><span class="m">ТП</span></div>
+    <div class="cell L"><span class="n">5</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell N"><span class="n">5</span><span class="k">N</span><span class="m">BU</span></div>
+    <div class="cell L"><span class="n">6</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell N"><span class="n">6</span><span class="k">N</span><span class="m">BU</span></div>
+    <div class="cell T"><span class="n">7</span><span class="k">L</span><span class="m">6–10</span></div>
+    <div class="cell L"><span class="n">8</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">9</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">10</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">11</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell N"><span class="n">11</span><span class="k">N</span><span class="m">BU</span></div>
+    <div class="cell L"><span class="n">18</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell N"><span class="n">18</span><span class="k">N</span><span class="m">BU</span></div>
+  </div>
+
+  <div class="half">J1 · B16 роз.жилые · 10pin</div>
+  <div class="bar">
+    <div class="cell j1"><span class="n">2</span><span class="k">L</span><span class="m">←ПУГВ</span></div>
+    <div class="cell j1"><span class="n">12</span><span class="k">L</span><span class="m">J1</span></div>
+    <div class="cell j1"><span class="n">13</span><span class="k">L</span><span class="m">J1</span></div>
+    <div class="cell j1"><span class="n">14</span><span class="k">L</span><span class="m">J1</span></div>
+    <div class="cell j1"><span class="n">16</span><span class="k">L</span><span class="m">J1</span></div>
+    <div class="cell j1"><span class="n">17</span><span class="k">L</span><span class="m">J1</span></div>
+    <div class="cell j1"><span class="n">21</span><span class="k">L</span><span class="m">J1</span></div>
+    <div class="cell j1"><span class="n">22</span><span class="k">L</span><span class="m">J1</span></div>
+    <div class="cell j1"><span class="n">23</span><span class="k">L</span><span class="m">J1</span></div>
+    <div class="cell j1"><span class="n">24</span><span class="k">L</span><span class="m">J1</span></div>
+  </div>
+
+  <div class="half">J2 · B16 роз.лоджия · 2pin</div>
+  <div class="bar">
+    <div class="cell j2"><span class="n">19</span><span class="k">L</span><span class="m">←ПУГВ</span></div>
+    <div class="cell j2"><span class="n">20</span><span class="k">L</span><span class="m">J2</span></div>
+  </div>
+
+  <p class="legend">
+    <span><i class="sw L"></i>GY</span>
+    <span><i class="sw N"></i>BU лок.N</span>
+    <span><i class="sw T"></i>плита 6–10</span>
+    <span><i class="sw j1"></i>J1 жилые 10pin</span>
+    <span><i class="sw j2"></i>J2 лоджия 2pin</span>
+    28 клемм: 23 GY + 1 толстая + 4 синих
+  </p>
+</section>
+
+<section class="rail" id="r1">
+  <h2>R1 · верх · слева → направо</h2>
+  <p class="dir">Розеточные блоки J6 / J5 / J3 / J4 стоят кустами. Свет и карнизы — отдельно (свой автомат / MDM / MR). Дырка №35. N сразу в ZK. UTP + BUSHUB в хвост.</p>
+
+  <div class="half">J6 IT · свет/карнизы · J5 стол/ТВ</div>
+  <div class="bar">
+    <div class="cell j6"><span class="n">26</span><span class="k">L</span><span class="m">←ПУГВ</span></div>
+    <div class="cell j6"><span class="n">105</span><span class="k">L</span><span class="m">J6</span></div>
+    <div class="cell L"><span class="n">27</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">28</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">29</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">30</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">31</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">32</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">34</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell S"><span class="n">35</span><span class="k">—</span><span class="m">дырка</span></div>
+    <div class="cell L"><span class="n">37</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">38</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell j5"><span class="n">41</span><span class="k">L</span><span class="m">←с J1</span></div>
+    <div class="cell j5"><span class="n">43</span><span class="k">L</span><span class="m">J5</span></div>
+  </div>
+
+  <div class="half">кухня свет · J3 роз.кух · проточный</div>
+  <div class="bar">
+    <div class="cell L"><span class="n">48</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">50</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">51</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">52</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">53</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">56</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">100</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell j3"><span class="n">47</span><span class="k">L</span><span class="m">←ПУГВ</span></div>
+    <div class="cell j3"><span class="n">54</span><span class="k">L</span><span class="m">J3</span></div>
+    <div class="cell j3"><span class="n">55</span><span class="k">L</span><span class="m">J3</span></div>
+    <div class="cell T"><span class="n">58</span><span class="k">L</span><span class="m">6–10</span></div>
+  </div>
+
+  <div class="half">сан свет · J4 роз.сан · люк · хвост</div>
+  <div class="bar">
+    <div class="cell L"><span class="n">61</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">62</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">64</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">68</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">69</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">71</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">72</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell j4"><span class="n">63</span><span class="k">L</span><span class="m">←ПУГВ</span></div>
+    <div class="cell j4"><span class="n">70</span><span class="k">L</span><span class="m">J4</span></div>
+    <div class="cell L"><span class="n">101</span><span class="k">L</span><span class="m">люк</span></div>
+    <div class="cell U"><span class="n">UTP</span><span class="k">сеть</span><span class="m">хвост</span></div>
+    <div class="cell H"><span class="n">HUB</span><span class="k">BUS</span><span class="m">хвост</span></div>
+  </div>
+
+  <p class="legend">
+    <span><i class="sw j6"></i>J6 IT 2pin</span>
+    <span><i class="sw j5"></i>J5 стол/ТВ 2pin ← с J1</span>
+    <span><i class="sw j3"></i>J3 кухня 3pin</span>
+    <span><i class="sw j4"></i>J4 сан 2pin</span>
+    <span><i class="sw S"></i>№35 дырка</span>
+    <span><i class="sw T"></i>№58 L 6–10</span>
+    сила: 33 GY + 1 толстая · без BU
+  </p>
+</section>
+
+</main>
+</body>
+</html>

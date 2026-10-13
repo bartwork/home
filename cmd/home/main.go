@@ -15,6 +15,7 @@ import (
 	"github.com/bartwork/home/internal/auth"
 	"github.com/bartwork/home/internal/config"
 	"github.com/bartwork/home/internal/devices"
+	"github.com/bartwork/home/internal/discovery"
 	"github.com/bartwork/home/internal/mqttbridge"
 	"github.com/bartwork/home/internal/realtime"
 	"github.com/bartwork/home/internal/repository"
@@ -43,16 +44,18 @@ func main() {
 
 	usersRepo := repository.NewUsers(database)
 	devicesRepo := repository.NewDevices(database)
+	discoveredRepo := repository.NewDiscovered(database)
+
 	if err := auth.SeedAdmin(ctx, usersRepo); err != nil {
 		log.Fatal().Err(err).Msg("seed admin")
-	}
-	if err := devices.SeedDemo(ctx, devicesRepo); err != nil {
-		log.Fatal().Err(err).Msg("seed devices")
 	}
 
 	tokens := auth.NewTokens(cfg.JWTSecret)
 	hub := realtime.NewHub(log.Logger)
-	bridge := mqttbridge.New(log.Logger, hub, cfg.MQTTBroker, cfg.MQTTClientID)
+	engine := discovery.NewEngine(log.Logger, discoveredRepo, devicesRepo)
+	discoSvc := discovery.NewService(discoveredRepo, devicesRepo)
+
+	bridge := mqttbridge.New(log.Logger, hub, engine, cfg.MQTTBroker, cfg.MQTTClientID)
 	bridge.Start()
 	defer bridge.Close()
 
@@ -73,6 +76,7 @@ func main() {
 	).WithMetrics().WithLog()
 
 	app := srv.Fiber()
+	discovery.Mount(app, discoSvc)
 	realtime.MountWS(app, hub, bridge, log.Logger)
 	if err := webui.Mount(app); err != nil {
 		log.Fatal().Err(err).Msg("mount webui")

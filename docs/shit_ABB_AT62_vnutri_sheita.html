@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ABB AT62 — подключения блоков внутри щита</title>
+  <style>
+    :root {
+      --bg: #eef1f4;
+      --ink: #15202b;
+      --muted: #5a6570;
+      --card: #fff;
+      --line: #cfd6dd;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.35;
+    }
+    header {
+      background: linear-gradient(120deg, #143a5c, #1f4e79 55%, #2a6f97);
+      color: #fff;
+      padding: 1.25rem 1.5rem 1.1rem;
+    }
+    header h1 { margin: 0 0 .35rem; font-size: 1.35rem; font-weight: 700; }
+    header p { margin: 0; opacity: .92; font-size: .92rem; max-width: 960px; }
+    .nav { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .65rem; }
+    .nav a {
+      color: #fff; text-decoration: none;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.28);
+      border-radius: 8px;
+      padding: .3rem .65rem;
+      font-size: .8rem;
+    }
+    main { max-width: 1320px; margin: 0 auto; padding: 1.1rem 1.25rem 3rem; }
+    section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1rem 1.1rem 1.15rem;
+      margin-bottom: 1rem;
+    }
+    h2 { margin: 0 0 .75rem; font-size: 1.05rem; }
+    h3 { margin: .85rem 0 .45rem; font-size: .92rem; }
+    .note { margin: .5rem 0 0; font-size: .84rem; color: var(--muted); }
+    .legend {
+      display: flex; flex-wrap: wrap; gap: .35rem .7rem;
+      margin: 0 0 .75rem; font-size: .72rem; color: var(--muted);
+    }
+    .legend i {
+      width: .65rem; height: .65rem; border-radius: 2px;
+      display: inline-block; margin-right: .25rem; vertical-align: -1px;
+      border: 1px solid rgba(0,0,0,.12);
+    }
+    .svg-wrap {
+      background: #f7f9fb;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: .5rem;
+      overflow-x: auto;
+    }
+    .svg-wrap svg { display: block; max-width: 100%; height: auto; }
+    .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .7rem; }
+    .card {
+      background: #f7f9fb;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: .65rem .75rem;
+      font-size: .84rem;
+    }
+    .card ul { margin: .2rem 0 0; padding-left: 1.05rem; }
+    .flow {
+      display: flex; flex-wrap: wrap; align-items: center; gap: .35rem;
+      font-size: .86rem; margin-bottom: .55rem;
+    }
+    .box {
+      border: 2px solid #2c3e50;
+      border-radius: 8px;
+      padding: .4rem .55rem;
+      background: #fff;
+      font-weight: 700;
+      font-size: .78rem;
+      text-align: center;
+    }
+    .box small { display: block; font-weight: 500; color: var(--muted); font-size: .68rem; }
+    .arrow { color: var(--muted); font-weight: 800; }
+    table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+    th, td { border: 1px solid var(--line); padding: .35rem .45rem; text-align: left; vertical-align: top; }
+    th { background: #1f4e79; color: #fff; }
+    tr:nth-child(even) { background: #f8fafb; }
+    .pill {
+      display: inline-block;
+      font-size: .72rem;
+      padding: .15rem .45rem;
+      border-radius: 999px;
+      background: #e8eef4;
+      margin: .15rem .15rem 0 0;
+    }
+    .mount-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: .7rem;
+      margin: .7rem 0 .9rem;
+    }
+    .mount-card {
+      background: #f7f9fb;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: .65rem .75rem;
+      font-size: .84rem;
+    }
+    .mount-card h3 { margin: 0 0 .35rem; font-size: .9rem; }
+    .mount-card ul { margin: .2rem 0 0; padding-left: 1rem; }
+    .mount-card li { margin: .18rem 0; }
+    .mount-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .8rem;
+    }
+    .mount-table th, .mount-table td {
+      border: 1px solid var(--line);
+      padding: .38rem .45rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    .mount-table th { background: #1f4e79; color: #fff; }
+    .mount-table tr:nth-child(even) { background: #f8fafb; }
+    .mount-step {
+      white-space: nowrap;
+      width: 3.1rem;
+      text-align: center;
+      font-weight: 800;
+    }
+    .toc { font-size: .84rem; }
+    .toc a { color: #1f4e79; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ABB AT62 · подключения блоков внутри щита</h1>
+    <p>
+      Логическая схема: как связаны модули на DIN R1–R6, шинки ZK13, катушка ESB, автоматика WB7 и поле Modbus.
+      Физическая раскладка на рейках — в <code>shit_ABB_AT62_shema.html</code>.
+    </p>
+    <nav class="nav">
+      <a href="shit_ABB_AT62_shema.html">Лицо щита</a>
+      <a href="shit_ABB_AT62_polnaya_tsepochka.html">Цепочки кабелей</a>
+      <a href="shit_ABB_AT62_R1_R6_klemmy.html">Клеммы</a>
+      <a href="shit_ABB_AT62_R1_R6_poryadok.html">Порядок на рейках</a>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Содержание</h2>
+      <p class="toc">
+        <a href="#mount-order">0. Порядок монтажа внутри щита</a> ·
+        <a href="#exits">0a. С каких выходов куда</a> ·
+        <a href="shit_ABB_AT62_uzo_vyhody.html">Выходы всех УЗО</a> ·
+        <a href="#pwr230">1. Силовая 230В L/N</a> ·
+        <a href="#esb">2. ESB63 · катушка · EH04</a> ·
+        <a href="#pwr24">3. Питание 24В автоматики</a> ·
+        <a href="#rs485">4. RS-485 Modbus</a> ·
+        <a href="#rel-dim">5. Реле MR6C · диммеры MDM3</a> ·
+        <a href="#led">6. Лента №35 · WB-LED→D6→ARV</a> ·
+        <a href="#zk">7. Шинки N/PE ZK13</a> ·
+        <a href="#master">8. Мастер-выключатель</a>
+      </p>
+      <div class="legend">
+        <span><i style="background:#f5b7b1"></i>ввод / автомат</span>
+        <span><i style="background:#922b21"></i>ESB / контактор</span>
+        <span><i style="background:#1e8449"></i>мимо ESB (отъезд)</span>
+        <span><i style="background:#6c3483"></i>реле MR6C / MR6CU</span>
+        <span><i style="background:#0e6655"></i>диммер MDM3</span>
+        <span><i style="background:#9b59b6"></i>WB7 / WB-LED</span>
+        <span><i style="background:#1a5276"></i>BUSHUB / поле</span>
+        <span><i style="background:#d35400"></i>БП 24В</span>
+        <span><i style="background:#2e7d32"></i>PE</span>
+        <span><i style="background:#2980b9"></i>N (группа УЗО)</span>
+      </div>
+    </section>
+
+    <section id="mount-order">
+      <h2>0. Порядок монтажа внутри щита</h2>
+      <p class="note">Внутренняя сборка щита (не полевые `№1…№105`). Правило рук: <strong>сила → нули УЗО в шины → мелочь → поле</strong>.</p>
+
+      <div class="mount-grid">
+        <div class="mount-card">
+          <h3>1. Сила (толстое)</h3>
+          <ul>
+            <li>`U-IN → ВА50 → УЗМ → развилка`</li>
+            <li>Быт: `УЗМ → ESB → УЗО1…5` · EH04 на корпус</li>
+            <li>Always-on: `УЗМ → входы УЗО6 и УЗО7` (не выход в выход)</li>
+            <li>L: УЗО → гребёнки/ПУГВ → автоматы · с УЗО7 ещё D10 / D6 / C2</li>
+          </ul>
+        </div>
+        <div class="mount-card">
+          <h3>2. Нули УЗО → шины</h3>
+          <ul>
+            <li>С <strong>выхода N</strong> каждого УЗО — <strong>один</strong> ПУГВ в свой N-блок</li>
+            <li>УЗО7 → шина ↑B «PE DIN + N УЗО7» (3-я справа сверху)</li>
+            <li>N разных УЗО между собой <strong>не мостить</strong></li>
+            <li>PE: магистраль с ввода + добор ZK206G / ZK175G</li>
+          </ul>
+        </div>
+        <div class="mount-card">
+          <h3>3. Мелочь</h3>
+          <ul>
+            <li>Катушка: `C2 → MR6CU#2 → A1`; `A2 → шина N УЗО7`</li>
+            <li>`D10 → MORNSUN → UPS → WB7` · MR/MDM/CU с UPS **24В** · MDM#2↔#3 N УЗО4</li>
+            <li>`D6 → ARV` · 24В → WB-LED · RS-485 · EH04→DI</li>
+            <li>`WB7 → BUSHUB` (лучи поля — позже)</li>
+          </ul>
+        </div>
+        <div class="mount-card">
+          <h3>4. Поле</h3>
+          <ul>
+            <li>`shit_ABB_AT62_R1_R6_poryadok.html`</li>
+            <li>№35 = 24В с WB-LED, не 230В</li>
+            <li>BUSHUB → MWAC / M1W2×2 / MSW / ONOKOM×2 / карнизы</li>
+          </ul>
+        </div>
+      </div>
+
+      <table class="mount-table">
+        <thead>
+          <tr>
+            <th>Шаг</th>
+            <th>Что</th>
+            <th>Как соединять</th>
+            <th>Зачем</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mount-step">1</td>
+            <td><strong>Ввод + PE</strong></td>
+            <td>`U-IN L/N → ВА50`; `PE → ZK206G`</td>
+            <td>Ввод без ВН-102</td>
+          </tr>
+          <tr>
+            <td class="mount-step">2</td>
+            <td><strong>УЗМ</strong></td>
+            <td>`выход ВА50 → вход УЗМ` L+N</td>
+            <td>УЗМ на весь щит</td>
+          </tr>
+          <tr>
+            <td class="mount-step">3</td>
+            <td><strong>Развилка + ESB + УЗО</strong></td>
+            <td>Ветка1: `УЗМ → ESB 1–2/3–4 → УЗО1…5` · EH04 слева на корпус<br>Ветка2: `УЗМ → входы УЗО6 и УЗО7`</td>
+            <td>Быт через ESB · IT/авт. мимо</td>
+          </tr>
+          <tr>
+            <td class="mount-step">4</td>
+            <td><strong>Сила L после УЗО</strong></td>
+            <td>УЗО1…5 → гребёнки R3 · УЗО6 → гребёнка R4<br>УЗО7 L → <strong>D10</strong>, <strong>D6</strong>, <strong>C2</strong> (см. §0a)</td>
+            <td>Автоматы и ветки автоматики</td>
+          </tr>
+          <tr>
+            <td class="mount-step">5</td>
+            <td><strong>N УЗО → шины</strong></td>
+            <td>С выхода N каждого УЗО — 1× ПУГВ в свой ZK/блок<br>УЗО7 N → шина N УЗО7 (↑B)</td>
+            <td>Нули готовы до мелочи и A2</td>
+          </tr>
+          <tr>
+            <td class="mount-step">6</td>
+            <td><strong>Катушка ESB</strong></td>
+            <td>`L УЗО7 → C2 → MR6CU#2(NO) → A1` · `A2 → шина N УЗО7`</td>
+            <td>Отъезд · УЗМ не в петле A1–A2</td>
+          </tr>
+          <tr>
+            <td class="mount-step">7</td>
+            <td><strong>WB + 230В модулей</strong></td>
+            <td>`УЗО7 → D10 → MORNSUN → UPS → WB7`<br>MR/MDM/CU: <strong>24В</strong> с UPS (+V/GND); средний N MR6C пусто<br>MDM L/N 230В — своего УЗО · MDM#2↔#3 перемычка N УЗО4</td>
+            <td>Контроллер и DIN живут мимо ESB</td>
+          </tr>
+          <tr>
+            <td class="mount-step">8</td>
+            <td><strong>Лента №35</strong></td>
+            <td>DIN: MDM#1·#2·#3 → WB-LED → D6 → ARV<br>`УЗО7 → D6 → ARV 230В` · `ARV 24В → WB-LED → №35`</td>
+            <td>Лента не гаснет при отъезде</td>
+          </tr>
+          <tr>
+            <td class="mount-step">9</td>
+            <td><strong>Шина / статус</strong></td>
+            <td>`WB7 RS-485 → MR/MDM/CU/WB-LED`<br>`EH04 NO → DI MR6C` · `WB7 → BUSHUB`</td>
+            <td>Логика и внутренняя шина</td>
+          </tr>
+          <tr>
+            <td class="mount-step">10</td>
+            <td><strong>Поле</strong></td>
+            <td>`shit_ABB_AT62_R1_R6_poryadok.html` · лучи с BUSHUB</td>
+            <td>Кабели квартиры</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="note">Не путать: корпус EH04 — на шаге 3; провод DI — на шаге 9. Лучи BUSHUB в поле — шаг 10, не вместе с внутренним `WB7→BUSHUB`.</p>
+    </section>
+
+    <section id="exits">
+      <h2>0a. С каких выходов куда</h2>
+      <p class="note">Если у аппарата <strong>два выхода</strong> (L и N) или несколько жил с одного полюса — куда каждая.</p>
+
+      <h3>УЗМ-50Ц — два выхода (L и N), развилка</h3>
+      <table class="mount-table">
+        <thead><tr><th>Выход</th><th>Куда (ветка 1 · быт)</th><th>Куда (ветка 2 · always-on)</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>L</strong></td>
+            <td>→ вход ESB <strong>1–2</strong></td>
+            <td>параллельно → входы L <strong>УЗО6</strong> и <strong>УЗО7</strong></td>
+          </tr>
+          <tr>
+            <td><strong>N</strong></td>
+            <td>→ вход ESB <strong>3–4</strong></td>
+            <td>параллельно → входы N <strong>УЗО6</strong> и <strong>УЗО7</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="note">Не соединять выход УЗО6 с выходом УЗО7. Обе always-on ветки — с <strong>выхода УЗМ</strong> на <strong>входы</strong> УЗО.</p>
+
+      <h3>ESB63 — сила и катушка отдельно</h3>
+      <table class="mount-table">
+        <thead><tr><th>Клеммы</th><th>Куда</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Выход L (после 1–2)</strong></td><td>→ входы L <strong>УЗО1…5</strong></td></tr>
+          <tr><td><strong>Выход N (после 3–4)</strong></td><td>→ входы N <strong>УЗО1…5</strong></td></tr>
+          <tr><td><strong>A1</strong></td><td>← с `MR6CU#2 NO` (после C2)</td></tr>
+          <tr><td><strong>A2</strong></td><td>→ <strong>шина N УЗО7</strong> (не в зажим N УЗО, не на PE)</td></tr>
+        </tbody>
+      </table>
+
+      <h3>УЗО1…6 — два выхода каждый</h3>
+      <table class="mount-table">
+        <thead><tr><th>Выход</th><th>Куда</th><th>Сколько жил с клеммы</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>L</strong></td>
+            <td>гребёнка / ПУГВ → куст автоматов своего УЗО (R3 или R4)</td>
+            <td>обычно 1 (в гребёнку)</td>
+          </tr>
+          <tr>
+            <td><strong>N</strong></td>
+            <td>1× ПУГВ → <strong>свой</strong> N-блок ZK</td>
+            <td><strong>1</strong> с клеммы УЗО; дальше отводы с шины</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>УЗО7 — L и N (много потребителей)</h3>
+      <table class="mount-table">
+        <thead><tr><th>Выход</th><th>С клеммы УЗО</th><th>Куда дальше</th></tr></thead>
+        <tbody>
+          <tr>
+            <td rowspan="3"><strong>L</strong></td>
+            <td>1 → <strong>D10</strong> (R4, рядом)</td>
+            <td>`D10 → MORNSUN → UPS → WB7` · с UPS <strong>24В</strong> на MR/MDM/CU (+V/GND)</td>
+          </tr>
+          <tr>
+            <td>2 → <strong>D6</strong> (R5)</td>
+            <td>`D6 → ARV 230В` · лента №35</td>
+          </tr>
+          <tr>
+            <td>3 → <strong>C2</strong> (R2)</td>
+            <td>`C2 → MR6CU#2 → A1` катушка</td>
+          </tr>
+          <tr>
+            <td><strong>N</strong></td>
+            <td><strong>1</strong> ПУГВ → шина N УЗО7 (↑B, 3-я справа)</td>
+            <td>С шины отводы: <strong>MORNSUN</strong> · <strong>ARV</strong> · <strong>A2</strong><br>Не сюда: N MR6C (пусто) · N MDM (свой УЗО)</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="note">С клеммы L УЗО7 — до <strong>трёх</strong> жил (D10 / D6 / C2; D10 можно короткой гребёнкой). С клеммы N — <strong>одна</strong> жила на шину, не три в зажим УЗО.</p>
+
+      <h3>D10 и D6 — только L (1P)</h3>
+      <table class="mount-table">
+        <thead><tr><th>Автомат</th><th>Вход</th><th>Выход</th></tr></thead>
+        <tbody>
+          <tr><td><strong>D10</strong></td><td>← L УЗО7</td><td>→ MORNSUN L · далее UPS → 24В на MR/MDM/CU</td></tr>
+          <tr><td><strong>D6</strong></td><td>← L УЗО7</td><td>→ ARV L (230В)</td></tr>
+          <tr><td><strong>C2</strong></td><td>← L УЗО7</td><td>→ MR6CU#2 (NO) → A1</td></tr>
+        </tbody>
+      </table>
+      <p class="note">N БП (MORNSUN, ARV) — не через эти автоматы, а с <strong>шины N УЗО7</strong>.</p>
+
+      <h3>Шина N УЗО7 — отводы (не с клеммы УЗО)</h3>
+      <table class="mount-table">
+        <thead><tr><th>Отвод</th><th>Куда</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><strong>MORNSUN</strong> N (БП WB)</td></tr>
+          <tr><td>2</td><td><strong>ARV</strong> N (БП ленты)</td></tr>
+          <tr><td>3</td><td><strong>A2</strong> катушки ESB</td></tr>
+        </tbody>
+      </table>
+      <p class="note">№35 в поле — <strong>0В 24В</strong> с WB-LED, не N 230В этой шины. Зелёные VPR PE рядом — PE, не N.</p>
+    </section>
+
+    <section id="pwr230">
+      <h2>1. Силовая 230В · развилка внутри щита</h2>
+      <p class="note">УЗМ-50Ц <strong>в</strong> силовом L/N всего щита: `ВА50 → УЗМ → развилка`. В петле A1–A2 УЗМ нет (катушка с УЗО7, уже после УЗМ). N каждого УЗО — на свой ZK (§7). ВН-102 нет.</p>
+      <div class="svg-wrap">
+        <svg viewBox="0 0 1180 420" width="1180" height="420" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, system-ui, sans-serif">
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#5a6570"/>
+            </marker>
+          </defs>
+          <!-- Ввод -->
+          <rect x="20" y="30" width="90" height="52" rx="6" fill="#f5b7b1" stroke="#922b21" stroke-width="2"/>
+          <text x="65" y="52" text-anchor="middle" font-size="11" font-weight="700">ВА50</text>
+          <text x="65" y="68" text-anchor="middle" font-size="8">ВА-103 2P C50</text>
+          <line x1="110" y1="56" x2="128" y2="56" stroke="#5a6570" stroke-width="2" marker-end="url(#arr)"/>
+          <rect x="128" y="30" width="95" height="52" rx="6" fill="#e74c3c" stroke="#7b241c" stroke-width="2"/>
+          <text x="175" y="52" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">УЗМ-50Ц</text>
+          <text x="175" y="68" text-anchor="middle" font-size="8" fill="#fff">сила · развилка</text>
+          <!-- Развилка -->
+          <line x1="223" y1="56" x2="300" y2="56" stroke="#5a6570" stroke-width="2"/>
+          <line x1="300" y1="56" x2="300" y2="320" stroke="#5a6570" stroke-width="2"/>
+          <!-- Ветка ESB -->
+          <line x1="300" y1="100" x2="340" y2="100" stroke="#5a6570" stroke-width="2" marker-end="url(#arr)"/>
+          <rect x="340" y="78" width="110" height="52" rx="6" fill="#922b21" stroke="#641e16" stroke-width="2"/>
+          <text x="405" y="100" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">ESB63</text>
+          <text x="405" y="116" text-anchor="middle" font-size="9" fill="#fff">20N-06 · R2</text>
+          <text x="405" y="128" text-anchor="middle" font-size="8" fill="#fde8e8">быт L+N · без O/AUTO/I</text>
+          <!-- EH04 -->
+          <rect x="340" y="30" width="70" height="40" rx="5" fill="#fadbd8" stroke="#922b21" stroke-width="1.5"/>
+          <text x="375" y="48" text-anchor="middle" font-size="9" font-weight="700">EH04</text>
+          <text x="375" y="62" text-anchor="middle" font-size="8">клип слева</text>
+          <line x1="375" y1="70" x2="375" y2="78" stroke="#922b21" stroke-width="1.5"/>
+          <line x1="375" y1="56" x2="320" y2="56" stroke="#6c3483" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <text x="300" y="48" font-size="8" fill="#6c3483">DI MR6C</text>
+          <!-- C2 слева ESB -->
+          <rect x="286" y="132" width="50" height="36" rx="5" fill="#f9e79f" stroke="#b7950b" stroke-width="1.5"/>
+          <text x="311" y="148" text-anchor="middle" font-size="9" font-weight="700">C2</text>
+          <text x="311" y="161" text-anchor="middle" font-size="8">катушка</text>
+          <text x="311" y="128" text-anchor="middle" font-size="7" fill="#5a6570">УЗО7 L →</text>
+          <!-- УЗО после ESB -->
+          <line x1="450" y1="100" x2="490" y2="100" stroke="#5a6570" stroke-width="2" marker-end="url(#arr)"/>
+          <g font-size="9" font-weight="700">
+            <rect x="490" y="70" width="72" height="36" rx="5" fill="#e67e22" stroke="#c0392b" stroke-width="1.5"/>
+            <text x="526" y="88" text-anchor="middle" fill="#fff">УЗО1</text>
+            <text x="526" y="100" text-anchor="middle" fill="#fff" font-size="8">кухня · R2</text>
+            <rect x="490" y="108" width="72" height="36" rx="5" fill="#2980b9" stroke="#1a5276" stroke-width="1.5"/>
+            <text x="526" y="130" text-anchor="middle" fill="#fff">УЗО2</text>
+            <text x="526" y="142" text-anchor="middle" fill="#fff" font-size="8">сан · R2</text>
+            <rect x="490" y="150" width="72" height="36" rx="5" fill="#27ae60" stroke="#1e8449" stroke-width="1.5"/>
+            <text x="526" y="172" text-anchor="middle" fill="#fff">УЗО3</text>
+            <text x="526" y="184" text-anchor="middle" fill="#fff" font-size="8">стирка</text>
+            <rect x="490" y="192" width="72" height="36" rx="5" fill="#e74c3c" stroke="#c0392b" stroke-width="1.5"/>
+            <text x="526" y="210" text-anchor="middle" fill="#fff">УЗО4</text>
+            <text x="526" y="222" text-anchor="middle" fill="#fff" font-size="8">жилые</text>
+            <rect x="490" y="234" width="72" height="36" rx="5" fill="#c0392b" stroke="#922b21" stroke-width="1.5"/>
+            <text x="526" y="252" text-anchor="middle" fill="#fff">УЗО5</text>
+            <text x="526" y="264" text-anchor="middle" fill="#fff" font-size="8">полы</text>
+          </g>
+          <line x1="562" y1="88" x2="600" y2="88" stroke="#5a6570" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="562" y1="126" x2="600" y2="126" stroke="#5a6570" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="562" y1="168" x2="600" y2="168" stroke="#5a6570" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="562" y1="210" x2="600" y2="210" stroke="#5a6570" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="562" y1="252" x2="600" y2="252" stroke="#5a6570" stroke-width="1.5" marker-end="url(#arr)"/>
+          <rect x="600" y="60" width="200" height="220" rx="8" fill="#eceff1" stroke="#546e7a" stroke-width="2"/>
+          <text x="700" y="82" text-anchor="middle" font-size="11" font-weight="700">R3 · автоматы B10/B16/B32</text>
+          <text x="700" y="100" text-anchor="middle" font-size="9">гребёнки L с УЗО → клеммы L R1/R6</text>
+          <text x="700" y="118" text-anchor="middle" font-size="8" fill="#5a6570">через MR6C / MDM3 или напрямую</text>
+          <text x="700" y="140" text-anchor="middle" font-size="8">→ кабели №1–72 в поле</text>
+          <text x="700" y="168" text-anchor="middle" font-size="8" fill="#1e8449">гасится при отъезде (ESB off)</text>
+          <!-- Ветка мимо ESB -->
+          <line x1="300" y1="320" x2="340" y2="320" stroke="#1e8449" stroke-width="2" marker-end="url(#arr)"/>
+          <rect x="340" y="298" width="110" height="44" rx="6" fill="#1e8449" stroke="#145a32" stroke-width="2"/>
+          <text x="405" y="318" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">УЗО6 IT</text>
+          <text x="405" y="334" text-anchor="middle" font-size="9" fill="#fff">R4 · мимо ESB</text>
+          <line x1="450" y1="320" x2="490" y2="320" stroke="#1e8449" stroke-width="2" marker-end="url(#arr)"/>
+          <rect x="490" y="298" width="110" height="44" rx="6" fill="#148f77" stroke="#0e6655" stroke-width="2"/>
+          <text x="555" y="318" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">УЗО7</text>
+          <text x="555" y="334" text-anchor="middle" font-size="9" fill="#fff">автоматика · R4</text>
+          <line x1="600" y1="320" x2="640" y2="320" stroke="#1e8449" stroke-width="2" marker-end="url(#arr)"/>
+          <rect x="640" y="290" width="160" height="60" rx="6" fill="#d5f5e3" stroke="#1e8449" stroke-width="2"/>
+          <text x="720" y="312" text-anchor="middle" font-size="10" font-weight="700">R4 · D10 · MR6C#1</text>
+          <text x="720" y="328" text-anchor="middle" font-size="9">MORNSUN · UPS · WB7</text>
+          <text x="720" y="344" text-anchor="middle" font-size="8" fill="#5a6570">R5 · MR·MDM·WB-LED·D6·ARV</text>
+          <text x="720" y="378" text-anchor="middle" font-size="8" fill="#1e8449">живёт при отъезде</text>
+          <!-- label -->
+          <text x="300" y="92" font-size="9" fill="#922b21" font-weight="700">через ESB</text>
+          <text x="300" y="308" font-size="9" fill="#1e8449" font-weight="700">мимо ESB</text>
+        </svg>
+      </div>
+    </section>
+
+    <section id="esb">
+      <h2>2. ESB63 · катушка · EH04</h2>
+      <div class="flow">
+        <div class="box">L УЗО7</div><span class="arrow">→</span>
+        <div class="box">C2<small>VA-103 · R2 слева ESB</small></div><span class="arrow">→</span>
+        <div class="box">MR6CU#2<small>NO · R5</small></div><span class="arrow">→</span>
+        <div class="box">A1 ESB</div>
+      </div>
+      <div class="flow">
+        <div class="box">A2</div><span class="arrow">→</span>
+        <div class="box">N УЗО7</div>
+      </div>
+      <div class="svg-wrap">
+        <svg viewBox="0 0 900 200" width="900" height="200" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, system-ui, sans-serif">
+          <defs>
+            <marker id="arr2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#5a6570"/>
+            </marker>
+          </defs>
+          <!-- ESB block -->
+          <rect x="280" y="40" width="140" height="100" rx="8" fill="#922b21" stroke="#641e16" stroke-width="2"/>
+          <text x="350" y="68" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">ESB63-20N-06</text>
+          <text x="350" y="86" text-anchor="middle" font-size="9" fill="#fde8e8">1–2 = L · 3–4 = N</text>
+          <text x="350" y="100" text-anchor="middle" font-size="9" fill="#fde8e8">силовой путь быта</text>
+          <text x="350" y="118" text-anchor="middle" font-size="8" fill="#fff">A1/A2 = катушка</text>
+          <!-- EH04 left clip -->
+          <rect x="200" y="55" width="70" height="50" rx="6" fill="#fadbd8" stroke="#922b21" stroke-width="2"/>
+          <text x="235" y="78" text-anchor="middle" font-size="10" font-weight="700">EH04</text>
+          <text x="235" y="92" text-anchor="middle" font-size="8">слева</text>
+          <line x1="270" y1="80" x2="280" y2="80" stroke="#922b21" stroke-width="2"/>
+          <line x1="200" y1="80" x2="120" y2="80" stroke="#6c3483" stroke-width="2" marker-end="url(#arr2)"/>
+          <rect x="20" y="60" width="100" height="40" rx="6" fill="#6c3483" stroke="#3b1a4a" stroke-width="2"/>
+          <text x="70" y="82" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">DI MR6C</text>
+          <text x="70" y="94" text-anchor="middle" font-size="8" fill="#e8daef">статус быта</text>
+          <!-- Coil chain -->
+          <rect x="420" y="20" width="80" height="36" rx="5" fill="#f9e79f" stroke="#b7950b" stroke-width="1.5"/>
+          <text x="460" y="38" text-anchor="middle" font-size="9" font-weight="700">C2</text>
+          <rect x="530" y="20" width="90" height="36" rx="5" fill="#6c3483" stroke="#3b1a4a" stroke-width="1.5"/>
+          <text x="575" y="38" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">MR6CU#2</text>
+          <line x1="500" y1="38" x2="530" y2="38" stroke="#5a6570" stroke-width="1.5" marker-end="url(#arr2)"/>
+          <line x1="620" y1="38" x2="350" y2="40" stroke="#5a6570" stroke-width="1.5" marker-end="url(#arr2)"/>
+          <text x="650" y="32" font-size="8" fill="#5a6570">→ A1</text>
+          <text x="420" y="14" font-size="8" fill="#5a6570">L от УЗО7</text>
+          <!-- Power in/out ESB -->
+          <line x1="420" y1="90" x2="480" y2="90" stroke="#5a6570" stroke-width="2" marker-end="url(#arr2)"/>
+          <text x="500" y="86" font-size="9">→ УЗО1…5</text>
+          <line x1="200" y1="90" x2="280" y2="90" stroke="#5a6570" stroke-width="2" marker-end="url(#arr2)"/>
+          <text x="160" y="86" font-size="9">от УЗМ</text>
+          <!-- UZM note -->
+          <rect x="510" y="150" width="280" height="36" rx="6" fill="#fff3e0" stroke="#ef6c00" stroke-width="1" stroke-dasharray="4,3"/>
+          <text x="640" y="168" text-anchor="middle" font-size="9">УЗМ после ВА50: авария гасит всю квартиру</text>
+          <text x="640" y="182" text-anchor="middle" font-size="8" fill="#5a6570">в петле A1–A2 УЗМ нет · питание с УЗО7 (после УЗМ)</text>
+        </svg>
+      </div>
+      <p class="note">Hard-off без WB: <strong>ВА50</strong> или <strong>УЗМ-50Ц</strong>. У ESB63 нет ручного O/AUTO/I. ВН-102 нет.</p>
+    </section>
+
+    <section id="pwr24">
+      <h2>3. Питание 24В автоматики (внутри щита)</h2>
+      <div class="svg-wrap">
+        <svg viewBox="0 0 960 160" width="960" height="160" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, system-ui, sans-serif">
+          <defs>
+            <marker id="arr3" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#5a6570"/>
+            </marker>
+          </defs>
+          <rect x="20" y="50" width="80" height="44" rx="6" fill="#148f77" stroke="#0e6655" stroke-width="2"/>
+          <text x="60" y="72" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">D10</text>
+          <text x="60" y="88" text-anchor="middle" font-size="8" fill="#fff">УЗО7 · R4</text>
+          <line x1="100" y1="72" x2="130" y2="72" stroke="#5a6570" stroke-width="2" marker-end="url(#arr3)"/>
+          <rect x="130" y="50" width="100" height="44" rx="6" fill="#d35400" stroke="#6e2c00" stroke-width="2"/>
+          <text x="180" y="72" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">MORNSUN</text>
+          <text x="180" y="88" text-anchor="middle" font-size="8" fill="#fff">24В · R4 4M</text>
+          <line x1="230" y1="72" x2="260" y2="72" stroke="#5a6570" stroke-width="2" marker-end="url(#arr3)"/>
+          <rect x="260" y="50" width="80" height="44" rx="6" fill="#9b59b6" stroke="#5b2c6f" stroke-width="2"/>
+          <text x="300" y="72" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">UPS</text>
+          <text x="300" y="88" text-anchor="middle" font-size="8" fill="#fff">2M · R4</text>
+          <line x1="340" y1="72" x2="390" y2="72" stroke="#5a6570" stroke-width="2" marker-end="url(#arr3)"/>
+          <rect x="390" y="40" width="110" height="64" rx="6" fill="#9b59b6" stroke="#5b2c6f" stroke-width="2"/>
+          <text x="455" y="64" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">WB7</text>
+          <text x="455" y="80" text-anchor="middle" font-size="9" fill="#e8daef">6M · R4</text>
+          <text x="455" y="94" text-anchor="middle" font-size="8" fill="#e8daef">Modbus master</text>
+          <!-- branches from WB7 -->
+          <line x1="500" y1="72" x2="540" y2="72" stroke="#5a6570" stroke-width="2"/>
+          <line x1="540" y1="72" x2="540" y2="30" stroke="#5a6570" stroke-width="1.5"/>
+          <line x1="540" y1="72" x2="540" y2="120" stroke="#5a6570" stroke-width="1.5"/>
+          <rect x="560" y="10" width="180" height="36" rx="5" fill="#6c3483" stroke="#3b1a4a" stroke-width="1.5"/>
+          <text x="660" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">MR6C×3 · MDM3×3 · MR6CU#2</text>
+          <rect x="560" y="56" width="180" height="36" rx="5" fill="#9b59b6" stroke="#5b2c6f" stroke-width="1.5"/>
+          <text x="660" y="76" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">WB-LED · R5</text>
+          <rect x="560" y="100" width="180" height="36" rx="5" fill="#1a5276" stroke="#0d3d56" stroke-width="1.5"/>
+          <text x="660" y="120" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">BUSHUB · R1</text>
+          <text x="760" y="30" font-size="8" fill="#5a6570">RS-485 DIN</text>
+          <text x="760" y="76" font-size="8" fill="#5a6570">RS-485</text>
+          <text x="760" y="120" font-size="8" fill="#5a6570">RS-485 + 24В</text>
+          <!-- MR6C 230V -->
+          <rect x="560" y="140" width="200" height="0" fill="none"/>
+          <text x="660" y="148" text-anchor="middle" font-size="8" fill="#5a6570">MR/MDM/MR6CU — 24В с UPS (УЗО7→D10→MORNSUN); средний N MR6C пусто</text>
+        </svg>
+      </div>
+      <p class="note">MR6C / MDM3 / MR6CU: питание модуля <strong>24В</strong> с UPS (+V/GND). Средний N MR6C пусто. MDM дополнительно L/N 230В своего УЗО. RS-485 от WB7.</p>
+    </section>
+
+    <section id="rs485">
+      <h2>4. RS-485 Modbus · две зоны</h2>
+      <div class="svg-wrap">
+        <svg viewBox="0 0 1000 280" width="1000" height="280" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, system-ui, sans-serif">
+          <defs>
+            <marker id="arr4" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#5a6570"/>
+            </marker>
+          </defs>
+          <rect x="40" y="100" width="120" height="60" rx="8" fill="#9b59b6" stroke="#5b2c6f" stroke-width="2"/>
+          <text x="100" y="124" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">WB7</text>
+          <text x="100" y="142" text-anchor="middle" font-size="9" fill="#e8daef">R4</text>
+          <!-- DIN bus -->
+          <line x1="180" y1="115" x2="240" y2="115" stroke="#6c3483" stroke-width="2" marker-end="url(#arr4)"/>
+          <rect x="240" y="30" width="320" height="200" rx="10" fill="#f3eef8" stroke="#6c3483" stroke-width="2"/>
+          <text x="400" y="52" text-anchor="middle" font-size="11" font-weight="700">Шина DIN · R4–R5</text>
+          <text x="400" y="68" text-anchor="middle" font-size="9" fill="#5a6570">одна RS-485 от WB7</text>
+          <rect x="260" y="80" width="90" height="40" rx="5" fill="#6c3483" stroke="#3b1a4a" stroke-width="1.5"/>
+          <text x="305" y="98" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">MR6C#1</text>
+          <text x="305" y="112" text-anchor="middle" font-size="8" fill="#e8daef">R4 · 6/6</text>
+          <rect x="360" y="80" width="90" height="40" rx="5" fill="#6c3483" stroke="#3b1a4a" stroke-width="1.5"/>
+          <text x="405" y="98" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">MR6C#2</text>
+          <text x="405" y="112" text-anchor="middle" font-size="8" fill="#e8daef">R5 · 4/6</text>
+          <rect x="460" y="80" width="90" height="40" rx="5" fill="#6c3483" stroke="#3b1a4a" stroke-width="1.5"/>
+          <text x="505" y="98" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">MR6C#3</text>
+          <text x="505" y="112" text-anchor="middle" font-size="8" fill="#e8daef">R5 · 6/6+DI</text>
+          <rect x="260" y="140" width="90" height="40" rx="5" fill="#0e6655" stroke="#064035" stroke-width="1.5"/>
+          <text x="305" y="158" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">MDM3#1</text>
+          <text x="305" y="172" text-anchor="middle" font-size="7" fill="#a8e6cf">N УЗО1</text>
+          <rect x="360" y="140" width="90" height="40" rx="5" fill="#0e6655" stroke="#064035" stroke-width="1.5"/>
+          <text x="405" y="158" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">MDM3#2</text>
+          <text x="405" y="172" text-anchor="middle" font-size="7" fill="#a8e6cf">N УЗО4</text>
+          <rect x="460" y="140" width="90" height="40" rx="5" fill="#0e6655" stroke="#064035" stroke-width="1.5"/>
+          <text x="505" y="158" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">MDM3#3</text>
+          <text x="505" y="172" text-anchor="middle" font-size="7" fill="#a8e6cf">N УЗО4</text>
+          <line x1="450" y1="160" x2="460" y2="160" stroke="#2980b9" stroke-width="2"/>
+          <text x="455" y="152" text-anchor="middle" font-size="6" fill="#2980b9">N</text>
+          <rect x="360" y="200" width="100" height="36" rx="5" fill="#6c3483" stroke="#3b1a4a" stroke-width="1.5"/>
+          <text x="410" y="220" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">MR6CU#2</text>
+          <rect x="260" y="200" width="90" height="36" rx="5" fill="#9b59b6" stroke="#5b2c6f" stroke-width="1.5"/>
+          <text x="295" y="220" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">WB-LED</text>
+          <!-- BUSHUB bus -->
+          <line x1="180" y1="145" x2="600" y2="145" stroke="#1a5276" stroke-width="2" marker-end="url(#arr4)"/>
+          <rect x="600" y="60" width="360" height="180" rx="10" fill="#e3f2fd" stroke="#1a5276" stroke-width="2"/>
+          <text x="780" y="82" text-anchor="middle" font-size="11" font-weight="700">BUSHUB · R1</text>
+          <text x="780" y="98" text-anchor="middle" font-size="9" fill="#5a6570">поле Modbus · A/B + 24В</text>
+          <rect x="620" y="110" width="100" height="36" rx="5" fill="#1a5276" stroke="#0d3d56" stroke-width="1.5"/>
+          <text x="670" y="130" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">MWAC</text>
+          <rect x="730" y="110" width="100" height="36" rx="5" fill="#1a5276" stroke="#0d3d56" stroke-width="1.5"/>
+          <text x="780" y="130" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">M1W2 ×2</text>
+          <rect x="620" y="150" width="100" height="36" rx="5" fill="#1a5276" stroke="#0d3d56" stroke-width="1.5"/>
+          <text x="670" y="170" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">MSW v.4</text>
+          <rect x="730" y="150" width="100" height="36" rx="5" fill="#1a5276" stroke="#0d3d56" stroke-width="1.5"/>
+          <text x="780" y="170" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">карнизы+ONOKOM</text>
+          <text x="780" y="210" text-anchor="middle" font-size="8" fill="#5a6570">кабели в поле · не DIN сила</text>
+        </svg>
+      </div>
+      <div class="cols">
+        <div class="card">
+          <h3>На шине DIN (WB7)</h3>
+          <ul>
+            <li>UPS v3 (Modbus слэйв, слева от WB7)</li>
+            <li>MR6C #1–3 · MDM3 #1 (N УЗО1, слева) · MDM3 #2+#3 (N УЗО4, справа)</li>
+            <li>MR6CU #2 (катушка)</li>
+            <li>WB-LED (диммер №35) — DIN после MDM, до D6/ARV</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>На BUSHUB (поле)</h3>
+          <ul>
+            <li>MWAC · M1W2×2 · MSW · ONOKOM×2</li>
+            <li>Упр. карнизов Modbus</li>
+            <li>Не сюда: MR/MDM, сила карнизов №34/38</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="rel-dim">
+      <h2>5. Реле MR6C и диммеры MDM3 · внутри щита</h2>
+      <p class="note">
+        MR6C: питание <strong>24В UPS</strong> (+V/GND), средний N <strong>пусто</strong>; коммутирует только L.
+        MDM3: 24В+RS с UPS/WB · L/N 230В — <strong>своего</strong> УЗО.
+        На R5 порядок: <strong>MDM#1 · MDM#2 · MDM#3</strong> — #1 слева (N УЗО1); #2+#3 справа рядом, перемычка N (УЗО4).
+      </p>
+      <div class="svg-wrap">
+        <svg viewBox="0 0 1000 320" width="1000" height="320" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, system-ui, sans-serif">
+          <defs>
+            <marker id="arr5" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#5a6570"/>
+            </marker>
+          </defs>
+          <!-- REL path -->
+          <text x="20" y="24" font-size="11" font-weight="700" fill="#6c3483">Реле MR6C (REL)</text>
+          <rect x="20" y="36" width="70" height="40" rx="5" fill="#e67e22" stroke="#c0392b" stroke-width="1.5"/>
+          <text x="55" y="58" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">УЗО</text>
+          <line x1="90" y1="56" x2="120" y2="56" stroke="#5a6570" stroke-width="1.5" marker-end="url(#arr5)"/>
+          <rect x="120" y="36" width="70" height="40" rx="5" fill="#e0e7ff" stroke="#3730a3" stroke-width="1.5"/>
+          <text x="155" y="58" text-anchor="middle" font-size="9" font-weight="700">B10</text>
+          <line x1="190" y1="56" x2="220" y2="56" stroke="#5a6570" stroke-width="1.5" marker-end="url(#arr5)"/>
+          <rect x="220" y="30" width="100" height="52" rx="6" fill="#6c3483" stroke="#3b1a4a" stroke-width="2"/>
+          <text x="270" y="52" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">MR6C ch</text>
+          <text x="270" y="68" text-anchor="middle" font-size="8" fill="#e8daef">коммутирует L</text>
+          <line x1="320" y1="56" x2="360" y2="56" stroke="#5a6570" stroke-width="1.5" marker-end="url(#arr5)"/>
+          <rect x="360" y="36" width="90" height="40" rx="5" fill="#eceff1" stroke="#546e7a" stroke-width="1.5"/>
+          <text x="405" y="58" text-anchor="middle" font-size="9" font-weight="700">L клемма</text>
+          <line x1="450" y1="56" x2="490" y2="56" stroke="#5a6570" stroke-width="1.5" marker-end="url(#arr5)"/>
+          <text x="540" y="58" font-size="10" font-weight="700">кабель №…</text>
+          <text x="20" y="100" font-size="8" fill="#5a6570">MR6C: L только в C1/C2 · один автомат на COM · №5 = контактор←CU#1 · №56 = MR2.3</text>
+          <!-- DIM path -->
+          <text x="20" y="140" font-size="11" font-weight="700" fill="#0e6655">Диммер MDM3 (DIM)</text>
+          <rect x="20" y="152" width="70" height="40" rx="5" fill="#e74c3c" stroke="#c0392b" stroke-width="1.5"/>
+          <text x="55" y="174" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">УЗО4</text>
+          <line x1="90" y1="172" x2="120" y2="172" stroke="#5a6570" stroke-width="1.5" marker-end="url(#arr5)"/>
+          <rect x="120" y="152" width="70" height="40" rx="5" fill="#e0e7ff" stroke="#3730a3" stroke-width="1.5"/>
+          <text x="155" y="174" text-anchor="middle" font-size="9" font-weight="700">B10</text>
+          <line x1="190" y1="172" x2="220" y2="172" stroke="#5a6570" stroke-width="1.5" marker-end="url(#arr5)"/>
+          <rect x="220" y="146" width="100" height="52" rx="6" fill="#0e6655" stroke="#064035" stroke-width="2"/>
+          <text x="270" y="168" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">MDM3 ch</text>
+          <text x="270" y="184" text-anchor="middle" font-size="8" fill="#d5f5e3">фаза через диммер</text>
+          <line x1="320" y1="172" x2="360" y2="172" stroke="#5a6570" stroke-width="1.5" marker-end="url(#arr5)"/>
+          <rect x="360" y="152" width="90" height="40" rx="5" fill="#eceff1" stroke="#546e7a" stroke-width="1.5"/>
+          <text x="405" y="174" text-anchor="middle" font-size="9" font-weight="700">L клемма</text>
+          <line x1="450" y1="172" x2="490" y2="172" stroke="#5a6570" stroke-width="1.5" marker-end="url(#arr5)"/>
+          <text x="540" y="174" font-size="10" font-weight="700">№30·31·37…</text>
+          <text x="20" y="216" font-size="8" fill="#5a6570">N диммера = N того же УЗО, что лампы. MDM#2↔#3 перемычка N (УЗО4). MDM#1 — отдельно N УЗО1.</text>
+          <!-- Direct path -->
+          <text x="20" y="250" font-size="11" font-weight="700">Напрямую (без MR/MDM)</text>
+          <rect x="20" y="262" width="70" height="36" rx="5" fill="#e67e22" stroke="#c0392b" stroke-width="1.5"/>
+          <text x="55" y="282" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">УЗО</text>
+          <line x1="90" y1="280" x2="120" y2="280" stroke="#5a6570" stroke-width="1.5" marker-end="url(#arr5)"/>
+          <rect x="120" y="262" width="70" height="36" rx="5" fill="#e0e7ff" stroke="#3730a3" stroke-width="1.5"/>
+          <text x="155" y="282" text-anchor="middle" font-size="9" font-weight="700">B10/B16</text>
+          <line x1="190" y1="280" x2="360" y2="280" stroke="#5a6570" stroke-width="1.5" marker-end="url(#arr5)"/>
+          <rect x="360" y="262" width="90" height="36" rx="5" fill="#eceff1" stroke="#546e7a" stroke-width="1.5"/>
+          <text x="405" y="282" text-anchor="middle" font-size="9" font-weight="700">L клемма</text>
+          <text x="540" y="282" font-size="9">№7 плита · №34/38 карниз сила · №18 кондей</text>
+          <!-- Module map table area -->
+          <rect x="600" y="36" width="380" height="260" rx="8" fill="#fafbfc" stroke="#cfd6dd" stroke-width="1"/>
+          <text x="780" y="58" text-anchor="middle" font-size="10" font-weight="700">Карта модулей → кабели</text>
+          <text x="620" y="78" font-size="8"><tspan font-weight="700">MR6C#1</tspan> 24В UPS · C1←ТП К+Т 1·3 · C2←ТП В+Кух 4·15 · N пусто</text>
+          <text x="620" y="94" font-size="8"><tspan font-weight="700">MR6C#2</tspan> 24В UPS · C1 УЗО1:48·53·56 · C2 УЗО4:27·28 · FREE ch6 · N пусто</text>
+          <text x="620" y="110" font-size="8"><tspan font-weight="700">MR6C#3</tspan> 24В UPS · L: УЗО2 61·62·64·69·71·72 · N модуля пусто</text>
+          <text x="620" y="126" font-size="8"><tspan font-weight="700">MDM3#1</tspan> L←B10 кух.дим · 50·51·52 · свой N · слева</text>
+          <text x="620" y="142" font-size="8"><tspan font-weight="700">MDM3#2</tspan> L←B10 комн.дим · 30·31·37 · N↔#3</text>
+          <text x="620" y="158" font-size="8"><tspan font-weight="700">MDM3#3</tspan> L←B10 бра+кор · 68·29·32 · N↔#2 · купить</text>
+          <text x="620" y="180" font-size="8" fill="#5a6570">R5 DIN: MDM#1 · MDM#2 · MDM#3 · WB-LED · D6 · ARV</text>
+          <text x="620" y="196" font-size="8" fill="#5a6570">WB7: MR1.C1 = ТП · DIM1.1 = MDM3#1 ch1 · CU#1 = катушка №5 · MR2.3 = №56</text>
+          <text x="620" y="216" font-size="8" fill="#5a6570">MR6CU#1 — на полке (запас)</text>
+          <text x="620" y="232" font-size="8" fill="#5a6570">MR6CU#2 — катушка ESB · 24В · сухой NO в петле A1</text>
+        </svg>
+      </div>
+    </section>
+
+    <section id="led">
+      <h2>6. Лента карниза №35 · внутри щита</h2>
+      <div class="flow">
+        <div class="box">DIN R5<small>MDM#1·#2·#3 → WB-LED → D6 → ARV</small></div>
+      </div>
+      <div class="flow">
+        <div class="box">УЗО7</div><span class="arrow">→</span>
+        <div class="box">D6<small>230В · после LED</small></div><span class="arrow">→</span>
+        <div class="box">ARV<small>конец рейки · 4M</small></div><span class="arrow">→</span>
+        <div class="box">24В<small>через 1M D6</small></div><span class="arrow">→</span>
+        <div class="box">WB-LED<small>после MDM</small></div><span class="arrow">→</span>
+        <div class="box">№35<small>+24 / 0В</small></div>
+      </div>
+      <div class="svg-wrap">
+        <svg viewBox="0 0 900 150" width="900" height="150" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, system-ui, sans-serif">
+          <defs>
+            <marker id="arr6" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#5a6570"/>
+            </marker>
+          </defs>
+          <text x="20" y="18" font-size="8" fill="#5a6570">DIN слева → направо · RS-485 до ARV</text>
+          <rect x="20" y="28" width="110" height="52" rx="6" fill="#9b59b6" stroke="#5b2c6f" stroke-width="2"/>
+          <text x="75" y="50" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">WB-LED</text>
+          <text x="75" y="66" text-anchor="middle" font-size="8" fill="#e8daef">после MDM · 2M</text>
+          <rect x="150" y="32" width="70" height="44" rx="6" fill="#148f77" stroke="#0e6655" stroke-width="2"/>
+          <text x="185" y="50" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">D6</text>
+          <text x="185" y="66" text-anchor="middle" font-size="8" fill="#fff">230В</text>
+          <rect x="240" y="28" width="120" height="52" rx="6" fill="#d35400" stroke="#6e2c00" stroke-width="2"/>
+          <text x="300" y="50" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">ARV 230→24</text>
+          <text x="300" y="66" text-anchor="middle" font-size="8" fill="#fff">конец · 4M</text>
+          <line x1="220" y1="54" x2="240" y2="54" stroke="#5a6570" stroke-width="2" marker-end="url(#arr6)"/>
+          <text x="228" y="46" font-size="7" fill="#5a6570">L</text>
+          <path d="M300,80 L300,100 L75,100 L75,80" fill="none" stroke="#d35400" stroke-width="1.8" marker-end="url(#arr6)"/>
+          <text x="160" y="94" font-size="8" fill="#d35400">24В через D6</text>
+          <path d="M75,28 L75,8 L520,8 L520,32" fill="none" stroke="#9b59b6" stroke-width="2" marker-end="url(#arr6)"/>
+          <text x="280" y="6" font-size="8" fill="#6b21a8">+24/0 с WB-LED · поверх D6+ARV</text>
+          <rect x="520" y="32" width="90" height="44" rx="6" fill="#ffedd5" stroke="#9a3412" stroke-width="2"/>
+          <text x="565" y="58" text-anchor="middle" font-size="10" font-weight="700">№35</text>
+          <line x1="20" y1="54" x2="8" y2="54" stroke="#9b59b6" stroke-width="1.5"/>
+          <line x1="8" y1="54" x2="8" y2="128" stroke="#9b59b6" stroke-width="1.5" stroke-dasharray="3,2"/>
+          <line x1="8" y1="128" x2="200" y2="128" stroke="#9b59b6" stroke-width="1.5" stroke-dasharray="3,2"/>
+          <text x="210" y="132" font-size="8" fill="#6b21a8">RS-485 ← WB7 (не BUSHUB, не через ARV)</text>
+          <text x="630" y="50" font-size="9" fill="#5a6570">PE №35 → PE ZK (если жила есть)</text>
+          <text x="630" y="66" font-size="8" fill="#5a6570">0В — не ZK N 230В</text>
+          <text x="20" y="148" font-size="8" fill="#5a6570">230В: УЗО7 → D6 → ARV. WB-LED только 24В, не после D6 по фазе.</text>
+        </svg>
+      </div>
+      <p class="note">При отъезде D6/УЗО7 живы → лента карниза <strong>не</strong> гасится с бытом (в отличие от №27 шкафа через ESB). DIN: WB-LED до D6, чтобы шина не обходила ARV.</p>
+    </section>
+
+    <section id="zk">
+      <h2>7. Шинки N / PE · ZK13 (не на DIN)</h2>
+      <p class="note">Кабель → клемма L на R1/R6 · N → цветной ZK своего УЗО · PE → зелёный ZK. N разных УЗО <strong>не мостить</strong>. Полная карта как на лице: 4 угла ZK13.</p>
+
+      <table class="mount-table">
+        <thead>
+          <tr><th>Зона</th><th>Блок</th><th>Назначение</th><th>Питание N/PE</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td rowspan="3"><strong>↑A</strong> над R1 слева</td>
+            <td>ZK144B N УЗО4↑ <em>купить</em></td>
+            <td>12 жил жилые верх</td>
+            <td>потенциал N УЗО4 (связь с ↓)</td>
+          </tr>
+          <tr>
+            <td>ZK144B N УЗО1↑ <em>купить</em></td>
+            <td>кухня верх №47·48·50–56·100</td>
+            <td>потенциал N УЗО1 (связь с ↓) · перемычку ↓↔↑ ставишь сам</td>
+          </tr>
+          <tr>
+            <td>ZK82B N УЗО6 ↓↑</td>
+            <td>№11·18·101·26·105 (один блок)</td>
+            <td>1× ПУГВ с выхода N УЗО6</td>
+          </tr>
+          <tr>
+            <td rowspan="3"><strong>↑B</strong> над R1 справа</td>
+            <td>ZK206G #2 PE↑</td>
+            <td>PE кабели сверху</td>
+            <td>магистраль PE (общая)</td>
+          </tr>
+          <tr>
+            <td>ZK113B N УЗО2</td>
+            <td>сан + №58</td>
+            <td>1× ПУГВ с выхода N УЗО2</td>
+          </tr>
+          <tr>
+            <td>PE DIN + N УЗО7</td>
+            <td>VPR PE ×7 + N ARV/WB/A2</td>
+            <td>1× ПУГВ с выхода N УЗО7 · PE — добор, не N</td>
+          </tr>
+          <tr>
+            <td rowspan="3"><strong>↓A</strong> под R6 слева · N</td>
+            <td>ZK144B N УЗО4↓ <em>есть</em></td>
+            <td>12 жил жилые низ</td>
+            <td>1× ПУГВ с выхода N УЗО4 → 25 мм²</td>
+          </tr>
+          <tr>
+            <td>ZK82B N УЗО1↓ <em>есть</em></td>
+            <td>№7–10 (плита N 25 мм²)</td>
+            <td>1× ПУГВ с выхода N УЗО1 · ↔↑ перемычка на УЗО1↑</td>
+          </tr>
+          <tr>
+            <td>ZK82B N УЗО5</td>
+            <td>ТП №1·3·4·15</td>
+            <td>1× ПУГВ с выхода N УЗО5</td>
+          </tr>
+          <tr>
+            <td rowspan="2"><strong>↓B</strong> под R6 справа · PE</td>
+            <td>ZK206G #1 PE↓</td>
+            <td>PE №1–20</td>
+            <td>магистраль PE</td>
+          </tr>
+          <tr>
+            <td>ZK175G PE добор</td>
+            <td>PE №21–24↓ + 13 слотов↑</td>
+            <td>общий с верхом PE</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="svg-wrap">
+        <svg viewBox="0 0 960 400" width="960" height="400" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, system-ui, sans-serif">
+          <rect x="30" y="28" width="900" height="350" rx="12" fill="#1a222b" stroke="#0f141a" stroke-width="2"/>
+          <text x="480" y="52" text-anchor="middle" font-size="12" font-weight="700" fill="#c5d0da">AT62 · ZK13 в 4 углах · не на DIN</text>
+
+          <!-- ↑A слева · N УЗО4↑ · УЗО1↑ · УЗО6 -->
+          <text x="50" y="78" font-size="9" font-weight="700" fill="#8fa0b0">↑A слева</text>
+          <rect x="50" y="86" width="120" height="32" rx="4" fill="#e74c3c" stroke="#c0392b" stroke-width="1.5"/>
+          <text x="110" y="100" text-anchor="middle" font-size="8" font-weight="700" fill="#fff">N УЗО4↑</text>
+          <text x="110" y="112" text-anchor="middle" font-size="6" fill="#fde8e8">купить</text>
+          <rect x="178" y="86" width="110" height="32" rx="4" fill="#e67e22" stroke="#d35400" stroke-width="1.5"/>
+          <text x="233" y="100" text-anchor="middle" font-size="8" font-weight="700" fill="#fff">N УЗО1↑</text>
+          <text x="233" y="112" text-anchor="middle" font-size="6" fill="#fdebd0">купить · ↔↓</text>
+          <rect x="296" y="86" width="140" height="32" rx="4" fill="#8e44ad" stroke="#5b2c6f" stroke-width="1.5"/>
+          <text x="366" y="106" text-anchor="middle" font-size="8" font-weight="700" fill="#fff">N УЗО6 ↓↑</text>
+
+          <!-- ↑B справа · PE · УЗО2 · УЗО7 -->
+          <text x="520" y="78" font-size="9" font-weight="700" fill="#8fa0b0">↑B справа</text>
+          <rect x="520" y="86" width="130" height="32" rx="4" fill="#2e7d32" stroke="#1b5e20" stroke-width="1.5"/>
+          <text x="585" y="106" text-anchor="middle" font-size="8" font-weight="700" fill="#fff">ZK206G PE↑</text>
+          <rect x="658" y="86" width="120" height="32" rx="4" fill="#2980b9" stroke="#1a5276" stroke-width="1.5"/>
+          <text x="718" y="106" text-anchor="middle" font-size="8" font-weight="700" fill="#fff">N УЗО2</text>
+          <rect x="786" y="86" width="130" height="32" rx="4" fill="#148f77" stroke="#0e6655" stroke-width="1.5"/>
+          <text x="851" y="100" text-anchor="middle" font-size="8" font-weight="700" fill="#fff">N УЗО7 + PE DIN</text>
+          <text x="851" y="112" text-anchor="middle" font-size="6" fill="#d5f5e3">3-я справа · ARV/WB/A2</text>
+
+          <!-- DIN -->
+          <rect x="70" y="140" width="820" height="90" rx="6" fill="#12181f" stroke="#3d4a57" stroke-width="1"/>
+          <text x="480" y="170" text-anchor="middle" font-size="11" fill="#8fa0b0">DIN R1↑ · R2 · R3 · R4 · R5 · R6↓</text>
+          <text x="480" y="190" text-anchor="middle" font-size="9" fill="#c5d0da">только модули + L-клеммы · N/PE здесь нет</text>
+          <text x="480" y="210" text-anchor="middle" font-size="8" fill="#8fa0b0">ПУГВ: выход N УЗО → свой ZK · PE общая верх↔низ</text>
+
+          <!-- ↓A · N слева (кабель N обрезан под лево) -->
+          <text x="50" y="258" font-size="9" font-weight="700" fill="#8fa0b0">↓A слева · N</text>
+          <rect x="50" y="266" width="130" height="32" rx="4" fill="#e74c3c" stroke="#c0392b" stroke-width="1.5"/>
+          <text x="115" y="280" text-anchor="middle" font-size="8" font-weight="700" fill="#fff">N УЗО4↓</text>
+          <text x="115" y="292" text-anchor="middle" font-size="6" fill="#fde8e8">есть</text>
+          <rect x="190" y="266" width="140" height="32" rx="4" fill="#e67e22" stroke="#d35400" stroke-width="1.5"/>
+          <text x="260" y="280" text-anchor="middle" font-size="8" font-weight="700" fill="#fff">N УЗО1↓</text>
+          <text x="260" y="292" text-anchor="middle" font-size="6" fill="#fdebd0">ZK82 есть · ↔↑</text>
+          <rect x="340" y="266" width="110" height="32" rx="4" fill="#c0392b" stroke="#922b21" stroke-width="1.5"/>
+          <text x="395" y="286" text-anchor="middle" font-size="8" font-weight="700" fill="#fff">N УЗО5</text>
+
+          <!-- ↓B · PE справа -->
+          <text x="520" y="258" font-size="9" font-weight="700" fill="#8fa0b0">↓B справа · PE</text>
+          <rect x="520" y="266" width="160" height="32" rx="4" fill="#2e7d32" stroke="#1b5e20" stroke-width="1.5"/>
+          <text x="600" y="286" text-anchor="middle" font-size="8" font-weight="700" fill="#fff">ZK206G PE↓ №1–20</text>
+          <rect x="690" y="266" width="160" height="32" rx="4" fill="#1e8449" stroke="#145a32" stroke-width="1.5"/>
+          <text x="770" y="286" text-anchor="middle" font-size="8" font-weight="700" fill="#fff">ZK175G PE добор</text>
+
+          <!-- jumper note UZO4 + UZO1: ↓A(N) → ↑A (оба слева) -->
+          <path d="M115,266 L115,248 L110,248 L110,118" fill="none" stroke="#e74c3c" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <text x="125" y="244" font-size="7" fill="#e74c3c">перемычка N УЗО4 ↓↔↑</text>
+          <path d="M260,266 L260,255 L233,255 L233,118" fill="none" stroke="#e67e22" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <text x="270" y="252" font-size="7" fill="#e67e22">перемычка N УЗО1 ↓↔↑</text>
+
+          <text x="480" y="340" text-anchor="middle" font-size="8" fill="#8fa0b0">Между N разных УЗО — никаких перемычек · PE общая</text>
+          <text x="480" y="358" text-anchor="middle" font-size="8" fill="#8fa0b0">Детали выходов УЗО → shit_ABB_AT62_uzo_vyhody.html</text>
+        </svg>
+      </div>
+
+      <p class="note">
+        Раньше на схеме §7 не хватало: <strong>N УЗО6, N УЗО7, ZK175G</strong>. N УЗО3 — без ZK, на синие BU R6.
+        УЗО4↓↔УЗО4↑ и УЗО1↓↔УЗО1↑ — перемычки своего N (верх↔низ), не чужой УЗО.
+        Лицо щита / артикулы: <code>shit_ABB_AT62_shema.html</code> · карта ZK.
+      </p>
+    </section>
+
+    <section id="master">
+      <h2>8. Мастер-выключатель · логика внутри щита</h2>
+      <div class="flow">
+        <div class="box">Мастер Cat6<small>сухой SELV</small></div><span class="arrow">→</span>
+        <div class="box">UTP R1</div><span class="arrow">→</span>
+        <div class="box">DI MR6C<small>не WB7 GPIO</small></div><span class="arrow">→</span>
+        <div class="box">WB7</div><span class="arrow">→</span>
+        <div class="box">MR6CU#2</div><span class="arrow">→</span>
+        <div class="box">катушка ESB</div>
+      </div>
+      <p class="note">EH04 (статус быта) — отдельный DI, не путать с мастер-выкл. Клип EH04 <strong>слева</strong> на ESB.</p>
+      <table>
+        <thead>
+          <tr><th>Сигнал</th><th>Откуда</th><th>Куда в щите</th><th>Действие</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Мастер ON/OFF</td><td>стена · Cat6</td><td>DI MR6C → WB7 → MR6CU#2 NO</td><td>размыкает катушку → ESB off</td></tr>
+          <tr><td>Статус быта</td><td>EH04 слева ESB</td><td>DI MR6C</td><td>факт «быт под L»</td></tr>
+          <tr><td>Авария УЗМ</td><td>УЗМ-50Ц в силе после ВА50</td><td>`ВА50 → УЗМ → развилка`</td><td>гаснет вся квартира, включая WB</td></tr>
+          <tr><td>ТП датчики</td><td>M1W2 в поле</td><td>BUSHUB → WB7</td><td>не DI MR6C</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Сводка · блоки и их связи</h2>
+      <table>
+        <thead>
+          <tr><th>Блок</th><th>Рейка</th><th>Питание</th><th>Связь с другими блоками</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>ВА50 · УЗМ-50Ц</td><td>R2</td><td>ввод 230В</td><td>ВА50 ввод → УЗМ общий → развилка ESB ‖ УЗО6/7</td></tr>
+          <tr><td>ESB63 + EH04 + C2</td><td>R2</td><td>L/N силовой · катушка от УЗО7</td><td>→ УЗО1–5 · EH04→DI · C2→MR6CU#2</td></tr>
+          <tr><td>УЗО1–5 + автоматы R3</td><td>R2/R3</td><td>через ESB</td><td>→ MR/MDM или прямо → L-клеммы → кабели</td></tr>
+          <tr><td>УЗО6 + IT автоматы</td><td>R4</td><td>мимо ESB</td><td>холод · кондей · люк · сервер</td></tr>
+          <tr><td>УЗО7 · D10 · D6 · C2</td><td>R4 / R5 / C2 на R2</td><td>мимо ESB</td><td>→ MORNSUN→UPS→WB7 · DIN WB-LED→D6→ARV · катушка</td></tr>
+          <tr><td>WB7</td><td>R4</td><td>24В UPS</td><td>RS-485 → DIN модули + BUSHUB</td></tr>
+          <tr><td>MR6C×3 · MDM3×3</td><td>R4/R5</td><td>24В UPS · MDM ещё L/N своего УЗО</td><td>коммутируют L нагрузок · Modbus от WB7 · MDM#2↔#3 N УЗО4</td></tr>
+          <tr><td>MR6CU#2</td><td>R5</td><td>230В · SELV NO</td><td>катушка ESB · сценарий от WB7/DI</td></tr>
+          <tr><td>WB-LED · D6 · ARV</td><td>R5</td><td>DIN после MDM · 230В D6→ARV · 24В обратно</td><td>WB-LED → №35 · RS-485 не через ARV</td></tr>
+          <tr><td>BUSHUB</td><td>R1</td><td>24В от шины WB</td><td>MWAC · M1W2×2 · MSW · ONOKOM×2 · карнизы поле</td></tr>
+          <tr><td>ZK13 N/PE</td><td>над/под DIN</td><td>—</td><td>N по УЗО · PE общий · не на DIN R1/R6</td></tr>
+          <tr><td>L-клеммы VPR</td><td>R1/R6</td><td>фаза с автоматов</td><td>только L · N/PE на ZK</td></tr>
+        </tbody>
+      </table>
+      <p class="note" style="margin-top:.75rem">
+        <span class="pill">shit_ABB_AT62_vnutri_sheita.html</span>
+        <span class="pill">shit_ABB_AT62_shema.html</span>
+        <span class="pill">shit_ABB_AT62_polnaya_tsepochka.html</span>
+        <span class="pill">shit_tsepochki_vvod_uzo_avtomat.xlsx</span>
+      </p>
+    </section>
+  </main>
+</body>
+</html>

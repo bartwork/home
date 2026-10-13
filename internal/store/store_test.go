@@ -50,6 +50,26 @@ func TestOpenMigratesUsers(t *testing.T) {
 			t.Fatalf("missing column %q", want)
 		}
 	}
+
+	cols = map[string]bool{}
+	drows, err := db.Query(`PRAGMA table_info(discovered_devices)`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer drows.Close()
+	for drows.Next() {
+		var cid int
+		var name, typ string
+		var notnull, pk int
+		var dflt any
+		if err := drows.Scan(&cid, &name, &typ, &notnull, &dflt, &pk); err != nil {
+			t.Fatal(err)
+		}
+		cols[name] = true
+	}
+	if !cols["mqtt_topic"] || !cols["status"] {
+		t.Fatal("discovered_devices incomplete")
+	}
 }
 
 func TestDatabaseFileIsEncrypted(t *testing.T) {

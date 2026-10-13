@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ABB AT62 — R6↓ · куда уходят нули кабелей №1–24</title>
+<style>
+:root {
+  --ink:#15202b; --muted:#5a6570; --line:#c5ced6;
+  --gy:#d5d8dc; --gyink:#2b3340;
+  --bu:#7eb6e8; --buink:#0b3d6e;
+  --th:#c4b5fd; --think:#3b0764;
+  --n4:#fde8d0; --n1:#e8daef; --n5:#d5f5e3; --n3:#fce4d6; --n6:#d6eaf8;
+}
+* { box-sizing:border-box; }
+body { margin:0; font-family:"Segoe UI",system-ui,sans-serif; background:#e8ecf0; color:var(--ink); }
+header { background:#1a3d5c; color:#fff; padding:1rem 1.2rem; }
+header h1 { margin:0 0 .35rem; font-size:1.2rem; }
+header p { margin:0; font-size:.9rem; opacity:.93; max-width:1000px; }
+.nav { display:flex; flex-wrap:wrap; gap:.4rem; margin:.55rem 0 0; }
+.nav a {
+  color:#fff; text-decoration:none; border:1px solid rgba(255,255,255,.35);
+  border-radius:7px; padding:.28rem .6rem; font-size:.8rem; background:rgba(255,255,255,.1);
+}
+main { max-width:1100px; margin:0 auto; padding:1rem 1rem 2.5rem; }
+.card {
+  background:#fff; border:1px solid var(--line); border-radius:12px;
+  padding:.85rem 1rem 1rem; margin-bottom:.85rem;
+}
+.card h2 { margin:0 0 .4rem; font-size:1.05rem; }
+.note { font-size:.84rem; color:var(--muted); margin:0 0 .55rem; }
+.half {
+  font-size:.72rem; font-weight:700; color:#fff; background:#5b6772;
+  padding:2px 9px; margin:8px 0 5px; display:inline-block; border-radius:4px;
+}
+.bar {
+  display:flex; align-items:stretch; gap:0; background:#8a939c;
+  padding:6px; border-radius:6px; overflow-x:auto;
+}
+.cell {
+  flex:0 0 auto; width:36px; min-height:78px; border:1px solid #4b5560; margin-left:-1px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; line-height:1.05; padding:3px 1px;
+}
+.cell:first-child { margin-left:0; border-radius:3px 0 0 3px; }
+.cell:last-child { border-radius:0 3px 3px 0; }
+.cell .n { font-weight:800; font-size:.78rem; }
+.cell .k { font-size:.58rem; font-weight:800; }
+.cell .m { font-size:.5rem; opacity:.85; }
+.L { background:var(--gy); color:var(--gyink); }
+.N { background:var(--bu); color:var(--buink); }
+.T { background:var(--th); color:var(--think); width:46px; }
+.legend { display:flex; flex-wrap:wrap; gap:.4rem .85rem; font-size:.78rem; margin:.5rem 0 0; color:var(--muted); }
+.sw { display:inline-block; width:.8rem; height:.8rem; border:1px solid #666; vertical-align:middle; margin-right:.2rem; }
+table { width:100%; border-collapse:collapse; font-size:.84rem; }
+th, td { text-align:left; padding:.4rem .45rem; border-bottom:1px solid #e6ebef; vertical-align:top; }
+th { color:var(--muted); font-weight:600; font-size:.72rem; }
+tr.bu { background:#eef6fc; }
+tr.th { background:#f5f0ff; }
+.tag {
+  display:inline-block; font-size:.68rem; font-weight:700;
+  padding:.08rem .32rem; border-radius:4px; margin-right:.15rem;
+}
+.tag.gy { background:var(--gy); color:var(--gyink); }
+.tag.bu { background:var(--bu); color:var(--buink); }
+.tag.th { background:var(--th); color:var(--think); }
+.path { font-weight:600; }
+.u4 { background:var(--n4); }
+.u1 { background:var(--n1); }
+.u5 { background:var(--n5); }
+.u3 { background:var(--n3); }
+.u6 { background:var(--n6); }
+.chips { display:flex; flex-wrap:wrap; gap:.45rem; margin-top:.35rem; }
+.chip {
+  border-radius:8px; padding:.45rem .65rem; font-size:.8rem; border:1px solid #cfd6dd;
+  min-width:9.5rem;
+}
+.chip b { display:block; font-size:.78rem; margin-bottom:.15rem; }
+.chip span { color:var(--muted); font-size:.76rem; }
+@media print {
+  .nav { display:none; }
+  .card { break-inside:avoid; }
+  .bar, .cell, .sw, .u1, .u3, .u4, .u5, .u6, .bu, .th {
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>R6↓ · нули кабелей №1–24</h1>
+  <p>Только низ щита. На DIN — фазы L (+ синие лок.N у 5·6·11·18). <strong>N-жила кабеля</strong> всегда уходит на ZK своего УЗО — ниже расписано куда именно.</p>
+  <nav class="nav">
+    <a href="#bar">Ряд DIN</a>
+    <a href="#nuli">Нули по кабелям</a>
+    <a href="#svod">Сводка по шинам</a>
+    <a href="shit_ABB_AT62_R6_klemmy_rasstanovka.html">R6 клеммы подробно</a>
+    <a href="shit_ABB_AT62_shema.html">Лицо</a>
+  </nav>
+</header>
+<main>
+
+<section class="card" id="bar">
+  <h2>Ряд клемм R6 · слева → направо</h2>
+  <p class="note">Серая = L кабеля. Синяя = лок.N (переходник на DIN, не «шина УЗО»). №7 = толстая L 6–10.</p>
+  <div class="half">1–12 лево</div>
+  <div class="bar">
+    <div class="cell L"><span class="n">1</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">2</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">3</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">4</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">5</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell N"><span class="n">5</span><span class="k">N</span><span class="m">BU</span></div>
+    <div class="cell L"><span class="n">6</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell N"><span class="n">6</span><span class="k">N</span><span class="m">BU</span></div>
+    <div class="cell T"><span class="n">7</span><span class="k">L</span><span class="m">6–10</span></div>
+    <div class="cell L"><span class="n">8</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">9</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">10</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">11</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell N"><span class="n">11</span><span class="k">N</span><span class="m">BU</span></div>
+    <div class="cell L"><span class="n">12</span><span class="k">L</span><span class="m">GY</span></div>
+  </div>
+  <div class="half">13–24 право</div>
+  <div class="bar">
+    <div class="cell L"><span class="n">13</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">14</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">15</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">16</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">17</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">18</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell N"><span class="n">18</span><span class="k">N</span><span class="m">BU</span></div>
+    <div class="cell L"><span class="n">19</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">20</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">21</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">22</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">23</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">24</span><span class="k">L</span><span class="m">GY</span></div>
+  </div>
+  <p class="legend">
+    <span><i class="sw L"></i>L GY</span>
+    <span><i class="sw N"></i>лок.N BU</span>
+    <span><i class="sw T"></i>L 6–10 плита</span>
+  </p>
+</section>
+
+<section class="card" id="nuli">
+  <h2>Куда уходит N-жила кабеля</h2>
+  <p class="note">
+    Читать колонку «N кабеля». PE здесь не разбираем — только нули.
+    Синяя BU на рейке = N кабеля сначала в BU, потом ПУГВ на ZK.
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th>№</th>
+        <th>Нагрузка</th>
+        <th>L на DIN</th>
+        <th>N кабеля → куда</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="u5">
+        <td>1</td><td>ТП коридор</td>
+        <td><span class="tag gy">L GY</span></td>
+        <td class="path">сразу → <b>ZK82B N УЗО5</b> (↓A)</td>
+      </tr>
+      <tr class="u4">
+        <td>2</td><td>Розетка коридор</td>
+        <td><span class="tag gy">L GY</span></td>
+        <td class="path">сразу → <b>ZK144B N УЗО4↓</b> (↓A)</td>
+      </tr>
+      <tr class="u5">
+        <td>3</td><td>ТП туалет</td>
+        <td><span class="tag gy">L GY</span></td>
+        <td class="path">сразу → <b>ZK82B N УЗО5</b> (↓A)</td>
+      </tr>
+      <tr class="u5">
+        <td>4</td><td>ТП ванна</td>
+        <td><span class="tag gy">L GY</span></td>
+        <td class="path">сразу → <b>ZK82B N УЗО5</b> (↓A)</td>
+      </tr>
+      <tr class="bu u3">
+        <td>5</td><td>Сушилка</td>
+        <td><span class="tag gy">L GY</span> + <span class="tag bu">N BU</span></td>
+        <td class="path">N → синяя BU №5 ← ПУГВ с <b>N УЗО3</b> (перемычка с BU №6 · без ZK)</td>
+      </tr>
+      <tr class="bu u3">
+        <td>6</td><td>Стиралка</td>
+        <td><span class="tag gy">L GY</span> + <span class="tag bu">N BU</span></td>
+        <td class="path">N → синяя BU №6 ← ПУГВ с <b>N УЗО3</b> (перемычка с BU №5 · без ZK)</td>
+      </tr>
+      <tr class="th u1">
+        <td>7</td><td>Плита</td>
+        <td><span class="tag th">L 6–10</span></td>
+        <td class="path">N 25 мм² сразу → <b>ZK82B N УЗО1↓</b> (↓A, слот 25)</td>
+      </tr>
+      <tr class="u1">
+        <td>8</td><td>Духовка</td>
+        <td><span class="tag gy">L GY</span></td>
+        <td class="path">сразу → <b>ZK82B N УЗО1↓</b> (↓A)</td>
+      </tr>
+      <tr class="u1">
+        <td>9</td><td>Посудомойка</td>
+        <td><span class="tag gy">L GY</span></td>
+        <td class="path">сразу → <b>ZK82B N УЗО1↓</b> (↓A)</td>
+      </tr>
+      <tr class="u1">
+        <td>10</td><td>Измельчитель</td>
+        <td><span class="tag gy">L GY</span></td>
+        <td class="path">сразу → <b>ZK82B N УЗО1↓</b> (↓A)</td>
+      </tr>
+      <tr class="bu u6">
+        <td>11</td><td>Холодильник</td>
+        <td><span class="tag gy">L GY</span> + <span class="tag bu">N BU</span></td>
+        <td class="path">N → синяя BU №11 → ПУГВ ↑ → <b>ZK82B N УЗО6</b> (↑A)</td>
+      </tr>
+      <tr class="u4">
+        <td>12</td><td>Розетка диван</td>
+        <td><span class="tag gy">L GY</span></td>
+        <td class="path">сразу → <b>ZK144B N УЗО4↓</b> (↓A)</td>
+      </tr>
+      <tr class="u4">
+        <td>13</td><td>Розетка под тумбой</td>
+        <td><span class="tag gy">L GY</span></td>
+        <td class="path">сразу → <b>ZK144B N УЗО4↓</b> (↓A)</td>
+      </tr>
+      <tr class="u4">
+        <td>14</td><td>Розетка под ТВ</td>
+        <td><span class="tag gy">L GY</span></td>
+        <td class="path">сразу → <b>ZK144B N УЗО4↓</b> (↓A)</td>
+      </tr>
+      <tr class="u5">
+        <td>15</td><td>ТП кухня</td>
+        <td><span class="tag gy">L GY</span></td>
+        <td class="path">сразу → <b>ZK82B N УЗО5</b> (↓A)</td>
+      </tr>
+      <tr class="u4">
+        <td>16</td><td>Розетка ТВ зона 2</td>
+        <td><span class="tag gy">L GY</span></td>
+        <td class="path">сразу → <b>ZK144B N УЗО4↓</b> (↓A)</td>
+      </tr>
+      <tr class="u4">
+        <td>17</td><td>Розетка под столом</td>
+        <td><span class="tag gy">L GY</span></td>
+        <td class="path">сразу → <b>ZK144B N УЗО4↓</b> (↓A)</td>
+      </tr>
+      <tr class="bu u6">
+        <td>18</td><td>Кондей</td>
+        <td><span class="tag gy">L GY</span> + <span class="tag bu">N BU</span></td>
+        <td class="path">N → синяя BU №18 → ПУГВ ↑ → <b>ZK82B N УЗО6</b> (↑A)</td>
+      </tr>
+      <tr class="u4">
+        <td>19</td><td>Розетка лоджия верх</td>
+        <td><span class="tag gy">L GY</span></td>
+        <td class="path">сразу → <b>ZK144B N УЗО4↓</b> (↓A)</td>
+      </tr>
+      <tr class="u4">
+        <td>20</td><td>Розетка лоджия низ</td>
+        <td><span class="tag gy">L GY</span></td>
+        <td class="path">сразу → <b>ZK144B N УЗО4↓</b> (↓A)</td>
+      </tr>
+      <tr class="u4">
+        <td>21</td><td>Розетка правая кровать</td>
+        <td><span class="tag gy">L GY</span></td>
+        <td class="path">сразу → <b>ZK144B N УЗО4↓</b> (↓A)</td>
+      </tr>
+      <tr class="u4">
+        <td>22</td><td>Розетка левая кровать</td>
+        <td><span class="tag gy">L GY</span></td>
+        <td class="path">сразу → <b>ZK144B N УЗО4↓</b> (↓A)</td>
+      </tr>
+      <tr class="u4">
+        <td>23</td><td>Розетка угол левый</td>
+        <td><span class="tag gy">L GY</span></td>
+        <td class="path">сразу → <b>ZK144B N УЗО4↓</b> (↓A)</td>
+      </tr>
+      <tr class="u4">
+        <td>24</td><td>Розетка кладовая низ</td>
+        <td><span class="tag gy">L GY</span></td>
+        <td class="path">сразу → <b>ZK144B N УЗО4↓</b> (↓A)</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="card" id="svod">
+  <h2>Сводка · какие нули на какую шину</h2>
+  <div class="chips">
+    <div class="chip u4">
+      <b>ZK144B N УЗО4↓</b>
+      <span>№2, 12–14, 16, 17, 19–24<br>12 жил кабеля · ↓A слева · +ПУГВ УЗО4 +↔↑ +MDM ≈15 / 18</span>
+    </div>
+    <div class="chip u1">
+      <b>ZK82B N УЗО1↓</b>
+      <span>№7 (25 мм²), 8, 9, 10<br>есть ZK82 · ↓A · +ПУГВ +↔↑ +MDM#1 ≈7 / 10<br>2×25: плита+ПУГВ · ↔↑ в 4 мм²</span>
+    </div>
+    <div class="chip u5">
+      <b>ZK82B N УЗО5</b>
+      <span>№1, 3, 4, 15<br>↓A · +ПУГВ УЗО5 = 5 / 10</span>
+    </div>
+    <div class="chip u3">
+      <b>N УЗО3 · без ZK</b>
+      <span>№5, 6<br>ПУГВ с УЗО3 → синие BU на R6</span>
+    </div>
+    <div class="chip u6">
+      <b>ZK82B N УЗО6</b>
+      <span>№11, 18<br>через синие BU → ↑A</span>
+    </div>
+  </div>
+  <p class="note" style="margin-top:.75rem">
+    N разных УЗО <strong>не мостить</strong>. Синяя BU — не общая N-шина, только отвод своего кабеля.
+  </p>
+</section>
+
+</main>
+</body>
+</html>

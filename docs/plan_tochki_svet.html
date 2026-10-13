@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>План точек света · AT62</title>
+<style>
+  :root {
+    --bg: #f4f2ec;
+    --ink: #1a1a18;
+    --muted: #5c5a54;
+    --ch: #c45c26;
+    --spot: #1f6f8b;
+    --relay: #6b5b95;
+    --line: #2a2a28;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.35;
+  }
+  header {
+    padding: 1.25rem 1.5rem 0.75rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  h1 { font-size: 1.45rem; font-weight: 600; margin: 0 0 .35rem; letter-spacing: -.02em; }
+  .lead { color: var(--muted); margin: 0; font-size: .95rem; max-width: 52rem; }
+  .wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem 2.5rem;
+    display: grid;
+    grid-template-columns: 1.35fr .85fr;
+    gap: 1.25rem;
+    align-items: start;
+  }
+  @media (max-width: 900px) { .wrap { grid-template-columns: 1fr; } }
+  .plan-card {
+    background: #fff;
+    border: 1px solid #d8d4c8;
+    padding: .75rem;
+  }
+  .plan {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 774 / 633;
+    background: #fff url("plan_kvartiry.png") center / contain no-repeat;
+    border: 1px solid #cfcab8;
+  }
+  svg.overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .65rem 1rem;
+    margin-top: .7rem;
+    font-size: .82rem;
+    color: var(--muted);
+  }
+  .legend span { display: inline-flex; align-items: center; gap: .35rem; }
+  .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    display: inline-block; border: 1.5px solid var(--line);
+  }
+  .dot.ch { background: var(--ch); }
+  .dot.sp { background: var(--spot); }
+  .dot.rl { background: var(--relay); }
+  .panel h2 {
+    font-size: 1.05rem;
+    margin: 0 0 .75rem;
+    font-weight: 600;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .84rem;
+    background: #fff;
+    border: 1px solid #d8d4c8;
+  }
+  th, td {
+    text-align: left;
+    padding: .45rem .55rem;
+    border-bottom: 1px solid #e6e2d6;
+    vertical-align: top;
+  }
+  th { background: #ebe7db; font-weight: 600; font-size: .78rem; }
+  td.n { white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .tag {
+    display: inline-block;
+    font-size: .72rem;
+    padding: .1rem .35rem;
+    border: 1px solid #cfcab8;
+    color: var(--muted);
+    margin-left: .2rem;
+  }
+  .tag.dim { border-color: #1f6f8b; color: #1f6f8b; }
+  .tag.rel { border-color: #6b5b95; color: #6b5b95; }
+  .note {
+    margin-top: 1rem;
+    padding: .85rem 1rem;
+    background: #fff;
+    border: 1px solid #d8d4c8;
+    font-size: .88rem;
+    color: var(--muted);
+  }
+  .note strong { color: var(--ink); }
+  .total {
+    margin-top: .75rem;
+    font-size: .95rem;
+  }
+  footer {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem 2rem;
+    font-size: .78rem;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Набросок точек света</h1>
+  <p class="lead">
+    План сохранён как <code>plan_kvartiry.png</code>. Люстры в зале и на кухне — основной свет;
+    точки — зональный / рабочий / запасной. Диммеры MDM3 как в щите.
+  </p>
+</header>
+
+<div class="wrap">
+  <div class="plan-card">
+    <div class="plan" aria-label="План с точками">
+      <!--
+        Координаты в % от габарита плана ≈ 774×633.
+        Комнаты (примерно):
+        - кладовая 3.1: x 0–18%, y 0–40%
+        - зал 14.7: x 18–78%, y 0–50%
+        - лоджия 4.4: x 78–100%, y 0–50%
+        - коридор L: середина-лево
+        - кухня 12.2: x 50–100%, y 50–100%
+        - сан 3.5: x 25–50%, y 55–90%
+        - туалет 1.7: x 12–25%, y 55–90%
+      -->
+      <svg class="overlay" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <!-- Зал: люстра центр + 6 точек по периметру -->
+        <circle cx="48" cy="26" r="1.8" fill="#c45c26" stroke="#1a1a18" stroke-width=".35"/>
+        <text x="48" y="21.5" text-anchor="middle" font-size="2.2" fill="#c45c26" font-family="system-ui,sans-serif">№30 люстра</text>
+        <circle cx="30" cy="12" r="1.15" fill="#1f6f8b" stroke="#1a1a18" stroke-width=".3"/>
+        <circle cx="48" cy="12" r="1.15" fill="#1f6f8b" stroke="#1a1a18" stroke-width=".3"/>
+        <circle cx="66" cy="12" r="1.15" fill="#1f6f8b" stroke="#1a1a18" stroke-width=".3"/>
+        <circle cx="30" cy="40" r="1.15" fill="#1f6f8b" stroke="#1a1a18" stroke-width=".3"/>
+        <circle cx="48" cy="40" r="1.15" fill="#1f6f8b" stroke="#1a1a18" stroke-width=".3"/>
+        <circle cx="66" cy="40" r="1.15" fill="#1f6f8b" stroke="#1a1a18" stroke-width=".3"/>
+        <text x="66" y="45.5" text-anchor="middle" font-size="2" fill="#1f6f8b" font-family="system-ui,sans-serif">№31 ×6</text>
+
+        <!-- Лоджия: 2 -->
+        <circle cx="88" cy="18" r="1.15" fill="#1f6f8b" stroke="#1a1a18" stroke-width=".3"/>
+        <circle cx="88" cy="36" r="1.15" fill="#1f6f8b" stroke="#1a1a18" stroke-width=".3"/>
+        <text x="88" y="46" text-anchor="middle" font-size="2" fill="#1f6f8b" font-family="system-ui,sans-serif">№37 ×2</text>
+
+        <!-- Кладовая: 1 (реле/прямо) -->
+        <circle cx="10" cy="22" r="1.15" fill="#6b5b95" stroke="#1a1a18" stroke-width=".3"/>
+        <text x="10" y="30" text-anchor="middle" font-size="1.9" fill="#6b5b95" font-family="system-ui,sans-serif">×1</text>
+
+        <!-- Коридор: 3 -->
+        <circle cx="22" cy="48" r="1.15" fill="#1f6f8b" stroke="#1a1a18" stroke-width=".3"/>
+        <circle cx="34" cy="58" r="1.15" fill="#1f6f8b" stroke="#1a1a18" stroke-width=".3"/>
+        <circle cx="28" cy="70" r="1.15" fill="#1f6f8b" stroke="#1a1a18" stroke-width=".3"/>
+        <text x="38" y="72" font-size="2" fill="#1f6f8b" font-family="system-ui,sans-serif">№68 ×3</text>
+
+        <!-- Кухня: люстра + точки по зонам 50/51/52 -->
+        <circle cx="72" cy="78" r="1.8" fill="#c45c26" stroke="#1a1a18" stroke-width=".35"/>
+        <text x="72" y="73" text-anchor="middle" font-size="2.1" fill="#c45c26" font-family="system-ui,sans-serif">люстра → №50</text>
+        <!-- стол / центр зона №50 доп точки не нужны если люстра -->
+        <!-- левая зона №51 (у стены к санузлу / вход) -->
+        <circle cx="58" cy="62" r="1.15" fill="#1f6f8b" stroke="#1a1a18" stroke-width=".3"/>
+        <circle cx="58" cy="74" r="1.15" fill="#1f6f8b" stroke="#1a1a18" stroke-width=".3"/>
+        <circle cx="58" cy="86" r="1.15" fill="#1f6f8b" stroke="#1a1a18" stroke-width=".3"/>
+        <text x="53" y="90" text-anchor="end" font-size="1.9" fill="#1f6f8b" font-family="system-ui,sans-serif">№51 ×3</text>
+        <!-- правая у окна №52 -->
+        <circle cx="88" cy="62" r="1.15" fill="#1f6f8b" stroke="#1a1a18" stroke-width=".3"/>
+        <circle cx="88" cy="74" r="1.15" fill="#1f6f8b" stroke="#1a1a18" stroke-width=".3"/>
+        <circle cx="88" cy="86" r="1.15" fill="#1f6f8b" stroke="#1a1a18" stroke-width=".3"/>
+        <text x="92" y="90" font-size="1.9" fill="#1f6f8b" font-family="system-ui,sans-serif">№52 ×3</text>
+
+        <!-- Ванна 3.5: 2 -->
+        <circle cx="40" cy="68" r="1.15" fill="#6b5b95" stroke="#1a1a18" stroke-width=".3"/>
+        <circle cx="46" cy="78" r="1.15" fill="#6b5b95" stroke="#1a1a18" stroke-width=".3"/>
+        <text x="43" y="86" text-anchor="middle" font-size="1.8" fill="#6b5b95" font-family="system-ui,sans-serif">сан ×2</text>
+
+        <!-- Туалет 1.7: 1 -->
+        <circle cx="18" cy="72" r="1.15" fill="#6b5b95" stroke="#1a1a18" stroke-width=".3"/>
+        <text x="18" y="80" text-anchor="middle" font-size="1.8" fill="#6b5b95" font-family="system-ui,sans-serif">×1</text>
+      </svg>
+    </div>
+    <div class="legend">
+      <span><i class="dot ch"></i> люстра (центр)</span>
+      <span><i class="dot sp"></i> точка Dim / TRIAC</span>
+      <span><i class="dot rl"></i> точка on/off (реле)</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Сколько точек</h2>
+    <table>
+      <thead>
+        <tr><th>Комната</th><th>Свет</th><th>Кабель</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Зал 14.7</td>
+          <td class="n"><b>1 люстра + 6 точек</b><span class="tag dim">DIM2</span></td>
+          <td>№30 + №31</td>
+        </tr>
+        <tr>
+          <td>Кухня 12.2</td>
+          <td class="n"><b>1 люстра + 6 точек</b><span class="tag dim">DIM1</span></td>
+          <td>№50 люстра · №51/52 точки</td>
+        </tr>
+        <tr>
+          <td>Коридор 4.4</td>
+          <td class="n"><b>3 точки</b><span class="tag dim">DIM3</span></td>
+          <td>№68</td>
+        </tr>
+        <tr>
+          <td>Лоджия 4.4</td>
+          <td class="n"><b>2 точки</b> IP44+<span class="tag dim">DIM2</span></td>
+          <td>№37</td>
+        </tr>
+        <tr>
+          <td>Кладовая 3.1</td>
+          <td class="n"><b>1</b><span class="tag rel">реле</span></td>
+          <td>кладовая / MR</td>
+        </tr>
+        <tr>
+          <td>Ванна 3.5</td>
+          <td class="n"><b>2</b> IP44<span class="tag rel">реле</span></td>
+          <td>свет.сан</td>
+        </tr>
+        <tr>
+          <td>Туалет 1.7</td>
+          <td class="n"><b>1</b> IP44<span class="tag rel">реле</span></td>
+          <td>свет.сан</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="total"><b>Итого потолочных точек ≈ 21</b> + 2 люстры. Димируемых точек ≈ 17.</p>
+
+    <div class="note">
+      <strong>Как лучше с люстрами</strong><br><br>
+      <b>Зал:</b> люстра №30 — основной сценарий; точки №31 — «кино / вечер / равномерно без люстры». Не дублировать центр — ставить кольцом или двумя рядами.<br><br>
+      <b>Кухня:</b> люстра над столом на <b>№50</b>; точки <b>№51 / №52</b> — две линии вдоль длинных сторон (рабочая зона / у окна). Так три канала DIM1 имеют смысл.<br><br>
+      Не вешать и люстру, и точки только «по сетке на весь потолок» — будет пересвет и бессмысленный диммер.
+    </div>
+  </div>
+</div>
+
+<footer>
+  Файлы: <code>plan_kvartiry.png</code> · <code>plan_tochki_svet.html</code> · привязка к MDM3 как в <code>shit_ABB_AT62_shema.html</code>
+</footer>
+</body>
+</html>

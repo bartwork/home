@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ABB AT62 — порядок клемм на R1 и R6</title>
+<style>
+:root {
+  --bg:#eef1f4; --ink:#15202b; --muted:#5a6570; --card:#fff; --line:#cfd6dd;
+  --L:#4a5568; --N:#1d6fb8; --PE:#2f8f4e; --jump:#b45309; --thick:#7c3aed; --selv:#0e7490;
+}
+* { box-sizing:border-box; }
+body { margin:0; font-family:"Segoe UI",system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.35; }
+header.top {
+  background:linear-gradient(120deg,#143a5c,#1f4e79 55%,#2a6f97);
+  color:#fff; padding:1.25rem 1.5rem 1.1rem;
+}
+header.top h1 { margin:0 0 .35rem; font-size:1.3rem; font-weight:700; }
+header.top p { margin:.15rem 0 0; opacity:.92; font-size:.9rem; max-width:980px; }
+.nav { display:flex; flex-wrap:wrap; gap:.45rem; margin:.6rem 0 0; }
+.nav a {
+  color:#fff; text-decoration:none; background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.28); border-radius:8px;
+  padding:.35rem .7rem; font-size:.82rem;
+}
+.nav a:hover { background:rgba(255,255,255,.24); }
+main { max-width:980px; margin:0 auto; padding:1.1rem 1.25rem 3rem; }
+section {
+  background:var(--card); border:1px solid var(--line); border-radius:14px;
+  padding:1rem 1.1rem 1.15rem; margin-bottom:1rem;
+}
+h2 { margin:0 0 .35rem; font-size:1.15rem; }
+.note { margin:.15rem 0 .7rem; font-size:.84rem; color:var(--muted); }
+.legend { display:flex; flex-wrap:wrap; gap:.4rem .8rem; font-size:.78rem; color:var(--muted); margin:0 0 .6rem; }
+.chip {
+  display:inline-block; font-size:.68rem; font-weight:800; padding:.1rem .38rem;
+  border-radius:4px; letter-spacing:.02em;
+}
+.chip.L { background:#e8eaed; color:var(--L); }
+.chip.N { background:#dbeafe; color:var(--N); }
+.chip.v24 { background:#cffafe; color:var(--selv); }
+.chip.utp { background:#f3e8ff; color:#6b21a8; }
+.chip.bus { background:#fce7f3; color:#9d174d; }
+.row {
+  display:grid; grid-template-columns:3.1rem 4.4rem 1fr;
+  gap:.45rem .55rem; align-items:start;
+  padding:.42rem .35rem; border-bottom:1px solid var(--line);
+}
+.row:last-child { border-bottom:0; }
+.row.jump { background:#fff7ed; }
+.row.thick { background:#f5f3ff; }
+.row.selv { background:#ecfeff; }
+.row.soft { background:#faf5ff; }
+.pos {
+  font-weight:800; font-size:1.15rem; line-height:1.1; text-align:center;
+  padding-top:.1rem;
+}
+.what { font-size:.78rem; }
+.what .parts { display:flex; flex-wrap:wrap; gap:.25rem; margin-bottom:.15rem; }
+.name { font-weight:650; font-size:.92rem; }
+.meta { font-size:.75rem; color:var(--muted); margin-top:.12rem; }
+.cab { font-weight:800; color:#1f4e79; }
+.dir {
+  font-size:.78rem; background:#f0f4f8; border:1px dashed #c5d0da;
+  border-radius:8px; padding:.45rem .65rem; margin:0 0 .7rem;
+}
+.strip {
+  display:flex; flex-wrap:wrap; gap:2px; margin:.4rem 0 .75rem;
+}
+.strip b {
+  min-width:1.55rem; text-align:center; font-size:.62rem; padding:.22rem .1rem;
+  border-radius:3px; background:#e8eaed; color:#334;
+}
+.strip b.n { background:#bfdbfe; }
+.strip b.t { background:#ddd6fe; }
+.strip b.s { background:#a5f3fc; }
+.strip b.u { background:#e9d5ff; }
+.strip b.h { background:#fbcfe8; }
+.foot { font-size:.78rem; color:var(--muted); }
+.queue {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .78rem;
+}
+.queue th, .queue td {
+  border: 1px solid var(--line);
+  padding: .38rem .45rem;
+  vertical-align: top;
+  text-align: left;
+}
+.queue th {
+  background: #1f4e79;
+  color: #fff;
+  font-weight: 700;
+}
+.queue tr:nth-child(even) td { background:#f8fafb; }
+.queue .step { white-space: nowrap; font-weight: 800; text-align: center; }
+.queue .minor { color: var(--muted); font-size: .74rem; }
+.checkgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: .7rem;
+  margin: .65rem 0 .9rem;
+}
+.checkcard {
+  background:#f7f9fb;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:.65rem .75rem;
+}
+.checkcard h4 {
+  margin:0 0 .35rem;
+  font-size:.86rem;
+}
+.checkcard ul {
+  margin:.2rem 0 0;
+  padding-left:1rem;
+  font-size:.77rem;
+}
+.checkcard li { margin:.18rem 0; }
+.mark {
+  display:inline-block;
+  min-width:1.1rem;
+  text-align:center;
+  border:1px solid #94a3b8;
+  border-radius:3px;
+  margin-right:.3rem;
+  font-size:.72rem;
+  color:#475569;
+}
+@media print {
+  header.top { background:#143a5c; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  section { break-inside:avoid; box-shadow:none; }
+  .nav { display:none; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Порядок клемм · рейка R1↑ и R6↓</h1>
+  <p>Слева направо, как смотришь на щит. Маркер = номер кабеля (не позиция). Розеточные L одного автомата — рядом + <b>JXB-ST-2.5-10pin</b>. N/PE в ZK13 — не на этих рейках, кроме синих лок.N рядом с L.</p>
+  <nav class="nav">
+    <a href="#queue">Очередь</a>
+    <a href="#in">Ввод</a>
+    <a href="#r6">R6↓ низ</a>
+    <a href="#r1">R1↑ верх</a>
+    <a href="shit_ABB_AT62_klemmy_na_reyki.html">Втыкай на рейки</a>
+    <a href="shit_ABB_AT62_R1_R6_klemmy.html">Таблица кабель→клемма</a>
+    <a href="shit_ABB_AT62_shema.html">Схема щита</a>
+    <a href="shit_ABB_AT62_vnutri_sheita.html">Внутри щита</a>
+  </nav>
+</header>
+<main>
+
+<section>
+  <h2>Как ставить</h2>
+  <div class="legend">
+    <span><span class="chip L">L серая</span> только VPR-2.5-GY · VPRTT не на рейку</span>
+    <span><span class="chip N">N синяя</span> лок. VPR-2.5-BU · рядом с L этого кабеля</span>
+    <span><span class="chip L">L 6–10</span> плита / проточный</span>
+    <span><span class="chip v24">24В</span> не 230В на DIN</span>
+  </div>
+  <p class="note">Клеммы узкие (~5 мм). На R6: 23× GY + 1× L6–10 + 4 синих BU. На R1: 33× GY + 1× L6–10 · без BU, потом UTP и BUSHUB. Купить: GY×50 · BU×6 · D-VPR-2.5×20 · <b>JXB-ST-2.5-10pin уп.20</b>. QUATTRO и VPRTT не на рейку. Блоки J1–J6: <a href="shit_ABB_AT62_klemmy_na_reyki.html">клеммы на рейки</a>.</p>
+</section>
+
+<section id="queue">
+  <h2>Очередь расключения в щите</h2>
+  <p class="dir">Если нужен именно порядок работы руками: сначала <b>вводной U-IN</b>, потом <b>низ R6 блоками</b> (техника → J1 → J2), потом <b>верх R1 блоками</b> (J6 → свет → J5 → кухня свет → J3 → сан свет → J4 → люк), и в конце <b>UTP / BUSHUB</b>. <b>№35</b> не сажать на R1: он идёт на <b>R5: WB-LED</b> как <b>24В</b>.</p>
+
+  <h3>Короткий монтажный чек-лист</h3>
+  <div class="checkgrid">
+    <div class="checkcard">
+      <h4>1. Начало</h4>
+      <ul>
+        <li><span class="mark">□</span><b>U-IN</b>: L/N в <b>ВА50 → УЗМ-50Ц</b></li>
+        <li><span class="mark">□</span>PE ввода на магистраль <b>ZK206G</b></li>
+        <li><span class="mark">□</span>УЗМ <b>после ВА50</b> в силовой L/N: весь щит · ВН-102 нет</li>
+      </ul>
+    </div>
+    <div class="checkcard">
+      <h4>2. Низ R6</h4>
+      <ul>
+        <li><span class="mark">□</span>Идти блоками: <b>техника → J1 → J2</b></li>
+        <li><span class="mark">□</span>Маркер = номер кабеля · не позиция 1…24</li>
+        <li><span class="mark">□</span>Особые: <b>№5, 6, 11, 18</b> с локальным N</li>
+        <li><span class="mark">□</span>J1 10pin · J2 2pin · №7 = L 6–10</li>
+      </ul>
+    </div>
+    <div class="checkcard">
+      <h4>3. Верх R1</h4>
+      <ul>
+        <li><span class="mark">□</span>Идти по <b>блокам</b>: J6 · свет · J5 · кух.свет · J3 · сан.свет · J4 · 101</li>
+        <li><span class="mark">□</span>Порядок: см. <a href="shit_ABB_AT62_R1_klemmy_rasstanovka.html">R1 расстановка</a></li>
+        <li><span class="mark">□</span>J5 (41·43) питать <b>с J1</b>, не с автомата</li>
+        <li><span class="mark">□</span>Особые: <b>58</b> силовой; N кухни сразу в ZK УЗО1↑</li>
+      </ul>
+    </div>
+    <div class="checkcard">
+      <h4>4. Отдельно</h4>
+      <ul>
+        <li><span class="mark">□</span><b>№35</b> не на R1: <b>R5 → WB-LED</b> (DIN MDM#1·#2·#3→WB-LED→D6→ARV)</li>
+        <li><span class="mark">□</span><b>UTP / PoE</b> после силовых клемм</li>
+        <li><span class="mark">□</span><b>BUSHUB</b> самым правым на R1</li>
+        <li><span class="mark">□</span>N разных УЗО между собой <b>не мостить</b></li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Сначала по большим этапам</h3>
+  <table class="queue">
+    <thead>
+      <tr>
+        <th>Этап</th>
+        <th>Что делать</th>
+        <th>Куда заводить</th>
+        <th>Примечание</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="step">0</td>
+        <td><b>U-IN</b> вводной кабель</td>
+        <td>L/N сразу в <b>ВА50 → УЗМ-50Ц</b>, PE на магистраль <b>ZK206G</b></td>
+        <td>ВА50 = ввод. УЗМ общий на всю квартиру. В катушку ESB не ставить. ВН-102 нет</td>
+      </tr>
+      <tr>
+        <td class="step">1</td>
+        <td><b>R6</b> нижние кабели</td>
+        <td>блоками: техника → <b>J1</b> → <b>J2</b></td>
+        <td>Маркер = № кабеля · см. расстановку R6</td>
+      </tr>
+      <tr>
+        <td class="step">2</td>
+        <td><b>R1</b> верхние кабели</td>
+        <td>блоками: J6 · свет · J5 · кух.свет · J3 · сан · J4 · 101</td>
+        <td>J5 ← с J1 · дырка №35</td>
+      </tr>
+      <tr>
+        <td class="step">3</td>
+        <td><b>№35</b> карнизная лента</td>
+        <td>не на R1, а в <b>R5</b>: <b>WB-LED → №35</b> (DIN: MDM#1·#2·#3→WB-LED→D6→ARV)</td>
+        <td>Только <b>+24В / 0В</b>, не 230В L/N</td>
+      </tr>
+      <tr>
+        <td class="step">4</td>
+        <td><b>UTP / PoE</b></td>
+        <td>после силовых клемм справа на R1</td>
+        <td>Это не силовые жилы и не ZK</td>
+      </tr>
+      <tr>
+        <td class="step">5</td>
+        <td><b>BUSHUB</b></td>
+        <td>последним справа на R1</td>
+        <td>Одна шина Modbus: A/B + 24В</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Точная таблица: кабель → L / N / PE</h3>
+  <p class="note"><b>Не путать № кабеля с позицией на DIN.</b> Физический ряд слева→направо: <a href="shit_ABB_AT62_R6_klemmy_rasstanovka.html">R6 расстановка</a> · <a href="shit_ABB_AT62_R1_klemmy_rasstanovka.html">R1 расстановка</a>. Здесь — куда вести жилы (L/N/PE) по номеру кабеля.</p>
+  <table class="queue">
+    <thead>
+      <tr>
+        <th>Шаг</th>
+        <th>Кабель</th>
+        <th>Куда сажать</th>
+        <th>Особенность</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="step">0</td><td><b>U-IN</b></td><td>R2: L/N в <b>ВА50 → УЗМ-50Ц</b>; PE на магистраль <b>ZK206G</b></td><td>Ввод щита · без ВН-102 · УЗМ на всю квартиру</td></tr>
+      <tr><td class="step">1</td><td><b>№1</b></td><td>R6: L серая (блок ТП); N → <b>ZK82B УЗО5</b>; PE → <b>ZK206G#1/1</b></td><td>ТП коридор</td></tr>
+      <tr><td class="step">2</td><td><b>№2</b></td><td>R6: L серая (<b>J1</b> ←ПУГВ); N → <b>ZK144B УЗО4↓</b>; PE → <b>ZK206G#1/2</b></td><td>Розетка коридор · вход J1</td></tr>
+      <tr><td class="step">3</td><td><b>№3</b></td><td>R6: L серая; N → <b>ZK82B УЗО5</b>; PE → <b>ZK206G#1/3</b></td><td>ТП туалет</td></tr>
+      <tr><td class="step">4</td><td><b>№4</b></td><td>R6: L серая; N → <b>ZK82B УЗО5</b>; PE → <b>ZK206G#1/4</b></td><td>ТП ванна</td></tr>
+      <tr><td class="step">5</td><td><b>№5</b></td><td>R6: L серая + лок.N синяя; N ← ПУГВ с <b>УЗО3</b> (без ZK); PE → <b>ZK206G#1/5</b></td><td>Сушилка</td></tr>
+      <tr><td class="step">6</td><td><b>№6</b></td><td>R6: L серая + лок.N синяя; N ← ПУГВ с <b>УЗО3</b> (без ZK); PE → <b>ZK206G#1/6</b></td><td>Стиралка</td></tr>
+      <tr><td class="step">7</td><td><b>№7</b></td><td>R6: L <b>6–10</b>; N 25 мм² → <b>ZK82B УЗО1↓</b>; PE → <b>ZK206G#1/7</b></td><td>Плита, силовой зажим 25 мм²</td></tr>
+      <tr><td class="step">8</td><td><b>№8</b></td><td>R6: L серая; N → <b>ZK82B УЗО1↓</b>; PE → <b>ZK206G#1/8</b></td><td>Духовка</td></tr>
+      <tr><td class="step">9</td><td><b>№9</b></td><td>R6: L серая; N → <b>ZK82B УЗО1↓</b>; PE → <b>ZK206G#1/9</b></td><td>Посудомойка</td></tr>
+      <tr><td class="step">10</td><td><b>№10</b></td><td>R6: L серая; N → <b>ZK82B УЗО1↓</b>; PE → <b>ZK206G#1/10</b></td><td>Измельчитель</td></tr>
+      <tr><td class="step">11</td><td><b>№11</b></td><td>R6: L серая + лок.N синяя; N ПУГВ ↑ → <b>ZK82B УЗО6</b>; PE → <b>ZK206G#1/11</b></td><td>Холодильник, неотключаемое</td></tr>
+      <tr><td class="step">12</td><td><b>№12</b></td><td>R6: L серая (<b>J1</b>); N → <b>ZK144B УЗО4↓</b>; PE → <b>ZK206G#1/12</b></td><td>Розетка диван</td></tr>
+      <tr><td class="step">13</td><td><b>№13</b></td><td>R6: L серая (<b>J1</b>); N → <b>ZK144B УЗО4↓</b>; PE → <b>ZK206G#1/13</b></td><td>Розетка под тумбой</td></tr>
+      <tr><td class="step">14</td><td><b>№14</b></td><td>R6: L серая (<b>J1</b>); N → <b>ZK144B УЗО4↓</b>; PE → <b>ZK206G#1/14</b></td><td>Розетка под ТВ</td></tr>
+      <tr><td class="step">15</td><td><b>№15</b></td><td>R6: L серая; N → <b>ZK82B УЗО5</b>; PE → <b>ZK206G#1/15</b></td><td>ТП кухня</td></tr>
+      <tr><td class="step">16</td><td><b>№16</b></td><td>R6: L серая (<b>J1</b>); N → <b>ZK144B УЗО4↓</b>; PE → <b>ZK206G#1/16</b></td><td>Розетка ТВ зона 2</td></tr>
+      <tr><td class="step">17</td><td><b>№17</b></td><td>R6: L серая (<b>J1</b>); N → <b>ZK144B УЗО4↓</b>; PE → <b>ZK206G#1/17</b></td><td>Розетка под столом</td></tr>
+      <tr><td class="step">18</td><td><b>№18</b></td><td>R6: L серая + лок.N синяя; N ПУГВ ↑ → <b>ZK82B УЗО6</b>; PE → <b>ZK206G#1/18</b></td><td>Кондей, неотключаемое</td></tr>
+      <tr><td class="step">19</td><td><b>№19</b></td><td>R6: L серая (<b>J2</b> ←ПУГВ); N → <b>ZK144B УЗО4↓</b>; PE → <b>ZK206G#1/19</b></td><td>Розетка лоджия верх</td></tr>
+      <tr><td class="step">20</td><td><b>№20</b></td><td>R6: L серая (<b>J2</b>); N → <b>ZK144B УЗО4↓</b>; PE → <b>ZK206G#1/20</b></td><td>Розетка лоджия низ</td></tr>
+      <tr><td class="step">21</td><td><b>№21</b></td><td>R6: L серая (<b>J1</b>); N → <b>ZK144B УЗО4↓</b>; PE → <b>ZK175G ↓1</b></td><td>Розетка правая кровать</td></tr>
+      <tr><td class="step">22</td><td><b>№22</b></td><td>R6: L серая (<b>J1</b>); N → <b>ZK144B УЗО4↓</b>; PE → <b>ZK175G ↓2</b></td><td>Розетка левая кровать</td></tr>
+      <tr><td class="step">23</td><td><b>№23</b></td><td>R6: L серая (<b>J1</b>); N → <b>ZK144B УЗО4↓</b>; PE → <b>ZK175G ↓3</b></td><td>Розетка угол левый</td></tr>
+      <tr><td class="step">24</td><td><b>№24</b></td><td>R6: L серая (<b>J1</b>); N → <b>ZK144B УЗО4↓</b>; PE → <b>ZK175G ↓4</b></td><td>Розетка кладовая низ</td></tr>
+      <tr><td class="step">25</td><td><b>№26</b></td><td>R1: L серая (<b>J6</b> ←ПУГВ); N → <b>ZK82B УЗО6</b>; PE → <b>ZK206G#2/1</b></td><td>Сервер / IT</td></tr>
+      <tr><td class="step">26</td><td><b>№27</b></td><td>R1: L серая; N → <b>ZK144B УЗО4↑</b>; PE → <b>ZK206G#2/2</b></td><td>Лента шкаф/кладовая</td></tr>
+      <tr><td class="step">27</td><td><b>№28</b></td><td>R1: L серая; N → <b>ZK144B УЗО4↑</b>; PE → <b>ZK206G#2/3</b></td><td>Свет кладовая</td></tr>
+      <tr><td class="step">28</td><td><b>№29</b></td><td>R1: L серая; N → <b>ZK144B УЗО4↑</b>; PE → <b>ZK206G#2/4</b></td><td>Бра левая кровать</td></tr>
+      <tr><td class="step">29</td><td><b>№30</b></td><td>R1: L серая; N → <b>ZK144B УЗО4↑</b>; PE → <b>ZK206G#2/5</b></td><td>Основная люстра</td></tr>
+      <tr><td class="step">30</td><td><b>№31</b></td><td>R1: L серая; N → <b>ZK144B УЗО4↑</b>; PE → <b>ZK206G#2/6</b></td><td>Точки у люстры</td></tr>
+      <tr><td class="step">31</td><td><b>№32</b></td><td>R1: L серая; N → <b>ZK144B УЗО4↑</b>; PE → <b>ZK206G#2/7</b></td><td>Бра правая кровать</td></tr>
+      <tr><td class="step">32</td><td><b>№34</b></td><td>R1: L серая; N → <b>ZK144B УЗО4↑</b>; PE → <b>ZK206G#2/8</b></td><td>Питание карниза комната</td></tr>
+      <tr><td class="step">33</td><td><b>№35</b></td><td><b>Не на R1</b>; в R5: <b>WB-LED → №35</b> (DIN MDM#1·#2·#3→WB-LED→D6→ARV)</td><td>Только 24В + PE при наличии жилы</td></tr>
+      <tr><td class="step">34</td><td><b>№37</b></td><td>R1: L серая; N → <b>ZK144B УЗО4↑</b>; PE → <b>ZK206G#2/10</b></td><td>Свет лоджия</td></tr>
+      <tr><td class="step">35</td><td><b>№38</b></td><td>R1: L серая; N → <b>ZK144B УЗО4↑</b>; PE → <b>ZK206G#2/11</b></td><td>Питание карниза лоджия</td></tr>
+      <tr><td class="step">36</td><td><b>№41</b></td><td>R1: L серая (<b>J5</b> ←с J1); N → <b>ZK144B УЗО4↑</b>; PE → <b>ZK206G#2/12</b></td><td>Розетка стол</td></tr>
+      <tr><td class="step">37</td><td><b>№43</b></td><td>R1: L серая (<b>J5</b>); N → <b>ZK144B УЗО4↑</b>; PE → <b>ZK206G#2/13</b></td><td>Розетка ТВ комната</td></tr>
+      <tr><td class="step">38</td><td><b>№47</b></td><td>R1: L серая (<b>J3</b> ←ПУГВ); N сразу → <b>ZK144B УЗО1↑</b>; PE → <b>ZK206G#2/14</b></td><td>Розетка ТВ кухня</td></tr>
+      <tr><td class="step">39</td><td><b>№48</b></td><td>R1: L серая; N сразу → <b>ZK144B УЗО1↑</b>; PE → <b>ZK206G#2/15</b></td><td>Бра кухня</td></tr>
+      <tr><td class="step">40</td><td><b>№50</b></td><td>R1: L серая; N сразу → <b>ZK144B УЗО1↑</b>; PE → <b>ZK206G#2/16</b></td><td>Основной свет кухня</td></tr>
+      <tr><td class="step">41</td><td><b>№51</b></td><td>R1: L серая; N сразу → <b>ZK144B УЗО1↑</b>; PE → <b>ZK206G#2/17</b></td><td>Левый свет кухни</td></tr>
+      <tr><td class="step">42</td><td><b>№52</b></td><td>R1: L серая; N сразу → <b>ZK144B УЗО1↑</b>; PE → <b>ZK206G#2/18</b></td><td>Правый свет кухни</td></tr>
+      <tr><td class="step">43</td><td><b>№53</b></td><td>R1: L серая; N сразу → <b>ZK144B УЗО1↑</b>; PE → <b>ZK206G#2/19</b></td><td>Подсветка кухни</td></tr>
+      <tr><td class="step">44</td><td><b>№54</b></td><td>R1: L серая (<b>J3</b>); N сразу → <b>ZK144B УЗО1↑</b>; PE → <b>ZK206G#2/20</b></td><td>Левая розетка кухни</td></tr>
+      <tr><td class="step">45</td><td><b>№55</b></td><td>R1: L серая (<b>J3</b>); N сразу → <b>ZK144B УЗО1↑</b>; PE → <b>ZK175G ↑1</b></td><td>Правая розетка кухни</td></tr>
+      <tr><td class="step">46</td><td><b>№56</b></td><td>R1: L серая; N сразу → <b>ZK144B УЗО1↑</b>; PE → <b>ZK175G ↑2</b></td><td>Вытяжка кухня</td></tr>
+      <tr><td class="step">47</td><td><b>№58</b></td><td>R1: L <b>6–10</b>; N 25 мм² → <b>ZK113B</b>; PE → <b>ZK175G ↑3</b></td><td>Проточный, силовой зажим 25 мм²</td></tr>
+      <tr><td class="step">48</td><td><b>№61</b></td><td>R1: L серая; N → <b>ZK113B</b>; PE → <b>ZK175G ↑4</b></td><td>Свет ванна</td></tr>
+      <tr><td class="step">49</td><td><b>№62</b></td><td>R1: L серая; N → <b>ZK113B</b>; PE → <b>ZK175G ↑5</b></td><td>Зеркало ванна</td></tr>
+      <tr><td class="step">50</td><td><b>№63</b></td><td>R1: L серая (<b>J4</b> ←ПУГВ); N → <b>ZK113B</b>; PE → <b>ZK175G ↑6</b></td><td>Розетка ванна</td></tr>
+      <tr><td class="step">51</td><td><b>№64</b></td><td>R1: L серая; N → <b>ZK113B</b>; PE → <b>ZK175G ↑7</b></td><td>Вытяжка ванна</td></tr>
+      <tr><td class="step">52</td><td><b>№68</b></td><td>R1: L серая; N → <b>ZK144B УЗО4↑</b>; PE → <b>ZK175G ↑8</b></td><td>Свет коридор</td></tr>
+      <tr><td class="step">53</td><td><b>№69</b></td><td>R1: L серая; N → <b>ZK113B</b>; PE → <b>ZK175G ↑9</b></td><td>Зеркало туалет</td></tr>
+      <tr><td class="step">54</td><td><b>№70</b></td><td>R1: L серая (<b>J4</b>); N → <b>ZK113B</b>; PE → <b>ZK175G ↑10</b></td><td>Розетка туалет</td></tr>
+      <tr><td class="step">55</td><td><b>№71</b></td><td>R1: L серая; N → <b>ZK113B</b>; PE → <b>ZK175G ↑11</b></td><td>Свет туалет</td></tr>
+      <tr><td class="step">56</td><td><b>№72</b></td><td>R1: L серая; N → <b>ZK113B</b>; PE → <b>ZK175G ↑12</b></td><td>Вытяжка туалет</td></tr>
+      <tr><td class="step">57</td><td><b>№100</b></td><td>R1: L серая; N сразу → <b>ZK144B УЗО1↑</b>; PE → <b>ZK175G ↑13</b></td><td>Питание карниза кухня</td></tr>
+      <tr><td class="step">58</td><td><b>№101</b></td><td>R1: L серая; N → <b>ZK82B УЗО6</b>; PE → <b>PE докуп #1</b></td><td>Розетка люк, неотключаемое</td></tr>
+      <tr><td class="step">59</td><td><b>№105</b></td><td>R1: L серая (<b>J6</b>); N → <b>ZK82B УЗО6</b>; PE → <b>PE докуп #2</b></td><td>Роутер / коммутатор</td></tr>
+      <tr><td class="step">60</td><td><b>UTP / PoE</b></td><td>после силовых справа на R1</td><td>Слаботочка, не ZK</td></tr>
+      <tr><td class="step">61</td><td><b>BUSHUB</b></td><td>самый правый блок на R1</td><td>A/B + 24В Modbus</td></tr>
+    </tbody>
+  </table>
+  <p class="foot">Если расключать прямо по этой таблице, то ошибка с верхом не случится: у <b>R1</b> шаги идут по <b>позиции на рейке</b>, а не по арифметическому номеру кабеля. Поэтому после <b>№34</b> идёт <b>пропуск под №35</b>, затем <b>№37</b>.</p>
+</section>
+
+<section id="in">
+  <h2>Вводной кабель U-IN · не на R1/R6</h2>
+  <p class="dir">Excel: вход <b>низ/ввод</b>, жилы <b>L+N+PE</b>, куда <b>ВА50 → УЗМ-50Ц</b>. Серые/синие на R1 и R6 — только уходящие кабели в квартиру. Фабричные N/PE AT62 снять. ВН-102 нет.</p>
+  <div class="row">
+    <div class="pos">L</div>
+    <div class="what"><div class="parts"><span class="chip L">сразу в ВА50</span></div></div>
+    <div>
+      <div class="name">Фаза → вход ВА-103 2P C50 (`12294DEK`) на R2</div>
+      <div class="meta">Выход ВА50 → вход УЗМ-50Ц. С выхода УЗМ — развилка: ESB и УЗО6/7. УЗМ в силе на весь щит, в катушку ESB не сажать.</div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="pos">N</div>
+    <div class="what"><div class="parts"><span class="chip N">сразу в ВА50</span></div></div>
+    <div>
+      <div class="name">Ноль → второй полюс ВА50 → УЗМ</div>
+      <div class="meta">С выхода УЗМ: N → ESB 3–4 → N УЗО1…5; отдельно N УЗО6/7. Вводной N <b>не</b> в бытовые ZK144/113/82.</div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="pos">PE</div>
+    <div class="what"><div class="parts"><span class="chip L" style="background:#dcfce7;color:#166534">сразу на землю</span></div></div>
+    <div>
+      <div class="name">Земля → магистраль PE → 25 мм² на ZK206G</div>
+      <div class="meta">Схема пишет «питающая PE → 25 мм²» на <b>#1 низ</b> (вход кабеля тоже низ). У #1 есть 6×25: ввод + связь #1↔#2 ПУГВ 10–16 + №7. Корпус AT62 на ту же PE. Не на серую L DIN. U-PE (туалет) — отдельная жила на ту же шину, не ввод.</div>
+    </div>
+  </div>
+  <p class="foot">Сила: <b>U-IN L+N → ВА50 → УЗМ-50Ц → развилка</b> (УЗО6+7 мимо ESB ‖ ESB → УЗО1…5). ВН-102 нет.</p>
+</section>
+
+<section id="r6">
+  <h2>R6↓ · низ · слева → направо</h2>
+  <p class="dir">Кабель → клемма с маркером № · ПУГВ вверх на автомат (или через JXB). Порядок <b>не</b> по номеру: техника → J1 10pin → J2 2pin. Подробно: <a href="shit_ABB_AT62_R6_klemmy_rasstanovka.html">R6 расстановка</a>.</p>
+  <div class="strip" title="R6 блоки">
+    <b>1</b><b>3</b><b>4</b><b>15</b><b class="n">5N</b><b class="n">6N</b><b class="t">7</b><b>8</b><b>9</b><b>10</b><b class="n">11N</b><b class="n">18N</b>
+    <b title="J1">2</b><b>12</b><b>13</b><b>14</b><b>16</b><b>17</b><b>21</b><b>22</b><b>23</b><b>24</b>
+    <b title="J2">19</b><b>20</b>
+  </div>
+  <p class="foot" style="margin-top:.4rem">J1 = B16 роз.жилые · JXB 10pin · ПУГВ в №2 · отсюда же ПУГВ на J5 (41·43). J2 = лоджия · 2pin · ПУГВ в №19. Полный список имён — в <a href="shit_ABB_AT62_R6_klemmy_rasstanovka.html">R6↓</a> / <a href="shit_ABB_AT62_klemmy_na_reyki.html">рейки</a>.</p>
+
+  <p class="note">Ниже — справочник кабель→назначение (порядок строк = старый номерной; на рейке ставь по strip выше).</p>
+
+  <div class="row">
+    <div class="pos">1</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№1</span> · Тёплый пол коридор</div><div class="meta">УЗО5 · B16 ТП К+Т · N сразу в ZK82B УЗО5 · PE ZK206G#1 сл.1</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">2</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№2</span> · Розетка коридор</div><div class="meta">УЗО4 · B16 роз.жилые · N в ZK144B↓ · PE ZK206G#1 сл.2</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">3</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№3</span> · Тёплый пол туалет</div><div class="meta">УЗО5 · B16 ТП К+Т · N в ZK82B УЗО5 · PE ZK206G#1 сл.3</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">4</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№4</span> · Тёплый пол ванна</div><div class="meta">УЗО5 · B16 ТП В+Кух · N в ZK82B УЗО5 · PE ZK206G#1 сл.4</div></div>
+  </div>
+  <div class="row jump">
+    <div class="pos">5</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span><span class="chip N">+ N синяя</span></div></div>
+    <div><div class="name"><span class="cab">№5</span> · Сушилка</div><div class="meta">УЗО3 · B16 · синяя BU ← ПУГВ с N УЗО3 (без ZK) · PE ZK206G#1 сл.5</div></div>
+  </div>
+  <div class="row jump">
+    <div class="pos">6</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span><span class="chip N">+ N синяя</span></div></div>
+    <div><div class="name"><span class="cab">№6</span> · Стиралка</div><div class="meta">УЗО3 · B16 · синяя BU ← ПУГВ с N УЗО3 (без ZK) · PE ZK206G#1 сл.6</div></div>
+  </div>
+  <div class="row thick">
+    <div class="pos">7</div>
+    <div class="what"><div class="parts"><span class="chip L">L 6–10</span></div></div>
+    <div><div class="name"><span class="cab">№7</span> · Плита</div><div class="meta">УЗО1 · B32 · N 25 мм² ZK144B УЗО1 · PE ZK206G#1 сл.7 · зажим 25 мм² (не 4)</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">8</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№8</span> · Духовка</div><div class="meta">УЗО1 · B16 · N в ZK144B УЗО1 · PE ZK206G#1 сл.8</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">9</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№9</span> · Посудомойка</div><div class="meta">УЗО1 · B16 ПММ · N в ZK144B УЗО1 · PE ZK206G#1 сл.9</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">10</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№10</span> · Измельчитель</div><div class="meta">УЗО1 · B10 · N в ZK144B УЗО1 · PE ZK206G#1 сл.10</div></div>
+  </div>
+  <div class="row jump">
+    <div class="pos">11</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span><span class="chip N">+ N синяя</span></div></div>
+    <div><div class="name"><span class="cab">№11</span> · Холодильник</div><div class="meta">УЗО6 · B10 · синяя → ПУГВ ↑ на ZK82B УЗО6 · PE ZK206G#1 сл.11</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">12</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№12</span> · Розетка диван</div><div class="meta">УЗО4 · B16 · N в ZK144B↓ · PE ZK206G#1 сл.12</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">13</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№13</span> · Розетка под тумбой</div><div class="meta">УЗО4 · B16 · N в ZK144B↓ · PE ZK206G#1 сл.13</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">14</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№14</span> · Розетка под ТВ (комната)</div><div class="meta">УЗО4 · B16 · N в ZK144B↓ · PE ZK206G#1 сл.14</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">15</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№15</span> · Тёплый пол кухня</div><div class="meta">УЗО5 · B16 ТП В+Кух · N в ZK82B УЗО5 · PE ZK206G#1 сл.15</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">16</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№16</span> · Розетка под ТВ (зона 2)</div><div class="meta">УЗО4 · B16 · N в ZK144B↓ · PE ZK206G#1 сл.16</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">17</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№17</span> · Розетка под столом</div><div class="meta">УЗО4 · B16 · N в ZK144B↓ · PE ZK206G#1 сл.17</div></div>
+  </div>
+  <div class="row jump">
+    <div class="pos">18</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span><span class="chip N">+ N синяя</span></div></div>
+    <div><div class="name"><span class="cab">№18</span> · Кондиционер · внешний блок</div><div class="meta">УЗО6 · B16 · синяя → ПУГВ ↑ на ZK82B УЗО6 · PE ZK206G#1 сл.18</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">19</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№19</span> · Розетка лоджия верх</div><div class="meta">УЗО4 · B16 лоджия · N в ZK144B↓ · PE ZK206G#1 сл.19</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">20</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№20</span> · Розетка лоджия низ</div><div class="meta">УЗО4 · B16 лоджия · N в ZK144B↓ · PE ZK206G#1 сл.20</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">21</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№21</span> · Розетка правая кровать</div><div class="meta">УЗО4 · B16 · N в ZK144B↓ · PE ZK175G ↓1</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">22</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№22</span> · Розетка левая кровать</div><div class="meta">УЗО4 · B16 · N в ZK144B↓ · PE ZK175G ↓2</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">23</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№23</span> · Розетка угол левый</div><div class="meta">УЗО4 · B16 · N в ZK144B↓ · PE ZK175G ↓3</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">24</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№24</span> · Розетка кладовая низ</div><div class="meta">УЗО4 · B16 · N в ZK144B↓ · PE ZK175G ↓4</div></div>
+  </div>
+  <p class="foot">На рейку: <b>23×</b> серая 2.5 + <b>1×</b> L 6–10 (плита) + <b>4×</b> синяя (5 · 6 · 11 · 18). Итого 28 клемм. Порядок на DIN — по strip (J1/J2), не по номерам строк ниже.</p>
+</section>
+
+<section id="r1">
+  <h2>R1↑ · верх · слева → направо</h2>
+  <p class="dir">Кабель сверху → клемма по блокам. Силовые L, затем UTP, затем BUSHUB. №35 не ставить. Подробно: <a href="shit_ABB_AT62_R1_klemmy_rasstanovka.html">R1 расстановка</a>.</p>
+  <div class="strip">
+    <b title="J6">26</b><b>105</b><b>27</b><b>28</b><b>29</b><b>30</b><b>31</b><b>32</b><b>34</b><b class="s">35</b><b>37</b><b>38</b><b title="J5">41</b><b>43</b>
+    <b>48</b><b>50</b><b>51</b><b>52</b><b>53</b><b>56</b><b class="n">100</b><b title="J3">47</b><b>54</b><b>55</b>
+    <b class="t">58</b><b>61</b><b>62</b><b>64</b><b>68</b><b>69</b><b>71</b><b>72</b><b title="J4">63</b><b>70</b><b>101</b>
+    <b class="u">UTP</b><b class="h">HUB</b>
+  </div>
+  <p class="foot" style="margin-top:.4rem">J6=26·105 · J5=41·43←с J1 · J3=47·54·55 · J4=63·70. Имена нагрузок в таблице ниже (порядок строк может отличаться от strip).</p>
+
+  <div class="row">
+    <div class="pos">1</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№26</span> · Розетка верх кладовая / сервер</div><div class="meta">УЗО6 · B16 сервер+IT · N в ZK82B УЗО6 · PE ZK206G#2 сл.1</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">2</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№27</span> · Лента шкаф/кладовая</div><div class="meta">УЗО4 · B10 · N в ZK144B↑ · PE ZK206G#2 сл.2</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">3</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№28</span> · Свет кладовая</div><div class="meta">УЗО4 · B10 · N в ZK144B↑ · PE ZK206G#2 сл.3</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">4</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№29</span> · Бра левая кровать</div><div class="meta">УЗО4 · B10 бра+кор → MDM#3 · N в ZK144B↑ · PE ZK206G#2 сл.4</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">5</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№30</span> · Основная люстра</div><div class="meta">УЗО4 · B10 комн.дим → MDM#2 · N в ZK144B↑ · PE ZK206G#2 сл.5</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">6</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№31</span> · Точки у люстры</div><div class="meta">УЗО4 · B10 комн.дим → MDM#2 · N в ZK144B↑ · PE ZK206G#2 сл.6</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">7</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№32</span> · Бра правая кровать</div><div class="meta">УЗО4 · B10 бра+кор → MDM#3 · N в ZK144B↑ · PE ZK206G#2 сл.7</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">8</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№34</span> · Питание карниза комната</div><div class="meta">УЗО4 · B10 карниз.ж · N в ZK144B↑ · PE ZK206G#2 сл.8</div></div>
+  </div>
+  <div class="row selv">
+    <div class="pos">9</div>
+    <div class="what"><div class="parts"><span class="chip v24">не на R1</span></div></div>
+    <div><div class="name"><span class="cab">№35</span> · Лента карниза 24В</div><div class="meta">Пропуск на R1. В щите R5: MDM#1·#2·#3→WB-LED→D6→ARV · №35 +24/0 с WB-LED · PE ZK206G#2 сл.9 свободен</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">10</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№37</span> · Свет лоджия</div><div class="meta">УЗО4 · B10 комн.дим → MDM#2 · N в ZK144B↑ · PE ZK206G#2 сл.10</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">11</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№38</span> · Питание карниза лоджия</div><div class="meta">УЗО4 · B10 карниз.ж · N в ZK144B↑ · PE ZK206G#2 сл.11</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">12</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№41</span> · Питание розетка стол</div><div class="meta">УЗО4 · B16 · N в ZK144B↑ · PE ZK206G#2 сл.12</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">13</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№43</span> · Розетка ТВ комната</div><div class="meta">УЗО4 · B16 · N в ZK144B↑ · PE ZK206G#2 сл.13</div></div>
+  </div>
+    <div class="row">
+    <div class="pos">14</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№47</span> · Розетка ТВ кухня</div><div class="meta">УЗО1 · B16 · N сразу в ZK144B УЗО1↑ · PE ZK206G#2 сл.14</div></div>
+  </div>
+    <div class="row">
+    <div class="pos">15</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№48</span> · Бра кухня</div><div class="meta">УЗО1 · B10 · N сразу в ZK144B УЗО1↑ · PE ZK206G#2 сл.15</div></div>
+  </div>
+    <div class="row">
+    <div class="pos">16</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№50</span> · Основной свет кухня</div><div class="meta">УЗО1 · B10 · N сразу в ZK144B УЗО1↑ · PE ZK206G#2 сл.16</div></div>
+  </div>
+    <div class="row">
+    <div class="pos">17</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№51</span> · Левый свет кухни</div><div class="meta">УЗО1 · B10 · N сразу в ZK144B УЗО1↑ · PE ZK206G#2 сл.17</div></div>
+  </div>
+    <div class="row">
+    <div class="pos">18</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№52</span> · Правый свет кухни</div><div class="meta">УЗО1 · B10 · N сразу в ZK144B УЗО1↑ · PE ZK206G#2 сл.18</div></div>
+  </div>
+    <div class="row">
+    <div class="pos">19</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№53</span> · Подсветка кухни</div><div class="meta">УЗО1 · B10 · N сразу в ZK144B УЗО1↑ · PE ZK206G#2 сл.19</div></div>
+  </div>
+    <div class="row">
+    <div class="pos">20</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№54</span> · Левая розетка кухни</div><div class="meta">УЗО1 · B16 · N сразу в ZK144B УЗО1↑ · PE ZK206G#2 сл.20</div></div>
+  </div>
+    <div class="row">
+    <div class="pos">21</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№55</span> · Правая розетка кухни</div><div class="meta">УЗО1 · B16 · N сразу в ZK144B УЗО1↑ · PE ZK175G ↑1</div></div>
+  </div>
+    <div class="row">
+    <div class="pos">22</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№56</span> · Вытяжка кухня</div><div class="meta">УЗО1 · B10 · N сразу в ZK144B УЗО1↑ · PE ZK175G ↑2</div></div>
+  </div>
+  <div class="row thick">
+    <div class="pos">23</div>
+    <div class="what"><div class="parts"><span class="chip L">L 6–10</span></div></div>
+    <div><div class="name"><span class="cab">№58</span> · Проточный водонагреватель</div><div class="meta">УЗО2 · B32 · N 25 мм² ZK113B · PE ZK175G ↑3 · зажим 25 мм² (не 4)</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">24</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№61</span> · Свет ванна</div><div class="meta">УЗО2 · B10 · N в ZK113B · PE ZK175G ↑4</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">25</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№62</span> · Зеркало ванна</div><div class="meta">УЗО2 · B10 · N в ZK113B · PE ZK175G ↑5</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">26</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№63</span> · Розетка ванна</div><div class="meta">УЗО2 · B16 · N в ZK113B · PE ZK175G ↑6</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">27</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№64</span> · Вытяжка ванна</div><div class="meta">УЗО2 · B10 · N в ZK113B · PE ZK175G ↑7</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">28</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№68</span> · Свет коридор</div><div class="meta">УЗО4 · B10 бра+кор → MDM#3 · N в ZK144B↑ · PE ZK175G ↑8</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">29</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№69</span> · Зеркало туалет</div><div class="meta">УЗО2 · B10 · N в ZK113B · PE ZK175G ↑9</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">30</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№70</span> · Розетка туалет</div><div class="meta">УЗО2 · B16 · N в ZK113B · PE ZK175G ↑10</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">31</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№71</span> · Свет туалет</div><div class="meta">УЗО2 · B10 · N в ZK113B · PE ZK175G ↑11</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">32</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№72</span> · Вытяжка туалет</div><div class="meta">УЗО2 · B10 · N в ZK113B · PE ZK175G ↑12</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">33</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№100</span> · Питание карниза кухня</div><div class="meta">УЗО1 · B10 · N сразу в ZK144B УЗО1↑ · PE ZK175G ↑13</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">34</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№101</span> · Розетка люк туалет</div><div class="meta">УЗО6 · B16 неоткл. · N в ZK82B УЗО6 · PE докуп #1</div></div>
+  </div>
+  <div class="row">
+    <div class="pos">35</div>
+    <div class="what"><div class="parts"><span class="chip L">L серая 2.5</span></div></div>
+    <div><div class="name"><span class="cab">№105</span> · Роутер / коммутатор</div><div class="meta">УЗО6 · B16 сервер+IT · N в ZK82B УЗО6 · PE докуп #2</div></div>
+  </div>
+  <div class="row soft">
+    <div class="pos">→</div>
+    <div class="what"><div class="parts"><span class="chip utp">UTP / PoE</span></div></div>
+    <div><div class="name">Клеммы ввода слаботочки</div><div class="meta">~3 модуля · выключатели, планшеты, камеры → внешний коммутатор · не ZK</div></div>
+  </div>
+  <div class="row soft">
+    <div class="pos">→</div>
+    <div class="what"><div class="parts"><span class="chip bus">BUSHUB</span></div></div>
+    <div><div class="name">Одна шина Modbus</div><div class="meta">~7 модулей · MWAC · M1W2×2 · MSW · ONOKOM×2 · карнизы · A/B+24В в порты хаба</div></div>
+  </div>
+  <p class="foot">На рейку сила: <b>33×</b> серая 2.5 + <b>1×</b> L 6–10 (проточный) · без синих BU. Порядок на DIN — по strip (J3–J6). N кухни сразу в ZK УЗО1↑. Потом UTP и BUSHUB.</p>
+</section>
+
+</main>
+</body>
+</html>

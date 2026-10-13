@@ -10,21 +10,26 @@ import (
 	"github.com/bartwork/home/internal/realtime"
 )
 
-// Топики Wirenboard живут под /devices/#.
 const defaultSubscribe = "/devices/#"
+
+type Observer interface {
+	Observe(topic, payload string)
+}
 
 type Bridge struct {
 	log       zerolog.Logger
 	hub       *realtime.Hub
+	observer  Observer
 	client    mqtt.Client
 	broker    string
 	subscribe string
 }
 
-func New(log zerolog.Logger, hub *realtime.Hub, broker, clientID string) *Bridge {
+func New(log zerolog.Logger, hub *realtime.Hub, observer Observer, broker, clientID string) *Bridge {
 	b := &Bridge{
 		log:       log,
 		hub:       hub,
+		observer:  observer,
 		broker:    broker,
 		subscribe: defaultSubscribe,
 	}
@@ -80,5 +85,10 @@ func (b *Bridge) Publish(topic, payload string) error {
 }
 
 func (b *Bridge) onMessage(_ mqtt.Client, msg mqtt.Message) {
-	b.hub.BroadcastState(msg.Topic(), string(msg.Payload()))
+	topic := msg.Topic()
+	payload := string(msg.Payload())
+	b.hub.BroadcastState(topic, payload)
+	if b.observer != nil {
+		b.observer.Observe(topic, payload)
+	}
 }

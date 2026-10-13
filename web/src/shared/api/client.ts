@@ -1,6 +1,6 @@
-import type { Device, LoginResponse, User } from './types'
+import type { Device, Discovered, LoginResponse, User } from './types'
 
-export type { Device, LoginResponse, User } from './types'
+export type { Device, Discovered, LoginResponse, User } from './types'
 
 const TOKEN_KEY = 'home.token'
 const USER_KEY = 'home.user'
@@ -83,4 +83,25 @@ export function login(login: string, password: string) {
 
 export function listDevices() {
   return api<{ devices: Device[] }>('/api/v1/devices')
+}
+
+export function listDiscovered() {
+  return api<{ discovered: Discovered[] }>('/api/v1/discovered')
+}
+
+export function countDiscovered() {
+  return api<{ count: number }>('/api/v1/discovered/count')
+}
+
+export function acceptDiscovered(id: number) {
+  return api<{ device: Device }>(`/api/v1/discovered/${id}/accept`, { method: 'POST' })
+}
+
+export function ignoreDiscovered(id: number) {
+  return api<void>(`/api/v1/discovered/${id}/ignore`, { method: 'POST' })
+}
+
+export function acceptAllDiscovered(type?: string) {
+  const q = type ? `?type=${encodeURIComponent(type)}` : ''
+  return api<{ accepted: number }>(`/api/v1/discovered/accept-all${q}`, { method: 'POST' })
 }

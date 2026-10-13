@@ -1,0 +1,2842 @@
+[
+  {
+    "device": "alarms",
+    "control": "log",
+    "topic": "/devices/alarms/controls/log",
+    "value": "",
+    "type": "text",
+    "title": "Лог",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "buzzer",
+    "control": "enabled",
+    "topic": "/devices/buzzer/controls/enabled",
+    "value": "0",
+    "type": "switch",
+    "title": "Включен",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "buzzer",
+    "control": "frequency",
+    "topic": "/devices/buzzer/controls/frequency",
+    "value": "4566",
+    "type": "range",
+    "title": "Частота",
+    "suggested_type": "range"
+  },
+  {
+    "device": "buzzer",
+    "control": "volume",
+    "topic": "/devices/buzzer/controls/volume",
+    "value": "100",
+    "type": "range",
+    "title": "Громкость",
+    "suggested_type": "range"
+  },
+  {
+    "device": "hwmon",
+    "control": "Board Temperature",
+    "topic": "/devices/hwmon/controls/Board Temperature",
+    "value": "39.125",
+    "type": "temperature",
+    "title": "hwmon · Board Temperature",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "hwmon",
+    "control": "CPU Temperature",
+    "topic": "/devices/hwmon/controls/CPU Temperature",
+    "value": "67.235",
+    "type": "temperature",
+    "title": "hwmon · CPU Temperature",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "knx",
+    "control": "data",
+    "topic": "/devices/knx/controls/data",
+    "value": "i:0/0/0 i:0/0/0 GroupValueRead 0x00",
+    "type": "text",
+    "title": "Сообщение",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "metrics",
+    "control": "data_total_space",
+    "topic": "/devices/metrics/controls/data_total_space",
+    "value": "56162",
+    "type": "value",
+    "title": "metrics · data_total_space",
+    "units": "MiB",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "metrics",
+    "control": "data_used_space",
+    "topic": "/devices/metrics/controls/data_used_space",
+    "value": "2137",
+    "type": "value",
+    "title": "metrics · data_used_space",
+    "units": "MiB",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "metrics",
+    "control": "dev_root_linked_on",
+    "topic": "/devices/metrics/controls/dev_root_linked_on",
+    "value": "/dev/mmcblk0p2",
+    "type": "text",
+    "title": "metrics · dev_root_linked_on",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "metrics",
+    "control": "dev_root_total_space",
+    "topic": "/devices/metrics/controls/dev_root_total_space",
+    "value": "1984",
+    "type": "value",
+    "title": "metrics · dev_root_total_space",
+    "units": "MiB",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "metrics",
+    "control": "dev_root_used_space",
+    "topic": "/devices/metrics/controls/dev_root_used_space",
+    "value": "771",
+    "type": "value",
+    "title": "metrics · dev_root_used_space",
+    "units": "MiB",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "metrics",
+    "control": "load_average_15min",
+    "topic": "/devices/metrics/controls/load_average_15min",
+    "value": "0.74",
+    "type": "value",
+    "title": "metrics · load_average_15min",
+    "units": "tasks",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "metrics",
+    "control": "load_average_1min",
+    "topic": "/devices/metrics/controls/load_average_1min",
+    "value": "1.54",
+    "type": "value",
+    "title": "metrics · load_average_1min",
+    "units": "tasks",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "metrics",
+    "control": "load_average_5min",
+    "topic": "/devices/metrics/controls/load_average_5min",
+    "value": "0.91",
+    "type": "value",
+    "title": "metrics · load_average_5min",
+    "units": "tasks",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "metrics",
+    "control": "ram_available",
+    "topic": "/devices/metrics/controls/ram_available",
+    "value": "1611",
+    "type": "value",
+    "title": "metrics · ram_available",
+    "units": "MiB",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "metrics",
+    "control": "ram_total",
+    "topic": "/devices/metrics/controls/ram_total",
+    "value": "2012",
+    "type": "value",
+    "title": "metrics · ram_total",
+    "units": "MiB",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "metrics",
+    "control": "ram_used",
+    "topic": "/devices/metrics/controls/ram_used",
+    "value": "352",
+    "type": "value",
+    "title": "metrics · ram_used",
+    "units": "MiB",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "metrics",
+    "control": "swap_total",
+    "topic": "/devices/metrics/controls/swap_total",
+    "value": "255",
+    "type": "value",
+    "title": "metrics · swap_total",
+    "units": "MiB",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "metrics",
+    "control": "swap_used",
+    "topic": "/devices/metrics/controls/swap_used",
+    "value": "0",
+    "type": "value",
+    "title": "metrics · swap_used",
+    "units": "MiB",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "network",
+    "control": "Active Connections",
+    "topic": "/devices/network/controls/Active Connections",
+    "value": "[\"lo\",\"wb-eth0\"]",
+    "type": "text",
+    "title": "Активные соединения",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "network",
+    "control": "Default Interface",
+    "topic": "/devices/network/controls/Default Interface",
+    "value": "eth0",
+    "type": "text",
+    "title": "Интерфейс по умолчанию",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "network",
+    "control": "Ethernet 2 IP",
+    "topic": "/devices/network/controls/Ethernet 2 IP",
+    "value": "",
+    "type": "text",
+    "title": "network · Ethernet 2 IP",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "network",
+    "control": "Ethernet 2 IP Connection Enabled",
+    "topic": "/devices/network/controls/Ethernet 2 IP Connection Enabled",
+    "value": "0",
+    "type": "switch",
+    "title": "Ethernet 2 Включен",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "network",
+    "control": "Ethernet 2 IP Online Status",
+    "topic": "/devices/network/controls/Ethernet 2 IP Online Status",
+    "value": "0",
+    "type": "switch",
+    "title": "Ethernet 2 Доступ к интернету",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "network",
+    "control": "Ethernet IP",
+    "topic": "/devices/network/controls/Ethernet IP",
+    "value": "192.168.1.9\n",
+    "type": "text",
+    "title": "Ethernet 1 IP",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "network",
+    "control": "Ethernet IP Connection Enabled",
+    "topic": "/devices/network/controls/Ethernet IP Connection Enabled",
+    "value": "1",
+    "type": "switch",
+    "title": "Ethernet 1 Включен",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "network",
+    "control": "Ethernet IP Online Status",
+    "topic": "/devices/network/controls/Ethernet IP Online Status",
+    "value": "1",
+    "type": "switch",
+    "title": "Ethernet 1 Доступ к интернету",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "network",
+    "control": "GPRS IP",
+    "topic": "/devices/network/controls/GPRS IP",
+    "value": "",
+    "type": "text",
+    "title": "network · GPRS IP",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "network",
+    "control": "GPRS IP Connection Enabled",
+    "topic": "/devices/network/controls/GPRS IP Connection Enabled",
+    "value": "0",
+    "type": "switch",
+    "title": "GPRS IP Включен",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "network",
+    "control": "GPRS IP Online Status",
+    "topic": "/devices/network/controls/GPRS IP Online Status",
+    "value": "0",
+    "type": "switch",
+    "title": "GPRS IP Доступ к интернету",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "network",
+    "control": "Internet Connection",
+    "topic": "/devices/network/controls/Internet Connection",
+    "value": "wb-eth0",
+    "type": "text",
+    "title": "Интернет соединение",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "network",
+    "control": "Wi-Fi 2 IP",
+    "topic": "/devices/network/controls/Wi-Fi 2 IP",
+    "value": "",
+    "type": "text",
+    "title": "Wi-Fi 2 IP",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "network",
+    "control": "Wi-Fi 2 IP Connection Enabled",
+    "topic": "/devices/network/controls/Wi-Fi 2 IP Connection Enabled",
+    "value": "0",
+    "type": "switch",
+    "title": "Wi-Fi 2 Включен",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "network",
+    "control": "Wi-Fi 2 IP Online Status",
+    "topic": "/devices/network/controls/Wi-Fi 2 IP Online Status",
+    "value": "0",
+    "type": "switch",
+    "title": "Wi-Fi 2 Доступ к интернету",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "network",
+    "control": "Wi-Fi IP",
+    "topic": "/devices/network/controls/Wi-Fi IP",
+    "value": "",
+    "type": "text",
+    "title": "Wi-Fi 1 IP",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "network",
+    "control": "Wi-Fi IP Connection Enabled",
+    "topic": "/devices/network/controls/Wi-Fi IP Connection Enabled",
+    "value": "0",
+    "type": "switch",
+    "title": "Wi-Fi 1 Включен",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "network",
+    "control": "Wi-Fi IP Online Status",
+    "topic": "/devices/network/controls/Wi-Fi IP Online Status",
+    "value": "0",
+    "type": "switch",
+    "title": "Wi-Fi 1 Доступ к интернету",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "power_status",
+    "control": "Vin",
+    "topic": "/devices/power_status/controls/Vin",
+    "value": "20.4",
+    "type": "voltage",
+    "title": "Входное напряжение",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "power_status",
+    "control": "working on battery",
+    "topic": "/devices/power_status/controls/working on battery",
+    "value": "0",
+    "type": "switch",
+    "title": "Работа от батареи",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "system",
+    "control": "Batch No",
+    "topic": "/devices/system/controls/Batch No",
+    "value": "7.3.3C/7 655",
+    "type": "text",
+    "title": "Номер партии",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system",
+    "control": "Current uptime",
+    "topic": "/devices/system/controls/Current uptime",
+    "value": "19d 11h 45m",
+    "type": "text",
+    "title": "Время работы",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system",
+    "control": "DTS Version",
+    "topic": "/devices/system/controls/DTS Version",
+    "value": "733\n",
+    "type": "text",
+    "title": "Версия DTS",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system",
+    "control": "HW Revision",
+    "topic": "/devices/system/controls/HW Revision",
+    "value": "7.3.3",
+    "type": "text",
+    "title": "Версия контроллера",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system",
+    "control": "Manufacturing Date",
+    "topic": "/devices/system/controls/Manufacturing Date",
+    "value": "2022-10-31 12:05:57",
+    "type": "text",
+    "title": "Дата производства",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system",
+    "control": "Reboot",
+    "topic": "/devices/system/controls/Reboot",
+    "value": "",
+    "type": "pushbutton",
+    "title": "Перезагрузить",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "system",
+    "control": "Release name",
+    "topic": "/devices/system/controls/Release name",
+    "value": "wb-2501",
+    "type": "text",
+    "title": "Название релиза",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system",
+    "control": "Release suite",
+    "topic": "/devices/system/controls/Release suite",
+    "value": "stable",
+    "type": "text",
+    "title": "Тип релиза",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system",
+    "control": "Short SN",
+    "topic": "/devices/system/controls/Short SN",
+    "value": "AZBDNV3C",
+    "type": "text",
+    "title": "Серийный номер",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system",
+    "control": "Temperature Grade",
+    "topic": "/devices/system/controls/Temperature Grade",
+    "value": "commercial",
+    "type": "text",
+    "title": "Температурный диапазон",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__0f098677-2b49-4167-a534-207567b1751b",
+    "control": "Active",
+    "topic": "/devices/system__networks__0f098677-2b49-4167-a534-207567b1751b/controls/Active",
+    "value": "0",
+    "type": "switch",
+    "title": "system__networks__0f098677-2b49-4167-a534-207567b1751b · Active",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "system__networks__0f098677-2b49-4167-a534-207567b1751b",
+    "control": "Address",
+    "topic": "/devices/system__networks__0f098677-2b49-4167-a534-207567b1751b/controls/Address",
+    "value": "",
+    "type": "text",
+    "title": "system__networks__0f098677-2b49-4167-a534-207567b1751b · Address",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__0f098677-2b49-4167-a534-207567b1751b",
+    "control": "Connectivity",
+    "topic": "/devices/system__networks__0f098677-2b49-4167-a534-207567b1751b/controls/Connectivity",
+    "value": "0",
+    "type": "switch",
+    "title": "system__networks__0f098677-2b49-4167-a534-207567b1751b · Connectivity",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "system__networks__0f098677-2b49-4167-a534-207567b1751b",
+    "control": "Device",
+    "topic": "/devices/system__networks__0f098677-2b49-4167-a534-207567b1751b/controls/Device",
+    "value": "",
+    "type": "text",
+    "title": "system__networks__0f098677-2b49-4167-a534-207567b1751b · Device",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__0f098677-2b49-4167-a534-207567b1751b",
+    "control": "Name",
+    "topic": "/devices/system__networks__0f098677-2b49-4167-a534-207567b1751b/controls/Name",
+    "value": "wb-debug",
+    "type": "text",
+    "title": "system__networks__0f098677-2b49-4167-a534-207567b1751b · Name",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__0f098677-2b49-4167-a534-207567b1751b",
+    "control": "State",
+    "topic": "/devices/system__networks__0f098677-2b49-4167-a534-207567b1751b/controls/State",
+    "value": "deactivated",
+    "type": "text",
+    "title": "system__networks__0f098677-2b49-4167-a534-207567b1751b · State",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__0f098677-2b49-4167-a534-207567b1751b",
+    "control": "Type",
+    "topic": "/devices/system__networks__0f098677-2b49-4167-a534-207567b1751b/controls/Type",
+    "value": "802-3-ethernet",
+    "type": "text",
+    "title": "system__networks__0f098677-2b49-4167-a534-207567b1751b · Type",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__0f098677-2b49-4167-a534-207567b1751b",
+    "control": "UUID",
+    "topic": "/devices/system__networks__0f098677-2b49-4167-a534-207567b1751b/controls/UUID",
+    "value": "0f098677-2b49-4167-a534-207567b1751b",
+    "type": "text",
+    "title": "system__networks__0f098677-2b49-4167-a534-207567b1751b · UUID",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__0f098677-2b49-4167-a534-207567b1751b",
+    "control": "UpDown",
+    "topic": "/devices/system__networks__0f098677-2b49-4167-a534-207567b1751b/controls/UpDown",
+    "value": "",
+    "type": "pushbutton",
+    "title": "Up",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac",
+    "control": "Active",
+    "topic": "/devices/system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac/controls/Active",
+    "value": "0",
+    "type": "switch",
+    "title": "system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac · Active",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac",
+    "control": "Address",
+    "topic": "/devices/system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac/controls/Address",
+    "value": "",
+    "type": "text",
+    "title": "system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac · Address",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac",
+    "control": "Connectivity",
+    "topic": "/devices/system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac/controls/Connectivity",
+    "value": "0",
+    "type": "switch",
+    "title": "system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac · Connectivity",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac",
+    "control": "Device",
+    "topic": "/devices/system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac/controls/Device",
+    "value": "",
+    "type": "text",
+    "title": "system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac · Device",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac",
+    "control": "Name",
+    "topic": "/devices/system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac/controls/Name",
+    "value": "MGTS_GPON_FFD5",
+    "type": "text",
+    "title": "system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac · Name",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac",
+    "control": "State",
+    "topic": "/devices/system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac/controls/State",
+    "value": "deactivated",
+    "type": "text",
+    "title": "system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac · State",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac",
+    "control": "Type",
+    "topic": "/devices/system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac/controls/Type",
+    "value": "802-11-wireless",
+    "type": "text",
+    "title": "system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac · Type",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac",
+    "control": "UUID",
+    "topic": "/devices/system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac/controls/UUID",
+    "value": "89adb663-5456-4fb5-9bf7-f815e3d8bbac",
+    "type": "text",
+    "title": "system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac · UUID",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac",
+    "control": "UpDown",
+    "topic": "/devices/system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac/controls/UpDown",
+    "value": "",
+    "type": "pushbutton",
+    "title": "Up",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e",
+    "control": "Active",
+    "topic": "/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/Active",
+    "value": "1",
+    "type": "switch",
+    "title": "system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e · Active",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e",
+    "control": "Address",
+    "topic": "/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/Address",
+    "value": "192.168.1.9",
+    "type": "text",
+    "title": "system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e · Address",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e",
+    "control": "Connectivity",
+    "topic": "/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/Connectivity",
+    "value": "1",
+    "type": "switch",
+    "title": "system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e · Connectivity",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e",
+    "control": "Device",
+    "topic": "/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/Device",
+    "value": "eth0",
+    "type": "text",
+    "title": "system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e · Device",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e",
+    "control": "Name",
+    "topic": "/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/Name",
+    "value": "wb-eth0",
+    "type": "text",
+    "title": "system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e · Name",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e",
+    "control": "State",
+    "topic": "/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/State",
+    "value": "activated",
+    "type": "text",
+    "title": "system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e · State",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e",
+    "control": "Type",
+    "topic": "/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/Type",
+    "value": "802-3-ethernet",
+    "type": "text",
+    "title": "system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e · Type",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e",
+    "control": "UUID",
+    "topic": "/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/UUID",
+    "value": "91f1c71d-2d97-4675-886f-ecbe52b8451e",
+    "type": "text",
+    "title": "system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e · UUID",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e",
+    "control": "UpDown",
+    "topic": "/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/UpDown",
+    "value": "",
+    "type": "pushbutton",
+    "title": "Down",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718",
+    "control": "Active",
+    "topic": "/devices/system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718/controls/Active",
+    "value": "1",
+    "type": "switch",
+    "title": "system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718 · Active",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718",
+    "control": "Address",
+    "topic": "/devices/system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718/controls/Address",
+    "value": "127.0.0.1",
+    "type": "text",
+    "title": "system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718 · Address",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718",
+    "control": "Connectivity",
+    "topic": "/devices/system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718/controls/Connectivity",
+    "value": "1",
+    "type": "switch",
+    "title": "system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718 · Connectivity",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718",
+    "control": "Device",
+    "topic": "/devices/system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718/controls/Device",
+    "value": "lo",
+    "type": "text",
+    "title": "system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718 · Device",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718",
+    "control": "Name",
+    "topic": "/devices/system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718/controls/Name",
+    "value": "lo",
+    "type": "text",
+    "title": "system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718 · Name",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718",
+    "control": "State",
+    "topic": "/devices/system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718/controls/State",
+    "value": "activated",
+    "type": "text",
+    "title": "system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718 · State",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718",
+    "control": "Type",
+    "topic": "/devices/system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718/controls/Type",
+    "value": "loopback",
+    "type": "text",
+    "title": "system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718 · Type",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718",
+    "control": "UUID",
+    "topic": "/devices/system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718/controls/UUID",
+    "value": "a5e01d8c-0857-40c8-a920-f24a171f0718",
+    "type": "text",
+    "title": "system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718 · UUID",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718",
+    "control": "UpDown",
+    "topic": "/devices/system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718/controls/UpDown",
+    "value": "",
+    "type": "pushbutton",
+    "title": "Down",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "system__networks__c3e38405-9c17-4155-ad70-664311b49066",
+    "control": "Active",
+    "topic": "/devices/system__networks__c3e38405-9c17-4155-ad70-664311b49066/controls/Active",
+    "value": "0",
+    "type": "switch",
+    "title": "system__networks__c3e38405-9c17-4155-ad70-664311b49066 · Active",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "system__networks__c3e38405-9c17-4155-ad70-664311b49066",
+    "control": "Address",
+    "topic": "/devices/system__networks__c3e38405-9c17-4155-ad70-664311b49066/controls/Address",
+    "value": "",
+    "type": "text",
+    "title": "system__networks__c3e38405-9c17-4155-ad70-664311b49066 · Address",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__c3e38405-9c17-4155-ad70-664311b49066",
+    "control": "Connectivity",
+    "topic": "/devices/system__networks__c3e38405-9c17-4155-ad70-664311b49066/controls/Connectivity",
+    "value": "0",
+    "type": "switch",
+    "title": "system__networks__c3e38405-9c17-4155-ad70-664311b49066 · Connectivity",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "system__networks__c3e38405-9c17-4155-ad70-664311b49066",
+    "control": "Device",
+    "topic": "/devices/system__networks__c3e38405-9c17-4155-ad70-664311b49066/controls/Device",
+    "value": "",
+    "type": "text",
+    "title": "system__networks__c3e38405-9c17-4155-ad70-664311b49066 · Device",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__c3e38405-9c17-4155-ad70-664311b49066",
+    "control": "Name",
+    "topic": "/devices/system__networks__c3e38405-9c17-4155-ad70-664311b49066/controls/Name",
+    "value": "wb-eth1",
+    "type": "text",
+    "title": "system__networks__c3e38405-9c17-4155-ad70-664311b49066 · Name",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__c3e38405-9c17-4155-ad70-664311b49066",
+    "control": "State",
+    "topic": "/devices/system__networks__c3e38405-9c17-4155-ad70-664311b49066/controls/State",
+    "value": "deactivated",
+    "type": "text",
+    "title": "system__networks__c3e38405-9c17-4155-ad70-664311b49066 · State",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__c3e38405-9c17-4155-ad70-664311b49066",
+    "control": "Type",
+    "topic": "/devices/system__networks__c3e38405-9c17-4155-ad70-664311b49066/controls/Type",
+    "value": "802-3-ethernet",
+    "type": "text",
+    "title": "system__networks__c3e38405-9c17-4155-ad70-664311b49066 · Type",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__c3e38405-9c17-4155-ad70-664311b49066",
+    "control": "UUID",
+    "topic": "/devices/system__networks__c3e38405-9c17-4155-ad70-664311b49066/controls/UUID",
+    "value": "c3e38405-9c17-4155-ad70-664311b49066",
+    "type": "text",
+    "title": "system__networks__c3e38405-9c17-4155-ad70-664311b49066 · UUID",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__networks__c3e38405-9c17-4155-ad70-664311b49066",
+    "control": "UpDown",
+    "topic": "/devices/system__networks__c3e38405-9c17-4155-ad70-664311b49066/controls/UpDown",
+    "value": "",
+    "type": "pushbutton",
+    "title": "Up",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "system__wb-cloud-agent__default",
+    "control": "activation_link",
+    "topic": "/devices/system__wb-cloud-agent__default/controls/activation_link",
+    "value": "https://wirenboard.cloud/controllers?add=f20590e2c0bec731dedca66c1e76b0a9c6e25dd299e04a070d8ebe4e210a",
+    "type": "text",
+    "title": "Link",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__wb-cloud-agent__default",
+    "control": "cloud_base_url",
+    "topic": "/devices/system__wb-cloud-agent__default/controls/cloud_base_url",
+    "value": "https://wirenboard.cloud",
+    "type": "text",
+    "title": "URL",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "system__wb-cloud-agent__default",
+    "control": "status",
+    "topic": "/devices/system__wb-cloud-agent__default/controls/status",
+    "value": "ok",
+    "type": "text",
+    "title": "Status",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "wb-adc",
+    "control": "A1",
+    "topic": "/devices/wb-adc/controls/A1",
+    "value": "0.2",
+    "type": "voltage",
+    "title": "wb-adc · A1",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-adc",
+    "control": "A2",
+    "topic": "/devices/wb-adc/controls/A2",
+    "value": "0.1",
+    "type": "voltage",
+    "title": "wb-adc · A2",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-adc",
+    "control": "A3",
+    "topic": "/devices/wb-adc/controls/A3",
+    "value": "0.1",
+    "type": "voltage",
+    "title": "wb-adc · A3",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-adc",
+    "control": "Vin",
+    "topic": "/devices/wb-adc/controls/Vin",
+    "value": "20.4",
+    "type": "voltage",
+    "title": "wb-adc · Vin",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-gpio",
+    "control": "5V_OUT",
+    "topic": "/devices/wb-gpio/controls/5V_OUT",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-gpio · 5V_OUT",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-gpio",
+    "control": "A1_IN",
+    "topic": "/devices/wb-gpio/controls/A1_IN",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-gpio · A1_IN",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-gpio",
+    "control": "A1_OUT",
+    "topic": "/devices/wb-gpio/controls/A1_OUT",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-gpio · A1_OUT",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-gpio",
+    "control": "A2_IN",
+    "topic": "/devices/wb-gpio/controls/A2_IN",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-gpio · A2_IN",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-gpio",
+    "control": "A2_OUT",
+    "topic": "/devices/wb-gpio/controls/A2_OUT",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-gpio · A2_OUT",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-gpio",
+    "control": "A3_IN",
+    "topic": "/devices/wb-gpio/controls/A3_IN",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-gpio · A3_IN",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-gpio",
+    "control": "A3_OUT",
+    "topic": "/devices/wb-gpio/controls/A3_OUT",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-gpio · A3_OUT",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-gpio",
+    "control": "D1_IN",
+    "topic": "/devices/wb-gpio/controls/D1_IN",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-gpio · D1_IN",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-gpio",
+    "control": "D1_OUT",
+    "topic": "/devices/wb-gpio/controls/D1_OUT",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-gpio · D1_OUT",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-gpio",
+    "control": "EXT1_K1",
+    "topic": "/devices/wb-gpio/controls/EXT1_K1",
+    "value": "1",
+    "type": "switch",
+    "title": "wb-gpio · EXT1_K1",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-gpio",
+    "control": "EXT1_K2",
+    "topic": "/devices/wb-gpio/controls/EXT1_K2",
+    "value": "1",
+    "type": "switch",
+    "title": "wb-gpio · EXT1_K2",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-gpio",
+    "control": "EXT1_K3",
+    "topic": "/devices/wb-gpio/controls/EXT1_K3",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-gpio · EXT1_K3",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-gpio",
+    "control": "EXT1_K4",
+    "topic": "/devices/wb-gpio/controls/EXT1_K4",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-gpio · EXT1_K4",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-gpio",
+    "control": "EXT1_K5",
+    "topic": "/devices/wb-gpio/controls/EXT1_K5",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-gpio · EXT1_K5",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-gpio",
+    "control": "EXT1_K6",
+    "topic": "/devices/wb-gpio/controls/EXT1_K6",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-gpio · EXT1_K6",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-gpio",
+    "control": "EXT1_K7",
+    "topic": "/devices/wb-gpio/controls/EXT1_K7",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-gpio · EXT1_K7",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-gpio",
+    "control": "EXT1_K8",
+    "topic": "/devices/wb-gpio/controls/EXT1_K8",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-gpio · EXT1_K8",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-gpio",
+    "control": "V_OUT",
+    "topic": "/devices/wb-gpio/controls/V_OUT",
+    "value": "1",
+    "type": "switch",
+    "title": "wb-gpio · V_OUT",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-led_221",
+    "control": "Allowed Power",
+    "topic": "/devices/wb-led_221/controls/Allowed Power",
+    "value": "100",
+    "type": "value",
+    "title": "Разрешенная мощность",
+    "units": "%",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-led_221",
+    "control": "Board Temperature",
+    "topic": "/devices/wb-led_221/controls/Board Temperature",
+    "value": "30",
+    "type": "value",
+    "title": "Температура платы",
+    "units": "deg C",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-led_221",
+    "control": "Channel 4",
+    "topic": "/devices/wb-led_221/controls/Channel 4",
+    "value": "0",
+    "type": "switch",
+    "title": "Канал 4",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-led_221",
+    "control": "Channel 4 Brightness",
+    "topic": "/devices/wb-led_221/controls/Channel 4 Brightness",
+    "value": "100",
+    "type": "range",
+    "title": "Яркость канала 4",
+    "suggested_type": "range"
+  },
+  {
+    "device": "wb-led_221",
+    "control": "Hue Changing",
+    "topic": "/devices/wb-led_221/controls/Hue Changing",
+    "value": "0",
+    "type": "switch",
+    "title": "Изменение оттенка RGB ленты",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-led_221",
+    "control": "Hue Changing Rate",
+    "topic": "/devices/wb-led_221/controls/Hue Changing Rate",
+    "value": "30",
+    "type": "value",
+    "title": "Время изменения оттенка (Hue) на 1° (мс)",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-led_221",
+    "control": "Input 1",
+    "topic": "/devices/wb-led_221/controls/Input 1",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 1",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-led_221",
+    "control": "Input 1 Counter",
+    "topic": "/devices/wb-led_221/controls/Input 1 Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 1",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-led_221",
+    "control": "Input 2",
+    "topic": "/devices/wb-led_221/controls/Input 2",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 2",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-led_221",
+    "control": "Input 2 Counter",
+    "topic": "/devices/wb-led_221/controls/Input 2 Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 2",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-led_221",
+    "control": "Input 3",
+    "topic": "/devices/wb-led_221/controls/Input 3",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 3",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-led_221",
+    "control": "Input 3 Counter",
+    "topic": "/devices/wb-led_221/controls/Input 3 Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 3",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-led_221",
+    "control": "Input 4",
+    "topic": "/devices/wb-led_221/controls/Input 4",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 4",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-led_221",
+    "control": "Input 4 Counter",
+    "topic": "/devices/wb-led_221/controls/Input 4 Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 4",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-led_221",
+    "control": "Overcurrent",
+    "topic": "/devices/wb-led_221/controls/Overcurrent",
+    "value": "0",
+    "type": "switch",
+    "title": "Перегрузка по току",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-led_221",
+    "control": "RGB Palette",
+    "topic": "/devices/wb-led_221/controls/RGB Palette",
+    "value": "76;0;130",
+    "type": "rgb",
+    "title": "Палитра RGB",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "wb-led_221",
+    "control": "RGB Strip",
+    "topic": "/devices/wb-led_221/controls/RGB Strip",
+    "value": "0",
+    "type": "switch",
+    "title": "Лента RGB",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-led_221",
+    "control": "RGB Strip Brightness",
+    "topic": "/devices/wb-led_221/controls/RGB Strip Brightness",
+    "value": "51",
+    "type": "range",
+    "title": "Яркость RGB ленты (V)",
+    "suggested_type": "range"
+  },
+  {
+    "device": "wb-led_221",
+    "control": "RGB Strip Hue",
+    "topic": "/devices/wb-led_221/controls/RGB Strip Hue",
+    "value": "275",
+    "type": "range",
+    "title": "Оттенок RGB ленты (H)",
+    "suggested_type": "range"
+  },
+  {
+    "device": "wb-led_221",
+    "control": "RGB Strip Saturation",
+    "topic": "/devices/wb-led_221/controls/RGB Strip Saturation",
+    "value": "100",
+    "type": "range",
+    "title": "Насыщенность цвета RGB ленты (S)",
+    "suggested_type": "range"
+  },
+  {
+    "device": "wb-led_221",
+    "control": "Serial",
+    "topic": "/devices/wb-led_221/controls/Serial",
+    "value": "105855",
+    "type": "text",
+    "title": "Серийный номер",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "AC on L-N",
+    "topic": "/devices/wb-mdm3_218/controls/AC on L-N",
+    "value": "1",
+    "type": "switch",
+    "title": "Напряжение на клеммах L-N",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Channel 1",
+    "topic": "/devices/wb-mdm3_218/controls/Channel 1",
+    "value": "100",
+    "type": "range",
+    "title": "Канал 1",
+    "suggested_type": "range"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Channel 2",
+    "topic": "/devices/wb-mdm3_218/controls/Channel 2",
+    "value": "100",
+    "type": "range",
+    "title": "Канал 2",
+    "suggested_type": "range"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Channel 3",
+    "topic": "/devices/wb-mdm3_218/controls/Channel 3",
+    "value": "100",
+    "type": "range",
+    "title": "Канал 3",
+    "suggested_type": "range"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Input 1",
+    "topic": "/devices/wb-mdm3_218/controls/Input 1",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 1",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Input 1 Long Press Counter",
+    "topic": "/devices/wb-mdm3_218/controls/Input 1 Long Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик длинных нажатий входа 1",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Input 1 Single Press Counter",
+    "topic": "/devices/wb-mdm3_218/controls/Input 1 Single Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик коротких нажатий входа 1",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Input 1 counter",
+    "topic": "/devices/wb-mdm3_218/controls/Input 1 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 1",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Input 2",
+    "topic": "/devices/wb-mdm3_218/controls/Input 2",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 2",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Input 2 Long Press Counter",
+    "topic": "/devices/wb-mdm3_218/controls/Input 2 Long Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик длинных нажатий входа 2",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Input 2 Single Press Counter",
+    "topic": "/devices/wb-mdm3_218/controls/Input 2 Single Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик коротких нажатий входа 2",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Input 2 counter",
+    "topic": "/devices/wb-mdm3_218/controls/Input 2 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 2",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Input 3",
+    "topic": "/devices/wb-mdm3_218/controls/Input 3",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 3",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Input 3 Long Press Counter",
+    "topic": "/devices/wb-mdm3_218/controls/Input 3 Long Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик длинных нажатий входа 3",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Input 3 Single Press Counter",
+    "topic": "/devices/wb-mdm3_218/controls/Input 3 Single Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик коротких нажатий входа 3",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Input 3 counter",
+    "topic": "/devices/wb-mdm3_218/controls/Input 3 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 3",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Input 4",
+    "topic": "/devices/wb-mdm3_218/controls/Input 4",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 4",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Input 4 Long Press Counter",
+    "topic": "/devices/wb-mdm3_218/controls/Input 4 Long Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик длинных нажатий входа 4",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Input 4 Single Press Counter",
+    "topic": "/devices/wb-mdm3_218/controls/Input 4 Single Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик коротких нажатий входа 4",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Input 4 counter",
+    "topic": "/devices/wb-mdm3_218/controls/Input 4 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 4",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Input 5",
+    "topic": "/devices/wb-mdm3_218/controls/Input 5",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 5",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Input 5 Long Press Counter",
+    "topic": "/devices/wb-mdm3_218/controls/Input 5 Long Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик длинных нажатий входа 5",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Input 5 Single Press Counter",
+    "topic": "/devices/wb-mdm3_218/controls/Input 5 Single Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик коротких нажатий входа 5",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Input 5 counter",
+    "topic": "/devices/wb-mdm3_218/controls/Input 5 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 5",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Input 6",
+    "topic": "/devices/wb-mdm3_218/controls/Input 6",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 6",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Input 6 Long Press Counter",
+    "topic": "/devices/wb-mdm3_218/controls/Input 6 Long Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик длинных нажатий входа 6",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Input 6 Single Press Counter",
+    "topic": "/devices/wb-mdm3_218/controls/Input 6 Single Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик коротких нажатий входа 6",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Input 6 counter",
+    "topic": "/devices/wb-mdm3_218/controls/Input 6 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 6",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "K1",
+    "topic": "/devices/wb-mdm3_218/controls/K1",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-mdm3_218 · K1",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "K2",
+    "topic": "/devices/wb-mdm3_218/controls/K2",
+    "value": "1",
+    "type": "switch",
+    "title": "wb-mdm3_218 · K2",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "K3",
+    "topic": "/devices/wb-mdm3_218/controls/K3",
+    "value": "1",
+    "type": "switch",
+    "title": "wb-mdm3_218 · K3",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Overcurrent",
+    "topic": "/devices/wb-mdm3_218/controls/Overcurrent",
+    "value": "0",
+    "type": "switch",
+    "title": "Перегрузка по току",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_218",
+    "control": "Serial",
+    "topic": "/devices/wb-mdm3_218/controls/Serial",
+    "value": "431016",
+    "type": "text",
+    "title": "Серийный номер",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "AC on L-N",
+    "topic": "/devices/wb-mdm3_75/controls/AC on L-N",
+    "value": "1",
+    "type": "switch",
+    "title": "Напряжение на клеммах L-N",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Channel 1",
+    "topic": "/devices/wb-mdm3_75/controls/Channel 1",
+    "value": "100",
+    "type": "range",
+    "title": "Канал 1",
+    "suggested_type": "range"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Channel 2",
+    "topic": "/devices/wb-mdm3_75/controls/Channel 2",
+    "value": "100",
+    "type": "range",
+    "title": "Канал 2",
+    "suggested_type": "range"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Channel 3",
+    "topic": "/devices/wb-mdm3_75/controls/Channel 3",
+    "value": "100",
+    "type": "range",
+    "title": "Канал 3",
+    "suggested_type": "range"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Input 1",
+    "topic": "/devices/wb-mdm3_75/controls/Input 1",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 1",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Input 1 Long Press Counter",
+    "topic": "/devices/wb-mdm3_75/controls/Input 1 Long Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик длинных нажатий входа 1",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Input 1 Single Press Counter",
+    "topic": "/devices/wb-mdm3_75/controls/Input 1 Single Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик коротких нажатий входа 1",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Input 1 counter",
+    "topic": "/devices/wb-mdm3_75/controls/Input 1 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 1",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Input 2",
+    "topic": "/devices/wb-mdm3_75/controls/Input 2",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 2",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Input 2 Long Press Counter",
+    "topic": "/devices/wb-mdm3_75/controls/Input 2 Long Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик длинных нажатий входа 2",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Input 2 Single Press Counter",
+    "topic": "/devices/wb-mdm3_75/controls/Input 2 Single Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик коротких нажатий входа 2",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Input 2 counter",
+    "topic": "/devices/wb-mdm3_75/controls/Input 2 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 2",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Input 3",
+    "topic": "/devices/wb-mdm3_75/controls/Input 3",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 3",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Input 3 Long Press Counter",
+    "topic": "/devices/wb-mdm3_75/controls/Input 3 Long Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик длинных нажатий входа 3",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Input 3 Single Press Counter",
+    "topic": "/devices/wb-mdm3_75/controls/Input 3 Single Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик коротких нажатий входа 3",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Input 3 counter",
+    "topic": "/devices/wb-mdm3_75/controls/Input 3 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 3",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Input 4",
+    "topic": "/devices/wb-mdm3_75/controls/Input 4",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 4",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Input 4 Long Press Counter",
+    "topic": "/devices/wb-mdm3_75/controls/Input 4 Long Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик длинных нажатий входа 4",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Input 4 Single Press Counter",
+    "topic": "/devices/wb-mdm3_75/controls/Input 4 Single Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик коротких нажатий входа 4",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Input 4 counter",
+    "topic": "/devices/wb-mdm3_75/controls/Input 4 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 4",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Input 5",
+    "topic": "/devices/wb-mdm3_75/controls/Input 5",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 5",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Input 5 Long Press Counter",
+    "topic": "/devices/wb-mdm3_75/controls/Input 5 Long Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик длинных нажатий входа 5",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Input 5 Single Press Counter",
+    "topic": "/devices/wb-mdm3_75/controls/Input 5 Single Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик коротких нажатий входа 5",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Input 5 counter",
+    "topic": "/devices/wb-mdm3_75/controls/Input 5 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 5",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Input 6",
+    "topic": "/devices/wb-mdm3_75/controls/Input 6",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 6",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Input 6 Long Press Counter",
+    "topic": "/devices/wb-mdm3_75/controls/Input 6 Long Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик длинных нажатий входа 6",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Input 6 Single Press Counter",
+    "topic": "/devices/wb-mdm3_75/controls/Input 6 Single Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик коротких нажатий входа 6",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Input 6 counter",
+    "topic": "/devices/wb-mdm3_75/controls/Input 6 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 6",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "K1",
+    "topic": "/devices/wb-mdm3_75/controls/K1",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-mdm3_75 · K1",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "K2",
+    "topic": "/devices/wb-mdm3_75/controls/K2",
+    "value": "1",
+    "type": "switch",
+    "title": "wb-mdm3_75 · K2",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "K3",
+    "topic": "/devices/wb-mdm3_75/controls/K3",
+    "value": "1",
+    "type": "switch",
+    "title": "wb-mdm3_75 · K3",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Overcurrent",
+    "topic": "/devices/wb-mdm3_75/controls/Overcurrent",
+    "value": "0",
+    "type": "switch",
+    "title": "Перегрузка по току",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_75",
+    "control": "Serial",
+    "topic": "/devices/wb-mdm3_75/controls/Serial",
+    "value": "169332",
+    "type": "text",
+    "title": "Серийный номер",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "AC on L-N",
+    "topic": "/devices/wb-mdm3_76/controls/AC on L-N",
+    "value": "1",
+    "type": "switch",
+    "title": "Напряжение на клеммах L-N",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Channel 1",
+    "topic": "/devices/wb-mdm3_76/controls/Channel 1",
+    "value": "100",
+    "type": "range",
+    "title": "Канал 1",
+    "suggested_type": "range"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Channel 2",
+    "topic": "/devices/wb-mdm3_76/controls/Channel 2",
+    "value": "100",
+    "type": "range",
+    "title": "Канал 2",
+    "suggested_type": "range"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Channel 3",
+    "topic": "/devices/wb-mdm3_76/controls/Channel 3",
+    "value": "100",
+    "type": "range",
+    "title": "Канал 3",
+    "suggested_type": "range"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Input 1",
+    "topic": "/devices/wb-mdm3_76/controls/Input 1",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 1",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Input 1 Long Press Counter",
+    "topic": "/devices/wb-mdm3_76/controls/Input 1 Long Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик длинных нажатий входа 1",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Input 1 Single Press Counter",
+    "topic": "/devices/wb-mdm3_76/controls/Input 1 Single Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик коротких нажатий входа 1",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Input 1 counter",
+    "topic": "/devices/wb-mdm3_76/controls/Input 1 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 1",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Input 2",
+    "topic": "/devices/wb-mdm3_76/controls/Input 2",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 2",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Input 2 Long Press Counter",
+    "topic": "/devices/wb-mdm3_76/controls/Input 2 Long Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик длинных нажатий входа 2",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Input 2 Single Press Counter",
+    "topic": "/devices/wb-mdm3_76/controls/Input 2 Single Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик коротких нажатий входа 2",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Input 2 counter",
+    "topic": "/devices/wb-mdm3_76/controls/Input 2 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 2",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Input 3",
+    "topic": "/devices/wb-mdm3_76/controls/Input 3",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 3",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Input 3 Long Press Counter",
+    "topic": "/devices/wb-mdm3_76/controls/Input 3 Long Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик длинных нажатий входа 3",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Input 3 Single Press Counter",
+    "topic": "/devices/wb-mdm3_76/controls/Input 3 Single Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик коротких нажатий входа 3",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Input 3 counter",
+    "topic": "/devices/wb-mdm3_76/controls/Input 3 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 3",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Input 4",
+    "topic": "/devices/wb-mdm3_76/controls/Input 4",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 4",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Input 4 Long Press Counter",
+    "topic": "/devices/wb-mdm3_76/controls/Input 4 Long Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик длинных нажатий входа 4",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Input 4 Single Press Counter",
+    "topic": "/devices/wb-mdm3_76/controls/Input 4 Single Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик коротких нажатий входа 4",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Input 4 counter",
+    "topic": "/devices/wb-mdm3_76/controls/Input 4 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 4",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Input 5",
+    "topic": "/devices/wb-mdm3_76/controls/Input 5",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 5",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Input 5 Long Press Counter",
+    "topic": "/devices/wb-mdm3_76/controls/Input 5 Long Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик длинных нажатий входа 5",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Input 5 Single Press Counter",
+    "topic": "/devices/wb-mdm3_76/controls/Input 5 Single Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик коротких нажатий входа 5",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Input 5 counter",
+    "topic": "/devices/wb-mdm3_76/controls/Input 5 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 5",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Input 6",
+    "topic": "/devices/wb-mdm3_76/controls/Input 6",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 6",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Input 6 Long Press Counter",
+    "topic": "/devices/wb-mdm3_76/controls/Input 6 Long Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик длинных нажатий входа 6",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Input 6 Single Press Counter",
+    "topic": "/devices/wb-mdm3_76/controls/Input 6 Single Press Counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик коротких нажатий входа 6",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Input 6 counter",
+    "topic": "/devices/wb-mdm3_76/controls/Input 6 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 6",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "K1",
+    "topic": "/devices/wb-mdm3_76/controls/K1",
+    "value": "1",
+    "type": "switch",
+    "title": "wb-mdm3_76 · K1",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "K2",
+    "topic": "/devices/wb-mdm3_76/controls/K2",
+    "value": "1",
+    "type": "switch",
+    "title": "wb-mdm3_76 · K2",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "K3",
+    "topic": "/devices/wb-mdm3_76/controls/K3",
+    "value": "1",
+    "type": "switch",
+    "title": "wb-mdm3_76 · K3",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Overcurrent",
+    "topic": "/devices/wb-mdm3_76/controls/Overcurrent",
+    "value": "0",
+    "type": "switch",
+    "title": "Перегрузка по току",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mdm3_76",
+    "control": "Serial",
+    "topic": "/devices/wb-mdm3_76/controls/Serial",
+    "value": "169333",
+    "type": "text",
+    "title": "Серийный номер",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "wb-mr6cu_43",
+    "control": "K1",
+    "topic": "/devices/wb-mr6cu_43/controls/K1",
+    "value": "1",
+    "type": "switch",
+    "title": "wb-mr6cu_43 · K1",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cu_43",
+    "control": "K2",
+    "topic": "/devices/wb-mr6cu_43/controls/K2",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-mr6cu_43 · K2",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cu_43",
+    "control": "K3",
+    "topic": "/devices/wb-mr6cu_43/controls/K3",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-mr6cu_43 · K3",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cu_43",
+    "control": "K4",
+    "topic": "/devices/wb-mr6cu_43/controls/K4",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-mr6cu_43 · K4",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cu_43",
+    "control": "K5",
+    "topic": "/devices/wb-mr6cu_43/controls/K5",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-mr6cu_43 · K5",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cu_43",
+    "control": "K6",
+    "topic": "/devices/wb-mr6cu_43/controls/K6",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-mr6cu_43 · K6",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cu_43",
+    "control": "Serial",
+    "topic": "/devices/wb-mr6cu_43/controls/Serial",
+    "value": "4262603572",
+    "type": "text",
+    "title": "Серийный номер",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "wb-mr6cv3_225",
+    "control": "Bus Power Supply",
+    "topic": "/devices/wb-mr6cv3_225/controls/Bus Power Supply",
+    "value": "1",
+    "type": "switch",
+    "title": "Состояние питания на шине",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_225",
+    "control": "Input 0",
+    "topic": "/devices/wb-mr6cv3_225/controls/Input 0",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 0",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_225",
+    "control": "Input 0 counter",
+    "topic": "/devices/wb-mr6cv3_225/controls/Input 0 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 0",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mr6cv3_225",
+    "control": "Input 1",
+    "topic": "/devices/wb-mr6cv3_225/controls/Input 1",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 1",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_225",
+    "control": "Input 1 counter",
+    "topic": "/devices/wb-mr6cv3_225/controls/Input 1 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 1",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mr6cv3_225",
+    "control": "Input 2",
+    "topic": "/devices/wb-mr6cv3_225/controls/Input 2",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 2",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_225",
+    "control": "Input 2 counter",
+    "topic": "/devices/wb-mr6cv3_225/controls/Input 2 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 2",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mr6cv3_225",
+    "control": "Input 3",
+    "topic": "/devices/wb-mr6cv3_225/controls/Input 3",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 3",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_225",
+    "control": "Input 3 counter",
+    "topic": "/devices/wb-mr6cv3_225/controls/Input 3 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 3",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mr6cv3_225",
+    "control": "Input 4",
+    "topic": "/devices/wb-mr6cv3_225/controls/Input 4",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 4",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_225",
+    "control": "Input 4 counter",
+    "topic": "/devices/wb-mr6cv3_225/controls/Input 4 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 4",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mr6cv3_225",
+    "control": "Input 5",
+    "topic": "/devices/wb-mr6cv3_225/controls/Input 5",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 5",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_225",
+    "control": "Input 5 counter",
+    "topic": "/devices/wb-mr6cv3_225/controls/Input 5 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 5",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mr6cv3_225",
+    "control": "Input 6",
+    "topic": "/devices/wb-mr6cv3_225/controls/Input 6",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 6",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_225",
+    "control": "Input 6 counter",
+    "topic": "/devices/wb-mr6cv3_225/controls/Input 6 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 6",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mr6cv3_225",
+    "control": "K1",
+    "topic": "/devices/wb-mr6cv3_225/controls/K1",
+    "value": "1",
+    "type": "switch",
+    "title": "wb-mr6cv3_225 · K1",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_225",
+    "control": "K2",
+    "topic": "/devices/wb-mr6cv3_225/controls/K2",
+    "value": "1",
+    "type": "switch",
+    "title": "wb-mr6cv3_225 · K2",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_225",
+    "control": "K3",
+    "topic": "/devices/wb-mr6cv3_225/controls/K3",
+    "value": "1",
+    "type": "switch",
+    "title": "wb-mr6cv3_225 · K3",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_225",
+    "control": "K4",
+    "topic": "/devices/wb-mr6cv3_225/controls/K4",
+    "value": "1",
+    "type": "switch",
+    "title": "wb-mr6cv3_225 · K4",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_225",
+    "control": "K5",
+    "topic": "/devices/wb-mr6cv3_225/controls/K5",
+    "value": "1",
+    "type": "switch",
+    "title": "wb-mr6cv3_225 · K5",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_225",
+    "control": "K6",
+    "topic": "/devices/wb-mr6cv3_225/controls/K6",
+    "value": "1",
+    "type": "switch",
+    "title": "wb-mr6cv3_225 · K6",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_225",
+    "control": "Serial",
+    "topic": "/devices/wb-mr6cv3_225/controls/Serial",
+    "value": "161672",
+    "type": "text",
+    "title": "Серийный номер",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "wb-mr6cv3_227",
+    "control": "Bus Power Supply",
+    "topic": "/devices/wb-mr6cv3_227/controls/Bus Power Supply",
+    "value": "1",
+    "type": "switch",
+    "title": "Состояние питания на шине",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_227",
+    "control": "Input 0",
+    "topic": "/devices/wb-mr6cv3_227/controls/Input 0",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 0",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_227",
+    "control": "Input 0 counter",
+    "topic": "/devices/wb-mr6cv3_227/controls/Input 0 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 0",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mr6cv3_227",
+    "control": "Input 1",
+    "topic": "/devices/wb-mr6cv3_227/controls/Input 1",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 1",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_227",
+    "control": "Input 1 counter",
+    "topic": "/devices/wb-mr6cv3_227/controls/Input 1 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 1",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mr6cv3_227",
+    "control": "Input 2",
+    "topic": "/devices/wb-mr6cv3_227/controls/Input 2",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 2",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_227",
+    "control": "Input 2 counter",
+    "topic": "/devices/wb-mr6cv3_227/controls/Input 2 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 2",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mr6cv3_227",
+    "control": "Input 3",
+    "topic": "/devices/wb-mr6cv3_227/controls/Input 3",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 3",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_227",
+    "control": "Input 3 counter",
+    "topic": "/devices/wb-mr6cv3_227/controls/Input 3 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 3",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mr6cv3_227",
+    "control": "Input 4",
+    "topic": "/devices/wb-mr6cv3_227/controls/Input 4",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 4",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_227",
+    "control": "Input 4 counter",
+    "topic": "/devices/wb-mr6cv3_227/controls/Input 4 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 4",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mr6cv3_227",
+    "control": "Input 5",
+    "topic": "/devices/wb-mr6cv3_227/controls/Input 5",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 5",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_227",
+    "control": "Input 5 counter",
+    "topic": "/devices/wb-mr6cv3_227/controls/Input 5 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 5",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mr6cv3_227",
+    "control": "Input 6",
+    "topic": "/devices/wb-mr6cv3_227/controls/Input 6",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 6",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_227",
+    "control": "Input 6 counter",
+    "topic": "/devices/wb-mr6cv3_227/controls/Input 6 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 6",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mr6cv3_227",
+    "control": "K1",
+    "topic": "/devices/wb-mr6cv3_227/controls/K1",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-mr6cv3_227 · K1",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_227",
+    "control": "K2",
+    "topic": "/devices/wb-mr6cv3_227/controls/K2",
+    "value": "1",
+    "type": "switch",
+    "title": "wb-mr6cv3_227 · K2",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_227",
+    "control": "K3",
+    "topic": "/devices/wb-mr6cv3_227/controls/K3",
+    "value": "1",
+    "type": "switch",
+    "title": "wb-mr6cv3_227 · K3",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_227",
+    "control": "K4",
+    "topic": "/devices/wb-mr6cv3_227/controls/K4",
+    "value": "1",
+    "type": "switch",
+    "title": "wb-mr6cv3_227 · K4",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_227",
+    "control": "K5",
+    "topic": "/devices/wb-mr6cv3_227/controls/K5",
+    "value": "1",
+    "type": "switch",
+    "title": "wb-mr6cv3_227 · K5",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_227",
+    "control": "K6",
+    "topic": "/devices/wb-mr6cv3_227/controls/K6",
+    "value": "1",
+    "type": "switch",
+    "title": "wb-mr6cv3_227 · K6",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_227",
+    "control": "Serial",
+    "topic": "/devices/wb-mr6cv3_227/controls/Serial",
+    "value": "161680",
+    "type": "text",
+    "title": "Серийный номер",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "wb-mr6cv3_239",
+    "control": "Bus Power Supply",
+    "topic": "/devices/wb-mr6cv3_239/controls/Bus Power Supply",
+    "value": "1",
+    "type": "switch",
+    "title": "Состояние питания на шине",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_239",
+    "control": "Input 0",
+    "topic": "/devices/wb-mr6cv3_239/controls/Input 0",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 0",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_239",
+    "control": "Input 0 counter",
+    "topic": "/devices/wb-mr6cv3_239/controls/Input 0 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 0",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mr6cv3_239",
+    "control": "Input 1",
+    "topic": "/devices/wb-mr6cv3_239/controls/Input 1",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 1",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_239",
+    "control": "Input 1 counter",
+    "topic": "/devices/wb-mr6cv3_239/controls/Input 1 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 1",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mr6cv3_239",
+    "control": "Input 2",
+    "topic": "/devices/wb-mr6cv3_239/controls/Input 2",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 2",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_239",
+    "control": "Input 2 counter",
+    "topic": "/devices/wb-mr6cv3_239/controls/Input 2 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 2",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mr6cv3_239",
+    "control": "Input 3",
+    "topic": "/devices/wb-mr6cv3_239/controls/Input 3",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 3",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_239",
+    "control": "Input 3 counter",
+    "topic": "/devices/wb-mr6cv3_239/controls/Input 3 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 3",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mr6cv3_239",
+    "control": "Input 4",
+    "topic": "/devices/wb-mr6cv3_239/controls/Input 4",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 4",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_239",
+    "control": "Input 4 counter",
+    "topic": "/devices/wb-mr6cv3_239/controls/Input 4 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 4",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mr6cv3_239",
+    "control": "Input 5",
+    "topic": "/devices/wb-mr6cv3_239/controls/Input 5",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 5",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_239",
+    "control": "Input 5 counter",
+    "topic": "/devices/wb-mr6cv3_239/controls/Input 5 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 5",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mr6cv3_239",
+    "control": "Input 6",
+    "topic": "/devices/wb-mr6cv3_239/controls/Input 6",
+    "value": "0",
+    "type": "switch",
+    "title": "Вход 6",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_239",
+    "control": "Input 6 counter",
+    "topic": "/devices/wb-mr6cv3_239/controls/Input 6 counter",
+    "value": "0",
+    "type": "value",
+    "title": "Счетчик 6",
+    "suggested_type": "sensor"
+  },
+  {
+    "device": "wb-mr6cv3_239",
+    "control": "K1",
+    "topic": "/devices/wb-mr6cv3_239/controls/K1",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-mr6cv3_239 · K1",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_239",
+    "control": "K2",
+    "topic": "/devices/wb-mr6cv3_239/controls/K2",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-mr6cv3_239 · K2",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_239",
+    "control": "K3",
+    "topic": "/devices/wb-mr6cv3_239/controls/K3",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-mr6cv3_239 · K3",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_239",
+    "control": "K4",
+    "topic": "/devices/wb-mr6cv3_239/controls/K4",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-mr6cv3_239 · K4",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_239",
+    "control": "K5",
+    "topic": "/devices/wb-mr6cv3_239/controls/K5",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-mr6cv3_239 · K5",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_239",
+    "control": "K6",
+    "topic": "/devices/wb-mr6cv3_239/controls/K6",
+    "value": "0",
+    "type": "switch",
+    "title": "wb-mr6cv3_239 · K6",
+    "suggested_type": "switch"
+  },
+  {
+    "device": "wb-mr6cv3_239",
+    "control": "Serial",
+    "topic": "/devices/wb-mr6cv3_239/controls/Serial",
+    "value": "161739",
+    "type": "text",
+    "title": "Серийный номер",
+    "suggested_type": "raw"
+  },
+  {
+    "device": "wbrules",
+    "control": "Rule debugging",
+    "topic": "/devices/wbrules/controls/Rule debugging",
+    "value": "",
+    "type": "switch",
+    "title": "Отладка правил",
+    "suggested_type": "switch"
+  }
+]

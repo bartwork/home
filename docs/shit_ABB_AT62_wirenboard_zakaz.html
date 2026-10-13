@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ABB AT62 — заказ Wiren Board · состав + ISEO</title>
+<style>
+:root {
+  --ink:#15202b; --muted:#5a6570; --line:#c5ced6;
+  --ok:#1e7a45; --warn:#b9770e; --bad:#c0392b;
+  --bg:#e8ecf0; --card:#fff;
+}
+* { box-sizing:border-box; }
+body { margin:0; font-family:"Segoe UI",system-ui,sans-serif; background:var(--bg); color:var(--ink); }
+header { background:#1a3d5c; color:#fff; padding:1rem 1.2rem; }
+header h1 { margin:0 0 .35rem; font-size:1.25rem; }
+header p { margin:0; font-size:.9rem; opacity:.93; max-width:960px; }
+.nav { display:flex; flex-wrap:wrap; gap:.4rem; margin:.65rem 0 0; }
+.nav a {
+  color:#fff; text-decoration:none; border:1px solid rgba(255,255,255,.35);
+  padding:.2rem .55rem; border-radius:4px; font-size:.8rem;
+}
+main { max-width:980px; margin:0 auto; padding:1rem 1.1rem 2.5rem; }
+section {
+  background:var(--card); border:1px solid var(--line); border-radius:8px;
+  padding:.9rem 1rem; margin:0 0 .85rem;
+}
+h2 { margin:0 0 .55rem; font-size:1.05rem; }
+h3 { margin:.7rem 0 .4rem; font-size:.95rem; }
+p, li { font-size:.9rem; line-height:1.45; }
+.note { color:var(--muted); font-size:.82rem; }
+table { width:100%; border-collapse:collapse; font-size:.85rem; }
+th, td { border:1px solid var(--line); padding:.35rem .45rem; text-align:left; vertical-align:top; }
+th { background:#f0f3f6; }
+.sum { font-weight:700; }
+.pill {
+  display:inline-block; font-size:.72rem; font-weight:700; padding:.1rem .4rem;
+  border-radius:3px; background:#d5f5e3; color:var(--ok);
+}
+.pill.warn { background:#fdebd0; color:var(--warn); }
+.pill.bad { background:#fadbd8; color:var(--bad); }
+.pill.mute { background:#e8ecf0; color:var(--muted); }
+.box {
+  border-left:4px solid var(--ok); background:#eafaf1; padding:.65rem .8rem;
+  margin:.5rem 0; border-radius:0 6px 6px 0; font-size:.9rem;
+}
+.box.warn { border-left-color:var(--warn); background:#fef9e7; }
+code { font-size:.84em; background:#f0f3f6; padding:.05rem .25rem; border-radius:3px; }
+.flow { display:flex; flex-wrap:wrap; align-items:center; gap:.35rem; margin:.4rem 0; font-size:.85rem; }
+.chip {
+  background:#1a3d5c; color:#fff; padding:.25rem .5rem; border-radius:4px; font-weight:600;
+}
+.arr { color:var(--muted); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Заказ Wiren Board · состав и применение</h1>
+  <p>Список купленного + что использовать для замка ISEO x1R Smart (открытие / статус двери). Докупать ничего не нужно.</p>
+  <div class="nav">
+    <a href="shit_ABB_AT62_iseo_dver.html">ISEO дверь</a>
+    <a href="shit_ABB_AT62_shema.html">схема щита</a>
+    <a href="shit_ABB_AT62_vnutri_sheita.html">внутри щита</a>
+    <a href="shit_ABB_AT62_avtomaty_pugv.html">автоматы</a>
+  </div>
+</header>
+<main>
+
+<section>
+  <h2>ISEO · чем открывать и снимать статус <span class="pill">из купленного</span></h2>
+  <div class="box">
+    <b>Одного модуля достаточно для команды «открыть»:</b>
+    <b>WBIO-DO-SSR-8</b> (лучше) или свободный канал <b>WB-MR6CU</b>.
+    Статус двери — <b>DI на любом WB-MR6C v.3</b> (или W1 контроллера).
+  </div>
+
+  <h3>1. Команда «открыть» — коричневый + синий</h3>
+  <p><span class="pill">рекомендую</span> <b>WBIO-DO-SSR-8</b> — сухой оптовыход до 30 В / 400 мА, как раз под оптовход замка 8–30 В.</p>
+  <div class="flow">
+    <span class="chip">24В+ (UPS / LI60)</span><span class="arr">→</span>
+    <span class="chip">коричневый ISEO</span>
+  </div>
+  <div class="flow">
+    <span class="chip">синий ISEO</span><span class="arr">→</span>
+    <span class="chip">SSR chN (одна клемма)</span><span class="arr">→</span>
+    <span class="chip">0В / GND 24В</span>
+  </div>
+  <p class="note">В вебке: импульс 1–2 с на <code>EXTx_Ky</code>, потом off. Не держать постоянно. Не использовать 5Vout.</p>
+
+  <p>Альтернатива: свободный сухой NO канала <b>WB-MR6CU</b> (тот же принцип: 24В → коричн. · синий → NO → 0В). В щите CU уже заняты: №5 сушилка + катушка ESB — бери свободный канал того же модуля или SSR.</p>
+
+  <h3>2. Статус двери — зелёный + оранжевый</h3>
+  <div class="flow">
+    <span class="chip">зелёный COM</span><span class="arr">→</span>
+    <span class="chip">GND / общий DI</span>
+  </div>
+  <div class="flow">
+    <span class="chip">оранжевый NO</span><span class="arr">→</span>
+    <span class="chip">DI MR6C</span>
+    <span class="arr">или</span>
+    <span class="chip">W1 WB7</span>
+  </div>
+  <p class="note">Логика: замкнуто = дверь открыта. Жёлтый (NC) не нужен. Питание замка 8–30 В обязательно, иначе реле статуса молчит.</p>
+
+  <h3>Что не брать под ISEO</h3>
+  <ul>
+    <li><b>WB-MCM8</b> — счётные входы, не статус двери</li>
+    <li><b>WB-MAO4 / WB-LED / MDM3</b> — не для замка</li>
+    <li><b>5Vout WB7</b> — ниже нормы 8–30 В, убрать</li>
+    <li>Силовые COM <b>MR6C</b> (230В) — не путать с командой замка</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Состав заказа</h2>
+  <table>
+    <thead>
+      <tr><th>Поз.</th><th>Артикул / имя</th><th>Кол.</th><th>Сумма</th><th>Роль в щите / ISEO</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td><b>WB7-2G-64G-COM</b><br>Wiren Board 7.2…7.3</td>
+        <td>1</td>
+        <td>22 200</td>
+        <td>контроллер · опц. W1 под статус двери</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td><b>WB-MR6C v.3</b></td>
+        <td>4</td>
+        <td>19 200</td>
+        <td>сила + <span class="pill">DI статуса ISEO</span></td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td><b>WB-MDM3-300W</b></td>
+        <td>2+1</td>
+        <td>12 800 + 6 700</td>
+        <td>диммеры света · не ISEO</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td><b>WB-MSW-CM1106</b> v.3</td>
+        <td>1</td>
+        <td>7 900</td>
+        <td>климат стены · не ИК кондеи</td>
+      </tr>
+      <tr>
+        <td>4a</td>
+        <td><b>ONOKOM</b> шлюз AC</td>
+        <td>2</td>
+        <td>по модели</td>
+        <td>в каждом внутр. блоке → BUSHUB · <a href="https://onokom.ru/">onokom.ru</a></td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td><b>WB-MWAC</b> v.1</td>
+        <td>1</td>
+        <td>5 500</td>
+        <td>протечки / вода</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td><b>WB-MCM8</b></td>
+        <td>2</td>
+        <td>5 000</td>
+        <td>счётные входы · <span class="pill mute">не ISEO</span></td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td><b>WB-UPS v.2</b></td>
+        <td>1</td>
+        <td>4 600</td>
+        <td>24В резерв щита · питание команды ISEO</td>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td><b>WB-MR6CU v.2</b></td>
+        <td>1</td>
+        <td>3 200</td>
+        <td>сухие NO · ESB / сушилка / <span class="pill warn">запас под открытие</span></td>
+      </tr>
+      <tr>
+        <td>9</td>
+        <td><b>WB-MAO4</b></td>
+        <td>1</td>
+        <td>3 500</td>
+        <td>0–10 В · не ISEO</td>
+      </tr>
+      <tr>
+        <td>10</td>
+        <td><b>WB-LED</b></td>
+        <td>1</td>
+        <td>2 700</td>
+        <td>лента №35</td>
+      </tr>
+      <tr>
+        <td>11</td>
+        <td><b>WBMZ4-BATTERY</b></td>
+        <td>1</td>
+        <td>2 500</td>
+        <td>батарея WB7</td>
+      </tr>
+      <tr>
+        <td>12</td>
+        <td><b>WB-M1W2</b></td>
+        <td>2</td>
+        <td>2 600</td>
+        <td>1-Wire → Modbus (ТП и пр.)</td>
+      </tr>
+      <tr>
+        <td>13</td>
+        <td><b>WBIO-DO-SSR-8</b></td>
+        <td>1</td>
+        <td>2 000</td>
+        <td><span class="pill">открытие ISEO</span> · сухой SSR ≤30 В</td>
+      </tr>
+      <tr>
+        <td>14</td>
+        <td><b>LI60-20B24PR2</b></td>
+        <td>1</td>
+        <td>1 960</td>
+        <td>БП 24В DIN → UPS / автоматика</td>
+      </tr>
+      <tr>
+        <td>15</td>
+        <td><b>WB-BUSHUB</b></td>
+        <td>1</td>
+        <td>1 900</td>
+        <td>разветвитель RS-485</td>
+      </tr>
+      <tr>
+        <td>16</td>
+        <td><b>DS18B20</b> 1 м</td>
+        <td>1+3</td>
+        <td>400 + 1 200</td>
+        <td>термометры → M1W2</td>
+      </tr>
+      <tr>
+        <td>17</td>
+        <td><b>GST25E24-P1J</b></td>
+        <td>1</td>
+        <td>950</td>
+        <td>БП 24В в розетку (стенд / временно)</td>
+      </tr>
+      <tr>
+        <td>18</td>
+        <td><b>Degson 15EDGKA-3.5-04P</b></td>
+        <td>2</td>
+        <td>200</td>
+        <td>ответные клеммники</td>
+      </tr>
+      <tr>
+        <td colspan="3" class="sum">Итого по списку</td>
+        <td class="sum">≈ 107 110 ₽</td>
+        <td class="note">суммы как в заказе</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="note">В схеме щита фигурируют <b>MR6CU#1</b> (сушилка) и <b>MR6CU#2</b> (ESB), в заказе CU ×1 — второй модуль / каналы уточнить по факту на руках. Для ISEO при наличии <b>WBIO-DO-SSR-8</b> второй CU не обязателен.</p>
+</section>
+
+<section>
+  <h2>Краткий чеклист ISEO</h2>
+  <ol>
+    <li>Снять коричневый/синий с 5Vout / GND</li>
+    <li>Замок: внешнее питание 8–30 В (кабельный переход)</li>
+    <li>Открытие: <b>SSR-8</b> + 24В UPS, импульс 1–2 с</li>
+    <li>Статус: зелёный→GND, оранжевый→DI MR6C (или W1)</li>
+    <li>В вебке завести сценарий / MQTT на канал SSR и DI</li>
+  </ol>
+  <div class="box warn">
+    Жёлтый для статуса не нужен (это NC). Коричневый+синий — только команда, не смешивать со статусом.
+  </div>
+</section>
+
+</main>
+</body>
+</html>

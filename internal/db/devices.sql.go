@@ -10,8 +10,8 @@ import (
 )
 
 const createDevice = `-- name: CreateDevice :execlastid
-INSERT INTO devices (name, mqtt_topic, device_type, unit, is_active)
-VALUES (?, ?, ?, ?, ?)
+INSERT INTO devices (name, mqtt_topic, device_type, unit, is_active, wb_device, wb_control, source)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 `
 
 type CreateDeviceParams struct {
@@ -20,6 +20,9 @@ type CreateDeviceParams struct {
 	DeviceType string `json:"device_type"`
 	Unit       string `json:"unit"`
 	IsActive   bool   `json:"is_active"`
+	WbDevice   string `json:"wb_device"`
+	WbControl  string `json:"wb_control"`
+	Source     string `json:"source"`
 }
 
 func (q *Queries) CreateDevice(ctx context.Context, arg CreateDeviceParams) (int64, error) {
@@ -29,6 +32,9 @@ func (q *Queries) CreateDevice(ctx context.Context, arg CreateDeviceParams) (int
 		arg.DeviceType,
 		arg.Unit,
 		arg.IsActive,
+		arg.WbDevice,
+		arg.WbControl,
+		arg.Source,
 	)
 	if err != nil {
 		return 0, err
@@ -50,7 +56,7 @@ func (q *Queries) DeleteDevice(ctx context.Context, id int64) (int64, error) {
 }
 
 const getDevice = `-- name: GetDevice :one
-SELECT id, name, mqtt_topic, device_type, unit, is_active, created_at
+SELECT id, name, mqtt_topic, device_type, unit, is_active, created_at, wb_device, wb_control, source
 FROM devices
 WHERE id = ?
 `
@@ -66,14 +72,41 @@ func (q *Queries) GetDevice(ctx context.Context, id int64) (Device, error) {
 		&i.Unit,
 		&i.IsActive,
 		&i.CreatedAt,
+		&i.WbDevice,
+		&i.WbControl,
+		&i.Source,
+	)
+	return i, err
+}
+
+const getDeviceByTopic = `-- name: GetDeviceByTopic :one
+SELECT id, name, mqtt_topic, device_type, unit, is_active, created_at, wb_device, wb_control, source
+FROM devices
+WHERE mqtt_topic = ?
+`
+
+func (q *Queries) GetDeviceByTopic(ctx context.Context, mqttTopic string) (Device, error) {
+	row := q.db.QueryRowContext(ctx, getDeviceByTopic, mqttTopic)
+	var i Device
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.MqttTopic,
+		&i.DeviceType,
+		&i.Unit,
+		&i.IsActive,
+		&i.CreatedAt,
+		&i.WbDevice,
+		&i.WbControl,
+		&i.Source,
 	)
 	return i, err
 }
 
 const listDevices = `-- name: ListDevices :many
-SELECT id, name, mqtt_topic, device_type, unit, is_active, created_at
+SELECT id, name, mqtt_topic, device_type, unit, is_active, created_at, wb_device, wb_control, source
 FROM devices
-ORDER BY id
+ORDER BY wb_device, id
 `
 
 func (q *Queries) ListDevices(ctx context.Context) ([]Device, error) {
@@ -93,6 +126,9 @@ func (q *Queries) ListDevices(ctx context.Context) ([]Device, error) {
 			&i.Unit,
 			&i.IsActive,
 			&i.CreatedAt,
+			&i.WbDevice,
+			&i.WbControl,
+			&i.Source,
 		); err != nil {
 			return nil, err
 		}
@@ -109,7 +145,7 @@ func (q *Queries) ListDevices(ctx context.Context) ([]Device, error) {
 
 const updateDevice = `-- name: UpdateDevice :execrows
 UPDATE devices
-SET name = ?, mqtt_topic = ?, device_type = ?, unit = ?, is_active = ?
+SET name = ?, mqtt_topic = ?, device_type = ?, unit = ?, is_active = ?, wb_device = ?, wb_control = ?
 WHERE id = ?
 `
 
@@ -119,6 +155,8 @@ type UpdateDeviceParams struct {
 	DeviceType string `json:"device_type"`
 	Unit       string `json:"unit"`
 	IsActive   bool   `json:"is_active"`
+	WbDevice   string `json:"wb_device"`
+	WbControl  string `json:"wb_control"`
 	ID         int64  `json:"id"`
 }
 
@@ -129,6 +167,8 @@ func (q *Queries) UpdateDevice(ctx context.Context, arg UpdateDeviceParams) (int
 		arg.DeviceType,
 		arg.Unit,
 		arg.IsActive,
+		arg.WbDevice,
+		arg.WbControl,
 		arg.ID,
 	)
 	if err != nil {

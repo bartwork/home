@@ -11,6 +11,7 @@ import (
 type DeviceStore interface {
 	List(ctx context.Context) ([]Device, error)
 	Get(ctx context.Context, id int64) (Device, error)
+	GetByTopic(ctx context.Context, topic string) (Device, error)
 	Create(ctx context.Context, in WriteDevice) (Device, error)
 	Update(ctx context.Context, id int64, in WriteDevice) (Device, error)
 	Delete(ctx context.Context, id int64) error
@@ -34,6 +35,9 @@ type Device struct {
 	Unit       string
 	Active     bool
 	CreatedAt  string
+	WbDevice   string
+	WbControl  string
+	Source     string
 }
 
 type WriteDevice struct {
@@ -42,6 +46,9 @@ type WriteDevice struct {
 	DeviceType string
 	Unit       string
 	Active     bool
+	WbDevice   string
+	WbControl  string
+	Source     string
 }
 
 func (r *Devices) List(ctx context.Context) ([]Device, error) {
@@ -64,13 +71,28 @@ func (r *Devices) Get(ctx context.Context, id int64) (Device, error) {
 	return mapDevice(row), nil
 }
 
+func (r *Devices) GetByTopic(ctx context.Context, topic string) (Device, error) {
+	row, err := r.q.GetDeviceByTopic(ctx, topic)
+	if err != nil {
+		return Device{}, mapDBErr(err)
+	}
+	return mapDevice(row), nil
+}
+
 func (r *Devices) Create(ctx context.Context, in WriteDevice) (Device, error) {
+	source := in.Source
+	if source == "" {
+		source = "manual"
+	}
 	id, err := r.q.CreateDevice(ctx, db.CreateDeviceParams{
 		Name:       in.Name,
 		MqttTopic:  in.MqttTopic,
 		DeviceType: in.DeviceType,
 		Unit:       in.Unit,
 		IsActive:   in.Active,
+		WbDevice:   in.WbDevice,
+		WbControl:  in.WbControl,
+		Source:     source,
 	})
 	if err != nil {
 		return Device{}, mapDBErr(err)
@@ -85,6 +107,8 @@ func (r *Devices) Update(ctx context.Context, id int64, in WriteDevice) (Device,
 		DeviceType: in.DeviceType,
 		Unit:       in.Unit,
 		IsActive:   in.Active,
+		WbDevice:   in.WbDevice,
+		WbControl:  in.WbControl,
 		ID:         id,
 	})
 	if err != nil {
@@ -116,6 +140,9 @@ func mapDevice(row db.Device) Device {
 		Unit:       row.Unit,
 		Active:     row.IsActive,
 		CreatedAt:  row.CreatedAt,
+		WbDevice:   row.WbDevice,
+		WbControl:  row.WbControl,
+		Source:     row.Source,
 	}
 }
 

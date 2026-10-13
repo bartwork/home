@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ABB AT62 — от автоматов куда идёт ПУГВ</title>
+  <style>
+    :root {
+      --bg:#eef1f4; --ink:#15202b; --muted:#5a6570; --card:#fff; --line:#cfd6dd;
+      --u1:#e67e22; --u2:#2980b9; --u3:#27ae60; --u4:#e74c3c; --u5:#c0392b; --u6:#8e44ad; --u7:#148f77;
+      --rel:#6c3483; --dim:#0b3d32; --dir:#1f4e79;
+    }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"Segoe UI",system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.35; }
+    header {
+      background:linear-gradient(120deg,#1a3a2a,#1f5c45 55%,#2a7a5c);
+      color:#fff; padding:1.25rem 1.5rem 1.1rem;
+    }
+    header h1 { margin:0 0 .35rem; font-size:1.35rem; font-weight:700; }
+    header p { margin:0; opacity:.92; font-size:.92rem; max-width:980px; }
+    .nav { display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.65rem; }
+    .nav a {
+      color:#fff; text-decoration:none;
+      background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.28);
+      border-radius:8px; padding:.3rem .65rem; font-size:.8rem;
+    }
+    main { max-width:1100px; margin:0 auto; padding:1.1rem 1.25rem 3rem; }
+    section {
+      background:var(--card); border:1px solid var(--line);
+      border-radius:14px; padding:1rem 1.1rem 1.15rem; margin-bottom:1rem;
+    }
+    h2 { margin:0 0 .55rem; font-size:1.08rem; }
+    .rule {
+      background:#fff8e6; border:1px solid #f0d78c; border-radius:10px;
+      padding:.65rem .8rem; font-size:.86rem; margin-bottom:.85rem;
+    }
+    .rule ul { margin:.35rem 0 0; padding-left:1.15rem; }
+    .toc { font-size:.86rem; margin-bottom:.2rem; }
+    .toc a { color:#1f5c45; margin-right:.55rem; }
+    table { width:100%; border-collapse:collapse; font-size:.82rem; }
+    th, td { border:1px solid var(--line); padding:.4rem .48rem; text-align:left; vertical-align:top; }
+    th { background:#1f5c45; color:#fff; font-weight:600; }
+    tr:nth-child(even) { background:#f8fafb; }
+    .uzo {
+      border:1px solid var(--line); border-left-width:6px; border-radius:12px;
+      padding:.85rem 1rem; margin-bottom:.85rem; background:#f7f9fb;
+    }
+    .uzo.u1 { border-left-color:var(--u1); }
+    .uzo.u2 { border-left-color:var(--u2); }
+    .uzo.u3 { border-left-color:var(--u3); }
+    .uzo.u4 { border-left-color:var(--u4); }
+    .uzo.u5 { border-left-color:var(--u5); }
+    .uzo.u6 { border-left-color:var(--u6); }
+    .uzo.u7 { border-left-color:var(--u7); }
+    .uzo h3 { margin:0 0 .55rem; font-size:.98rem; display:flex; flex-wrap:wrap; gap:.35rem .7rem; align-items:baseline; }
+    .pill {
+      display:inline-block; font-size:.72rem; padding:.12rem .45rem;
+      border-radius:999px; background:#e8eef4; font-weight:600;
+    }
+    .pill.dir { background:#d6eaf8; color:var(--dir); }
+    .pill.rel { background:#f5eef8; color:var(--rel); }
+    .pill.dim { background:#d5f5e3; color:var(--dim); }
+    .pill.alw { background:#e8daef; color:#5b2c6f; }
+    .path { font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.78rem; }
+    .note { margin:.45rem 0 0; font-size:.84rem; color:var(--muted); }
+    code { font-size:.8rem; background:#eef2f6; padding:.05rem .3rem; border-radius:4px; }
+    .legend { display:flex; flex-wrap:wrap; gap:.4rem .85rem; font-size:.8rem; color:var(--muted); margin:.2rem 0 .7rem; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>ABB AT62 · от автоматов куда идёт ПУГВ (L)</h1>
+  <p>
+    С выхода каждого 1P-автомата — куда тянуть фазный ПУГВ.
+    N полевых кабелей на эту страницу не относятся (→ ZK своего УЗО).
+    Вход автоматов с гребёнки куста УЗО — см. <a href="shit_ABB_AT62_uzo_vyhody.html" style="color:#fff">выходы УЗО</a>.
+  </p>
+  <nav class="nav">
+    <a href="#how">как читать</a>
+    <a href="#u1">УЗО1</a>
+    <a href="#u2">УЗО2</a>
+    <a href="#u3">УЗО3</a>
+    <a href="#u4">УЗО4</a>
+    <a href="#u5">УЗО5</a>
+    <a href="#u6">УЗО6</a>
+    <a href="#u7">УЗО7</a>
+    <a href="shit_ABB_AT62_uzo_vyhody.html">выходы УЗО</a>
+    <a href="shit_ABB_AT62_shema.html">лицо</a>
+    <a href="shit_ABB_AT62_polnaya_tsepochka.html">цепочки</a>
+  </nav>
+</header>
+<main>
+
+<section id="how">
+  <h2>Как читать</h2>
+  <div class="rule">
+    Три типа выхода L с автомата:
+    <ul>
+      <li><span class="pill dir">прямо</span> — ПУГВ на <b>L-клемму</b> R1/R6 (серая GY / толстая 6–10). Потом полевой кабель.</li>
+      <li><span class="pill rel">реле</span> — ПУГВ на <b>общий C</b> MR6C (или канал), с канала K → ПУГВ → L-клемма кабеля.</li>
+      <li><span class="pill dim">диммер</span> — ПУГВ на <b>L 230В модуля MDM / WB-LED</b>, с канала → ПУГВ → L-клемма (или №35 с WB-LED).</li>
+    </ul>
+  </div>
+  <div class="legend">
+    <span><span class="pill dir">прямо</span> без модуля</span>
+    <span><span class="pill rel">реле</span> MR6C</span>
+    <span><span class="pill dim">диммер</span> MDM / WB-LED</span>
+    <span><span class="pill alw">ALW</span> мимо ESB</span>
+  </div>
+  <p class="note">Один автомат на несколько кабелей: одна жила L с автомата → <b>блок клемм с JXB-ST-2.5-10pin</b> (или вход модуля). Не несколько жил из зажима автомата. Розеточные блоки: см. <a href="shit_ABB_AT62_klemmy_na_reyki.html">клеммы на рейки</a>.</p>
+  <div class="rule" style="margin-top:.55rem">
+    <b>Розеточные перемычки JXB-ST-2.5-10pin</b> (уп. 20, обрезать полюса):
+    <ul>
+      <li><b>J1</b> R6: 2·12·13·14·16·17·21·22·23·24 — 10pin · ПУГВ в №2</li>
+      <li><b>J2</b> R6: 19·20 — 2pin · ПУГВ в №19</li>
+      <li><b>J3</b> R1: 47·54·55 — 3pin · ПУГВ в №47</li>
+      <li><b>J4</b> R1: 63·70 — 2pin · ПУГВ в №63</li>
+      <li><b>J5</b> R1: 41·43 — 2pin · питание <b>с J1</b> (не вторая жила с автомата)</li>
+      <li><b>J6</b> R1: 26·105 — 2pin · ПУГВ в №26</li>
+    </ul>
+  </div>
+</section>
+
+<!-- УЗО1 -->
+<section id="u1" class="uzo u1">
+  <h3>УЗО1 · кухня <span class="pill">R3 · 9 автоматов</span></h3>
+  <table>
+    <thead>
+      <tr><th>Автомат</th><th>Тип</th><th>ПУГВ L куда</th><th>Дальше → кабели / клеммы</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>B32 плита</b></td>
+        <td><span class="pill dir">прямо</span></td>
+        <td class="path">→ L 6–10 на R6 (поз.№7)</td>
+        <td>№7 плита</td>
+      </tr>
+      <tr>
+        <td><b>B16 духовка</b></td>
+        <td><span class="pill dir">прямо</span></td>
+        <td class="path">→ L GY R6 №8</td>
+        <td>№8</td>
+      </tr>
+      <tr>
+        <td><b>B16 ПММ</b></td>
+        <td><span class="pill dir">прямо</span></td>
+        <td class="path">→ L GY R6 №9</td>
+        <td>№9</td>
+      </tr>
+      <tr>
+        <td><b>B16 роз.кух</b></td>
+        <td><span class="pill dir">прямо</span></td>
+        <td class="path">→ L GY R1 <b>J3</b> №47 (перемычка 47·54·55)</td>
+        <td>три розетки кухни · JXB 3pin</td>
+      </tr>
+      <tr>
+        <td><b>B10 измельч</b></td>
+        <td><span class="pill dir">прямо</span></td>
+        <td class="path">→ L GY R6 №10</td>
+        <td>№10</td>
+      </tr>
+      <tr>
+        <td><b>B10 кух.дим</b></td>
+        <td><span class="pill dim">диммер</span></td>
+        <td class="path">→ L 230В MDM3#1</td>
+        <td>ch1→№50 · ch2→№51 · ch3→№52 (L на R1)</td>
+      </tr>
+      <tr>
+        <td><b>B10 кух.реле</b></td>
+        <td><span class="pill rel">реле</span></td>
+        <td class="path">→ C1 MR6C#2 (K1–K3)</td>
+        <td>ch1→№48 · ch2→№53 · <b>ch3→№56 вытяжка</b> · один B10 на весь C1</td>
+      </tr>
+      <tr>
+        <td><b>B10 карниз.к</b></td>
+        <td><span class="pill dir">прямо</span></td>
+        <td class="path">→ L GY R1 №100</td>
+        <td>№100 · упр. №49 → BUSHUB</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="note">MDM#1: ещё N с <code>ZK144B УЗО1↑</code>. MR: средний N модуля пусто.
+    <b>№56 вытяжка</b> = <b>MR6C#2 ch3 (MR2.3)</b> · тот же C1 и B10 кух.реле, что 48·53. Отдельный B10 вытяж.к не нужен (один COM = один автомат).
+  </p>
+</section>
+
+<!-- УЗО2 -->
+<section id="u2" class="uzo u2">
+  <h3>УЗО2 · санузлы <span class="pill">R3 · 3 автомата</span></h3>
+  <table>
+    <thead>
+      <tr><th>Автомат</th><th>Тип</th><th>ПУГВ L куда</th><th>Дальше → кабели / клеммы</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>B32 проточ.</b></td>
+        <td><span class="pill dir">прямо</span></td>
+        <td class="path">→ L 6–10 на R1 (поз.№58)</td>
+        <td>№58</td>
+      </tr>
+      <tr>
+        <td><b>B16 роз.сан</b></td>
+        <td><span class="pill dir">прямо</span></td>
+        <td class="path">→ L GY R1 <b>J4</b> №63 (перемычка 63·70)</td>
+        <td>розетки сан / туалет · JXB 2pin</td>
+      </tr>
+      <tr>
+        <td><b>B10 свет.сан</b></td>
+        <td><span class="pill rel">реле</span></td>
+        <td class="path">→ C1+C2 MR6C#3</td>
+        <td>ch1–6 = 61·62·64·69·71·72 → L на R1<br>
+          <span class="note">весь модуль с одного автомата · N модуля пусто · N кабелей → ZK113B</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- УЗО3 -->
+<section id="u3" class="uzo u3">
+  <h3>УЗО3 · стирка <span class="pill">R3 · 2 автомата</span></h3>
+  <table>
+    <thead>
+      <tr><th>Автомат</th><th>Тип</th><th>ПУГВ L куда</th><th>Дальше → кабели / клеммы</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>B16 стиралка</b></td>
+        <td><span class="pill dir">прямо</span></td>
+        <td class="path">→ L GY R6 №6</td>
+        <td>№6 (+ синяя BU N ← УЗО3)</td>
+      </tr>
+      <tr>
+        <td><b>B16 сушилка</b></td>
+        <td><span class="pill rel">реле</span></td>
+        <td class="path">→ силовые контакты <b>контактора</b></td>
+        <td>катушка ← MR6CU#1 (сухой NO) · сила №5: B16 → контактор → R6 · N BU как было<br>
+          <span class="note">не сажать на C1/C2 MR6C#1 (там только ТП УЗО5)</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="note">УЗО3 без ZK: N → синие BU №5·6 на R6 (перемычка BU↔BU).</p>
+</section>
+
+<!-- УЗО4 -->
+<section id="u4" class="uzo u4">
+  <h3>УЗО4 · жилые <span class="pill">R3 · 6 автоматов</span></h3>
+  <div class="rule">
+    <b>Правило MDM:</b> один автомат → один вход L 230В модуля. Каналы ch1–3 — выходы, не отдельные питания.
+    Образец: кухня <code>B10 кух.дим → MDM#1</code>.
+  </div>
+  <table>
+    <thead>
+      <tr><th>Автомат</th><th>Тип</th><th>ПУГВ L куда</th><th>Дальше → кабели / клеммы</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>B16 роз.жилые</b></td>
+        <td><span class="pill dir">прямо</span></td>
+        <td class="path">→ L GY R6 <b>J1</b> №2 (10pin) · с J1 → R1 <b>J5</b> 41·43</td>
+        <td>№2·12–14·16·17·21–24 · +41·43 с J1 · не 2 жилы с автомата</td>
+      </tr>
+      <tr>
+        <td><b>B16 роз.лоджия</b></td>
+        <td><span class="pill dir">прямо</span></td>
+        <td class="path">→ L GY R6 <b>J2</b> №19 (перемычка 19·20)</td>
+        <td>розетки лоджия · JXB 2pin</td>
+      </tr>
+      <tr>
+        <td><b>B10 комн.дим</b></td>
+        <td><span class="pill dim">диммер</span></td>
+        <td class="path">→ L 230В <b>MDM3#2</b></td>
+        <td>ch1→№30 · ch2→№31 · ch3→№37 (весь модуль с одного B10)</td>
+      </tr>
+      <tr>
+        <td><b>B10 бра+кор</b></td>
+        <td><span class="pill dim">диммер</span></td>
+        <td class="path">→ L 230В <b>MDM3#3</b></td>
+        <td>ch1→№68 · ch2→№29 · ch3→№32 (весь модуль с одного B10)</td>
+      </tr>
+      <tr>
+        <td><b>B10 карниз.ж</b></td>
+        <td><span class="pill dir">прямо</span></td>
+        <td class="path">→ L GY R1 №34 · №38</td>
+        <td>карнизы комната + лоджия · <b>не</b> через MDM · можно JXB 2pin</td>
+      </tr>
+      <tr>
+        <td><b>B10 кладовая</b></td>
+        <td><span class="pill rel">реле</span></td>
+        <td class="path">→ C2 MR6C#2 (K4–K6)</td>
+        <td>ch4→№27 · ch5→№28 · ch6 FREE</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="note">MDM#2+#3: N перемычка + 1× с <code>ZK144B УЗО4↑</code>. Не мостить N с MDM#1.
+    <b>MDM#1</b> (кухня): один B10 кух.дим · 50·51·52. <b>WB-LED</b>: отдельно D6→ARV→24В · №35 — не MDM.</p>
+</section>
+
+<!-- УЗО5 -->
+<section id="u5" class="uzo u5">
+  <h3>УЗО5 · тёплые полы <span class="pill">R3 · 2 автомата</span></h3>
+  <div class="rule">
+    <b>MR6C:</b> L только в <code>C1</code> (→K1–K3) и <code>C2</code> (→K4–K6). На один COM — <b>один</b> автомат / одно УЗО.
+    «Отдельный L на K» — <b>нельзя</b> (K = выход нагрузки).
+  </div>
+  <table>
+    <thead>
+      <tr><th>Автомат</th><th>Тип</th><th>ПУГВ L куда</th><th>Дальше → кабели / клеммы</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>B16 ТП К+Т</b></td>
+        <td><span class="pill rel">реле</span></td>
+        <td class="path">→ <b>C1</b> MR6C#1</td>
+        <td>ch1→№1 · ch2→№3 · ch3 FREE</td>
+      </tr>
+      <tr>
+        <td><b>B16 ТП В+Кух</b></td>
+        <td><span class="pill rel">реле</span></td>
+        <td class="path">→ <b>C2</b> MR6C#1</td>
+        <td>ch4→№4 · ch5→№15 · ch6 FREE</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="note">
+    Оба автомата — УЗО5, но <b>разные COM</b> (не параллелить два B16 на один C).
+    №5 (УЗО3) на MR6C#1 <b>нельзя</b> — через <b>контактор</b>, катушка с <b>MR6CU#1</b>.
+    <b>№56 вытяжка</b> → <b>MR6C#2 ch3</b> (C1 УЗО1 вместе с 48·53, питание C1 с B10 кух.реле).
+  </p>
+</section>
+
+<!-- УЗО6 -->
+<section id="u6" class="uzo u6">
+  <h3>УЗО6 · IT / всегда <span class="pill alw">R4 · мимо ESB</span></h3>
+  <table>
+    <thead>
+      <tr><th>Автомат</th><th>Тип</th><th>ПУГВ L куда</th><th>Дальше → кабели / клеммы</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>B10 холод.</b></td>
+        <td><span class="pill dir">прямо</span></td>
+        <td class="path">→ L GY R6 №11</td>
+        <td>№11 (+ BU → ZK УЗО6)</td>
+      </tr>
+      <tr>
+        <td><b>B16 кондей</b></td>
+        <td><span class="pill dir">прямо</span></td>
+        <td class="path">→ L GY R6 №18</td>
+        <td>№18 (+ BU → ZK УЗО6)</td>
+      </tr>
+      <tr>
+        <td><b>B16 люк</b></td>
+        <td><span class="pill dir">прямо</span></td>
+        <td class="path">→ L GY R1 №101</td>
+        <td>№101</td>
+      </tr>
+      <tr>
+        <td><b>B16 сервер+IT</b></td>
+        <td><span class="pill dir">прямо</span></td>
+        <td class="path">→ L GY R1 <b>J6</b> №26 (перемычка 26·105)</td>
+        <td>сервер / роутер · JXB 2pin</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- УЗО7 -->
+<section id="u7" class="uzo u7">
+  <h3>УЗО7 · автоматика <span class="pill alw">R4/R5 · мимо ESB</span></h3>
+  <table>
+    <thead>
+      <tr><th>Автомат</th><th>Тип</th><th>ПУГВ L куда</th><th>Дальше</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>D10 →WB</b></td>
+        <td><span class="pill alw">ALW</span></td>
+        <td class="path">→ MORNSUN L (рядом на R4)</td>
+        <td>MORNSUN → UPS → WB7 · 24В на MR/MDM/CU<br>
+          <span class="note">можно короткой гребёнкой УЗО7↔D10 вместо длинного ПУГВ</span>
+        </td>
+      </tr>
+      <tr>
+        <td><b>D6 →ARV</b></td>
+        <td><span class="pill alw">ALW</span></td>
+        <td class="path">→ ARV 230В (R5)</td>
+        <td>ARV 24В → WB-LED → кабель №35 (+24/0, не на R1)<br>
+          <span class="note">D6 — автомат 230В на БП, не диммер; диммер = WB-LED</span>
+        </td>
+      </tr>
+      <tr>
+        <td><b>C2 катушка</b> <span class="pill">R2</span></td>
+        <td><span class="pill rel">реле</span></td>
+        <td class="path">→ MR6CU#2 (NO) → A1 ESB</td>
+        <td>вход C2 ← L УЗО7 · A2 → шина N УЗО7 · не сила на поле</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="note">С клеммы L УЗО7 — до трёх отводов (D10 / D6 / C2). N УЗО7 — одна жила на шину ↑A, с шины MORNSUN / ARV / A2.</p>
+</section>
+
+<section>
+  <h2>Сводка · куда чаще всего ошибка</h2>
+  <table>
+    <thead>
+      <tr><th>Автомат</th><th>Не туда</th><th>Куда надо</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>B10 кух.дим</td>
+        <td>на MR6C#2</td>
+        <td>на <b>MDM#1</b> (50·51·52)</td>
+      </tr>
+      <tr>
+        <td>B10 кух.реле</td>
+        <td>на C2 / кладовую</td>
+        <td>на <b>C1</b> MR6C#2 (48·53·56)</td>
+      </tr>
+      <tr>
+        <td>B10 кладовая</td>
+        <td>на C1 / кухню</td>
+        <td>на <b>C2</b> MR6C#2 (27·28 = ch4·ch5)</td>
+      </tr>
+      <tr>
+        <td>B10 свет.сан</td>
+        <td>по одному каналу с разных автоматов</td>
+        <td>весь MR6C#3 с <b>этого</b> B10</td>
+      </tr>
+      <tr>
+        <td>MDM#2 / MDM#3</td>
+        <td>отдельный автомат на каждый канал (люстра/точки/бра/коридор)</td>
+        <td><b>один</b> B10 на модуль: комн.дим → MDM#2 · бра+кор → MDM#3</td>
+      </tr>
+      <tr>
+        <td>D6</td>
+        <td>на поле №35 как 230В</td>
+        <td>только → ARV → 24В → WB-LED → №35</td>
+      </tr>
+      <tr>
+        <td>B10 карниз.ж</td>
+        <td>в L MDM#2 вместе с 30·31·37</td>
+        <td>только прямо №34·38 · свет лоджии №37 с <b>комн.дим</b></td>
+      </tr>
+      <tr>
+        <td>B10 вытяж</td>
+        <td>свой B10 + чужой COM / «L на K»</td>
+        <td><b>MR6C#2 ch3 (MR2.3)</b> на C1 с 48·53 · один B10 кух.реле</td>
+      </tr>
+      <tr>
+        <td>B16 сушилка</td>
+        <td>общий C2 MR6C#1 с ТП</td>
+        <td><b>контактор + MR6CU#1</b></td>
+      </tr>
+      <tr>
+        <td>B16 ТП (оба)</td>
+        <td>оба на C1 · или L «в K»</td>
+        <td><b>ТП К+Т → C1</b> (№1·3) · <b>ТП В+Кух → C2</b> (№4·15)</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+</main>
+</body>
+</html>

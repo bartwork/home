@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ABB AT62 — клеммы R1↑ и R6↓ · кабели</title>
+<style>
+:root {
+  --bg:#eef1f4; --ink:#15202b; --muted:#5a6570; --card:#fff; --line:#cfd6dd;
+  --L:#4a5568; --N:#1d6fb8; --PE:#2f8f4e; --jump:#b45309; --thick:#7c3aed; --selv:#0e7490;
+}
+* { box-sizing:border-box; }
+body { margin:0; font-family:"Segoe UI",system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.35; }
+header.top {
+  background:linear-gradient(120deg,#143a5c,#1f4e79 55%,#2a6f97);
+  color:#fff; padding:1.25rem 1.5rem 1.1rem;
+}
+header.top h1 { margin:0 0 .35rem; font-size:1.3rem; font-weight:700; }
+header.top p { margin:.15rem 0 0; opacity:.92; font-size:.9rem; max-width:980px; }
+main { max-width:1400px; margin:0 auto; padding:1.1rem 1.25rem 3rem; }
+section {
+  background:var(--card); border:1px solid var(--line); border-radius:14px;
+  padding:1rem 1.1rem 1.15rem; margin-bottom:1rem; box-shadow:0 1px 0 rgba(20,40,60,.04);
+}
+h2 { margin:0 0 .55rem; font-size:1.05rem; }
+.note { margin:.2rem 0 .75rem; font-size:.84rem; color:var(--muted); }
+.legend {
+  display:flex; flex-wrap:wrap; gap:.4rem .85rem; margin:0 0 .4rem;
+  font-size:.78rem; color:var(--muted);
+}
+.tag {
+  display:inline-block; font-size:.68rem; font-weight:700; padding:.12rem .4rem;
+  border-radius:4px; margin-right:.2rem; vertical-align:1px;
+}
+.tag.L { background:#e8eaed; color:var(--L); }
+.tag.N { background:#dbeafe; color:var(--N); }
+.tag.PE { background:#dcfce7; color:var(--PE); }
+.tag.jump { background:#ffedd5; color:var(--jump); }
+.tag.thick { background:#ede9fe; color:var(--thick); }
+.tag.selv { background:#cffafe; color:var(--selv); }
+.nav {
+  display:flex; flex-wrap:wrap; gap:.45rem; margin:.6rem 0 0;
+}
+.nav a {
+  color:#fff; text-decoration:none; background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.28); border-radius:8px;
+  padding:.35rem .7rem; font-size:.82rem;
+}
+.nav a:hover { background:rgba(255,255,255,.24); }
+.rules {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:.65rem;
+}
+.rules .card {
+  background:#f7f9fb; border:1px solid var(--line); border-radius:10px;
+  padding:.65rem .75rem; font-size:.84rem;
+}
+.rules .card strong { display:block; margin-bottom:.25rem; }
+.rules ul { margin:.2rem 0 0; padding-left:1.05rem; }
+.audit {
+  background:#f0fdf4; border:1px solid #86efac; border-radius:10px;
+  padding:.65rem .8rem; font-size:.82rem; margin:.7rem 0 0;
+}
+.audit b { color:#166534; }
+.table-wrap { overflow-x:auto; }
+table {
+  width:100%; border-collapse:collapse; font-size:.78rem; min-width:1100px;
+}
+th, td {
+  border:1px solid var(--line); padding:.38rem .45rem; vertical-align:top; text-align:left;
+}
+th {
+  background:#f0f4f8; font-size:.72rem; text-transform:uppercase; letter-spacing:.02em;
+  color:var(--muted); position:sticky; top:0; z-index:1;
+}
+td.num { font-weight:800; width:2.4rem; text-align:center; }
+td.pos { white-space:nowrap; color:var(--muted); font-size:.72rem; }
+td.name { font-weight:600; min-width:11rem; }
+td.uzo { font-weight:700; white-space:nowrap; }
+td .m { font-weight:600; }
+td .a { color:var(--muted); font-size:.72rem; margin-top:.12rem; }
+tr.jump { background:#fff7ed; }
+tr.thick { background:#f5f3ff; }
+tr.selv { background:#ecfeff; }
+tr.must td.PE { color:#b45309; font-weight:700; }
+.uzo1 { color:#c2410c; } .uzo2 { color:#0369a1; } .uzo3 { color:#7c3aed; }
+.uzo4 { color:#15803d; } .uzo5 { color:#a16207; } .uzo6 { color:#be185d; } .uzo7 { color:#0f766e; }
+.cables {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:.55rem;
+}
+.cable {
+  background:#f7f9fb; border:1px solid var(--line); border-radius:10px;
+  padding:.55rem .65rem; font-size:.78rem;
+}
+.cable.jump { border-color:#fdba74; background:#fff7ed; }
+.cable.thick { border-color:#c4b5fd; background:#f5f3ff; }
+.cable.selv { border-color:#67e8f9; background:#ecfeff; }
+.cable header { display:flex; justify-content:space-between; align-items:center; margin-bottom:.2rem; }
+.cable .n { font-weight:800; font-size:.95rem; }
+.cable .u { font-weight:700; font-size:.72rem; }
+.cable h4 { margin:0 0 .15rem; font-size:.84rem; font-weight:650; }
+.cable .auto { margin:0 0 .35rem; color:var(--muted); font-size:.72rem; }
+.cable dl { margin:0; display:grid; gap:.18rem; }
+.cable dl > div { display:grid; grid-template-columns:3.2rem 1fr; gap:.25rem; }
+.cable dt { color:var(--muted); font-size:.68rem; text-transform:uppercase; }
+.cable dd { margin:0; }
+.foot { font-size:.78rem; color:var(--muted); }
+.foot code { font-size:.74rem; background:#e8eef4; padding:.05rem .3rem; border-radius:3px; }
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Клеммы R1↑ и R6↓ — какой кабель куда</h1>
+  <p>Силовые кабели щита ABB AT62 (144 DIN): низ №1–24 → ряд R6, верх №25+ → ряд R1.
+  На DIN у ввода — клеммы L (серые) и при необходимости лок. N (синие). N/PE ABB ZK — на ZK13. Внутри щита — ПУГВ.</p>
+  <nav class="nav">
+    <a href="#rules">Правила</a>
+    <a href="shit_ABB_AT62_klemmy_na_reyki.html">Втыкай на рейки</a>
+    <a href="shit_ABB_AT62_R1_R6_poryadok.html">Порядок на рейке</a>
+    <a href="#r6">R6↓ №1–24</a>
+    <a href="#r6-cards">R6 карточки</a>
+    <a href="#r1">R1↑ №25+</a>
+    <a href="#r1-cards">R1 карточки</a>
+    <a href="shit_ABB_AT62_polnaya_tsepochka.html">Полная цепочка</a>
+    <a href="shit_ABB_AT62_shema.html">Схема щита</a>
+    <a href="shit_ABB_AT62_vnutri_sheita.html">Внутри щита</a>
+  </nav>
+</header>
+<main>
+
+<section id="rules">
+  <h2>Как читать</h2>
+  <div class="legend">
+    <span><span class="tag L">L</span> серая DIN-клемма фазы → ПУГВ → автомат</span>
+    <span><span class="tag N">N</span> сразу в ZK своего УЗО <b>или</b> лок.N→ПУГВ→ZK</span>
+    <span><span class="tag PE">PE</span> в ZK PE своей стороны / слот</span>
+    <span><span class="tag jump">жёлтый</span> N-перемычка (4 шт R6: 5·6·11·18)</span>
+    <span><span class="tag thick">фиолетовый</span> толстый L 6–10 (№7 плита · №58 проточный)</span>
+    <span><span class="tag selv">бирюзовый</span> №35 = 24В с WB-LED (R5), не 230В L/N</span>
+  </div>
+  <div class="rules">
+    <div class="card"><strong>R6 · низ</strong>
+      <ul>
+        <li>Порядок на DIN — <b>блоками</b> (не №1…24 подряд): техника → <b>J1</b> → <b>J2</b></li>
+        <li>Маркер на клемме = номер кабеля · см. <a href="shit_ABB_AT62_R6_klemmy_rasstanovka.html">расстановку</a></li>
+        <li>На DIN: только L (+ синяя N при прыжке) · розеточные L — <b>JXB-ST-2.5-10pin</b></li>
+        <li>N/PE — на ZK13 под рядами, не на DIN</li>
+      </ul>
+    </div>
+    <div class="card"><strong>R1 · верх</strong>
+      <ul>
+        <li>Блоки: <b>J6</b> · свет · <b>J5</b> · кух.свет · <b>J3</b> · сан · <b>J4</b> · 101</li>
+        <li>L на DIN → ПУГВ на автомат <em>или</em> через JXB · J5←с J1</li>
+        <li>N/PE → ZK своего УЗО (не смешивать N)</li>
+        <li>UTP / BUSHUB — не в этой таблице (не ZK)</li>
+      </ul>
+    </div>
+    <div class="card"><strong>Клеммы L</strong>
+      <ul>
+        <li>Обычные: <code>VPR-2.5-GY</code> / ЗНИ 2.5 · докуп ×50 · VPRTT не на R1/R6</li>
+        <li>Перемычка L: <b>JXB-ST-2.5-10pin</b> уп.20 (обрезать полюса) · J1–J6</li>
+        <li>№7 / №58: L <b>6–10</b> · №35: не L 230В — +24/0 с WB-LED</li>
+      </ul>
+    </div>
+    <div class="card"><strong>Лок. N (перемычка) · 4 шт · только R6</strong>
+      <ul>
+        <li>Модель: <code>VPR-2.5-BU</code> (докуп ×6 · тот же корпус, что GY · QUATTRO не на рейку)</li>
+        <li><b>R6</b>: 5 · 6 (N с УЗО3) · 11 · 18 (прыжок ↑ на ZK УЗО6)</li>
+        <li><b>R1 кухня</b>: без BU — N сразу в <b>ZK144B УЗО1↑</b></li>
+        <li>№7–10 (низ УЗО1): N <b>сразу</b> в ZK82B УЗО1↓ — без перемычки на DIN</li>
+      </ul>
+    </div>
+  </div>
+  <div class="audit">
+    <b>Перепроверка 2026-08-14:</b> 59 силовых = Excel «Монтаж на кабель» / цепочки.
+    N-перемычки = только R6 (5 · 6 · 11 · 18). Кухня 47·48·50–56·100 — сразу ZK144B УЗО1↑ (без BU).
+    PE: низ ZK206G#1 сл.1–20 + ZK175G ↓1–4; верх ZK206G#2 сл.1–8·10–20 (слот 9 свободен — №35 не 230В PE) + ZK175G ↑1–13 + PE-докуп №101·105.
+    УЗО: 1→14 · 2→9 · 3→2 · 4→24 · 5→4 · 6→5 · 7→1.
+  </div>
+  <p class="note">Источник: «Монтаж на кабель», «Кабель N PE», «N перемычка ПУГВ», «Низ R6 · 1-12|13-24», «Клеммы шинки».</p>
+</section>
+
+<section id="r6">
+  <h2>R6↓ — таблица №1–24</h2>
+  <p class="note">Каждый кабель: клемма L на DIN у низа → ПУГВ вверх к автомату. N — в ZK или через лок.N. PE — ZK206G#1 / ZK175G↓.</p>
+  <div class="table-wrap"><table>
+<thead><tr>
+  <th>№</th><th>Место</th><th>Кабель / нагрузка</th><th>УЗО</th><th>Автомат</th>
+  <th>Клемма L</th><th>N (куда)</th><th>Лок. N на DIN</th><th>PE блок / слот</th><th>WB / тип</th>
+</tr></thead>
+<tbody>
+<tr class="">
+  <td class="num">1</td>
+  <td class="pos">лево DIN #1</td>
+  <td class="name">Тёплый пол коридор</td>
+  <td class="uzo uzo5">УЗО5</td>
+  <td class="auto">B16 ТП К+Т</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN (фаза, серая)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK82B УЗО5 (есть)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#1 / слот 1</td>
+  <td class="wb">реле · MR6C#1 ch1</td>
+</tr>
+<tr class="">
+  <td class="num">2</td>
+  <td class="pos">лево DIN #2</td>
+  <td class="name">Розетка коридор</td>
+  <td class="uzo uzo4">УЗО4</td>
+  <td class="auto">B16 роз.жилые</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN (фаза, серая)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B (есть ×1)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#1 / слот 2</td>
+  <td class="wb">розетка · —</td>
+</tr>
+<tr class="">
+  <td class="num">3</td>
+  <td class="pos">лево DIN #3</td>
+  <td class="name">Тёплый пол туалет</td>
+  <td class="uzo uzo5">УЗО5</td>
+  <td class="auto">B16 ТП К+Т</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN (фаза, серая)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK82B УЗО5 (есть)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#1 / слот 3</td>
+  <td class="wb">реле · MR6C#1 ch2</td>
+</tr>
+<tr class="">
+  <td class="num">4</td>
+  <td class="pos">лево DIN #4</td>
+  <td class="name">Тёплый пол ванна</td>
+  <td class="uzo uzo5">УЗО5</td>
+  <td class="auto">B16 ТП В+Кух</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN (фаза, серая)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK82B УЗО5 (есть)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#1 / слот 4</td>
+  <td class="wb">реле · MR6C#1 ch4</td>
+</tr>
+<tr class="jump">
+  <td class="num">5</td>
+  <td class="pos">лево DIN #5</td>
+  <td class="name">Сушилка</td>
+  <td class="uzo uzo3">УЗО3</td>
+  <td class="auto">B16 сушилка</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN (фаза, серая)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">лок. N BU ← ПУГВ с N УЗО3 · перемычка BU↔BU · без ZK</div><div class="a">на R6 рядом с L</div></td>
+  <td class="lok">N DIN у R6 · VPR-2.5-BU</td>
+  <td class="PE">ZK206G#1 / слот 5</td>
+  <td class="wb">контактор ← MR6CU#1</td>
+</tr>
+<tr class="jump">
+  <td class="num">6</td>
+  <td class="pos">лево DIN #6</td>
+  <td class="name">Стиралка</td>
+  <td class="uzo uzo3">УЗО3</td>
+  <td class="auto">B16 стиралка</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN (фаза, серая)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">лок. N BU ← ПУГВ с N УЗО3 · перемычка BU↔BU · без ZK</div><div class="a">на R6 рядом с L</div></td>
+  <td class="lok">N DIN у R6 · VPR-2.5-BU</td>
+  <td class="PE">ZK206G#1 / слот 6</td>
+  <td class="wb">сила · —</td>
+</tr>
+<tr class="thick">
+  <td class="num">7</td>
+  <td class="pos">лево DIN #7</td>
+  <td class="name">Плита</td>
+  <td class="uzo uzo1">УЗО1</td>
+  <td class="auto">B32 плита</td>
+  <td class="L"><div class="m">L 6–10 мм² DIN (UT 10 / Wago 2010)</div><div class="a">DKC/винт L 6–10 · счёт 1581</div></td>
+  <td class="N"><div class="m">ZK82B УЗО1↓ (есть) · ↔↑</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#1 / слот 7</td>
+  <td class="wb">сила · —</td>
+</tr>
+<tr class="">
+  <td class="num">8</td>
+  <td class="pos">лево DIN #8</td>
+  <td class="name">Духовка</td>
+  <td class="uzo uzo1">УЗО1</td>
+  <td class="auto">B16 духовка</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN (фаза, серая)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK82B УЗО1↓ (есть) · ↔↑</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#1 / слот 8</td>
+  <td class="wb">сила · —</td>
+</tr>
+<tr class="">
+  <td class="num">9</td>
+  <td class="pos">лево DIN #9</td>
+  <td class="name">Посудомойка</td>
+  <td class="uzo uzo1">УЗО1</td>
+  <td class="auto">B16 ПММ</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN (фаза, серая)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK82B УЗО1↓ (есть) · ↔↑</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#1 / слот 9</td>
+  <td class="wb">сила · —</td>
+</tr>
+<tr class="">
+  <td class="num">10</td>
+  <td class="pos">лево DIN #10</td>
+  <td class="name">Измельчитель</td>
+  <td class="uzo uzo1">УЗО1</td>
+  <td class="auto">B10 измельч.</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN (фаза, серая)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK82B УЗО1↓ (есть) · ↔↑</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#1 / слот 10</td>
+  <td class="wb">сила · —</td>
+</tr>
+<tr class="jump">
+  <td class="num">11</td>
+  <td class="pos">лево DIN #11</td>
+  <td class="name">Холодильник</td>
+  <td class="uzo uzo6">УЗО6</td>
+  <td class="auto">B10 холод.</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN (фаза, серая)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">лок. N-клемма 2.5 → ↑ ПУГВ 2.5 → ZK82B УЗО6 · зона ↑A</div><div class="a">ДА · чужая высота</div></td>
+  <td class="lok">N DIN у R6 · VPR-2.5-BU</td>
+  <td class="PE">ZK206G#1 / слот 11</td>
+  <td class="wb">неоткл. · —</td>
+</tr>
+<tr class="">
+  <td class="num">12</td>
+  <td class="pos">лево DIN #12</td>
+  <td class="name">Розетка диван</td>
+  <td class="uzo uzo4">УЗО4</td>
+  <td class="auto">B16 роз.жилые</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN (фаза, серая)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B (есть ×1)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#1 / слот 12</td>
+  <td class="wb">розетка · —</td>
+</tr>
+<tr class="">
+  <td class="num">13</td>
+  <td class="pos">право DIN #1 · каб.№13</td>
+  <td class="name">Розетка под тумбой</td>
+  <td class="uzo uzo4">УЗО4</td>
+  <td class="auto">B16 роз.жилые</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN (фаза, серая)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B (есть ×1)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#1 / слот 13</td>
+  <td class="wb">розетка · —</td>
+</tr>
+<tr class="">
+  <td class="num">14</td>
+  <td class="pos">право DIN #2 · каб.№14</td>
+  <td class="name">Розетка под ТВ (комната)</td>
+  <td class="uzo uzo4">УЗО4</td>
+  <td class="auto">B16 роз.жилые</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN (фаза, серая)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B (есть ×1)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#1 / слот 14</td>
+  <td class="wb">розетка · —</td>
+</tr>
+<tr class="">
+  <td class="num">15</td>
+  <td class="pos">право DIN #3 · каб.№15</td>
+  <td class="name">Тёплый пол кухня</td>
+  <td class="uzo uzo5">УЗО5</td>
+  <td class="auto">B16 ТП В+Кух</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN (фаза, серая)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK82B УЗО5 (есть)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#1 / слот 15</td>
+  <td class="wb">реле · MR6C#1 ch5</td>
+</tr>
+<tr class="">
+  <td class="num">16</td>
+  <td class="pos">право DIN #4 · каб.№16</td>
+  <td class="name">Розетка под ТВ (зона 2)</td>
+  <td class="uzo uzo4">УЗО4</td>
+  <td class="auto">B16 роз.жилые</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN (фаза, серая)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B (есть ×1)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#1 / слот 16</td>
+  <td class="wb">розетка · —</td>
+</tr>
+<tr class="">
+  <td class="num">17</td>
+  <td class="pos">право DIN #5 · каб.№17</td>
+  <td class="name">Розетка под столом</td>
+  <td class="uzo uzo4">УЗО4</td>
+  <td class="auto">B16 роз.жилые</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN (фаза, серая)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B (есть ×1)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#1 / слот 17</td>
+  <td class="wb">розетка · —</td>
+</tr>
+<tr class="jump">
+  <td class="num">18</td>
+  <td class="pos">право DIN #6 · каб.№18</td>
+  <td class="name">Кондиционер · внешний блок (один)</td>
+  <td class="uzo uzo6">УЗО6</td>
+  <td class="auto">B16 кондей</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN (фаза, серая)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">лок. N-клемма 2.5 → ↑ ПУГВ 2.5 → ZK82B УЗО6 · зона ↑A</div><div class="a">ДА · чужая высота</div></td>
+  <td class="lok">N DIN у R6 · VPR-2.5-BU</td>
+  <td class="PE">ZK206G#1 / слот 18</td>
+  <td class="wb">неоткл. · сила 1×; упр. Modbus ONOKOM в каждом внутр. блоке → BUSHUB</td>
+</tr>
+<tr class="">
+  <td class="num">19</td>
+  <td class="pos">право DIN #7 · каб.№19</td>
+  <td class="name">Розетка лоджия верх</td>
+  <td class="uzo uzo4">УЗО4</td>
+  <td class="auto">B16 лоджия</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN (фаза, серая)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B (есть ×1)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#1 / слот 19</td>
+  <td class="wb">розетка · —</td>
+</tr>
+<tr class="">
+  <td class="num">20</td>
+  <td class="pos">право DIN #8 · каб.№20</td>
+  <td class="name">Розетка лоджия низ</td>
+  <td class="uzo uzo4">УЗО4</td>
+  <td class="auto">B16 лоджия</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN (фаза, серая)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B (есть ×1)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#1 / слот 20</td>
+  <td class="wb">розетка · —</td>
+</tr>
+<tr class="">
+  <td class="num">21</td>
+  <td class="pos">право DIN #9 · каб.№21</td>
+  <td class="name">Розетка правая кровать</td>
+  <td class="uzo uzo4">УЗО4</td>
+  <td class="auto">B16 роз.жилые</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN (фаза, серая)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B (есть ×1)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK175G / слот ↓1</td>
+  <td class="wb">розетка · —</td>
+</tr>
+<tr class="">
+  <td class="num">22</td>
+  <td class="pos">право DIN #10 · каб.№22</td>
+  <td class="name">Розетка левая кровать</td>
+  <td class="uzo uzo4">УЗО4</td>
+  <td class="auto">B16 роз.жилые</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN (фаза, серая)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B (есть ×1)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK175G / слот ↓2</td>
+  <td class="wb">розетка · —</td>
+</tr>
+<tr class="">
+  <td class="num">23</td>
+  <td class="pos">право DIN #11 · каб.№23</td>
+  <td class="name">Розетка угол левый</td>
+  <td class="uzo uzo4">УЗО4</td>
+  <td class="auto">B16 роз.жилые</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN (фаза, серая)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B (есть ×1)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK175G / слот ↓3</td>
+  <td class="wb">розетка · —</td>
+</tr>
+<tr class="">
+  <td class="num">24</td>
+  <td class="pos">право DIN #12 · каб.№24</td>
+  <td class="name">Розетка кладовая низ</td>
+  <td class="uzo uzo4">УЗО4</td>
+  <td class="auto">B16 роз.жилые</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN (фаза, серая)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B (есть ×1)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK175G / слот ↓4</td>
+  <td class="wb">розетка · —</td>
+</tr>
+</tbody></table></div>
+</section>
+
+<section class="cards-sec" id="r6-cards">
+  <h2>R6↓ · лево №1–12 — карточки</h2>
+  <p class="note">Позиции = лево DIN #1…12 = № кабеля.</p>
+  <div class="cables"><article class="cable ">
+  <header><span class="n">№1</span><span class="u uzo5">УЗО5</span></header>
+  <h4>Тёплый пол коридор</h4>
+  <p class="auto">B16 ТП К+Т</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN (фаза, серая)</dd></div>
+    <div><dt>N</dt><dd>ZK82B УЗО5 (есть)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#1 / слот 1</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№2</span><span class="u uzo4">УЗО4</span></header>
+  <h4>Розетка коридор</h4>
+  <p class="auto">B16 роз.жилые</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN (фаза, серая)</dd></div>
+    <div><dt>N</dt><dd>ZK144B (есть ×1)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#1 / слот 2</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№3</span><span class="u uzo5">УЗО5</span></header>
+  <h4>Тёплый пол туалет</h4>
+  <p class="auto">B16 ТП К+Т</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN (фаза, серая)</dd></div>
+    <div><dt>N</dt><dd>ZK82B УЗО5 (есть)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#1 / слот 3</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№4</span><span class="u uzo5">УЗО5</span></header>
+  <h4>Тёплый пол ванна</h4>
+  <p class="auto">B16 ТП В+Кух</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN (фаза, серая)</dd></div>
+    <div><dt>N</dt><dd>ZK82B УЗО5 (есть)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#1 / слот 4</dd></div>
+  </dl>
+</article><article class="cable jump">
+  <header><span class="n">№5</span><span class="u uzo3">УЗО3</span></header>
+  <h4>Сушилка</h4>
+  <p class="auto">B16 сушилка</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN (фаза, серая)</dd></div>
+    <div><dt>N</dt><dd>лок.N BU ← ПУГВ с N УЗО3 · перемычка BU↔BU · без ZK</dd></div>
+    <div><dt>лок.N</dt><dd>N DIN у R6 · VPR-2.5-BU</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#1 / слот 5</dd></div>
+  </dl>
+</article><article class="cable jump">
+  <header><span class="n">№6</span><span class="u uzo3">УЗО3</span></header>
+  <h4>Стиралка</h4>
+  <p class="auto">B16 стиралка</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN (фаза, серая)</dd></div>
+    <div><dt>N</dt><dd>лок.N BU ← ПУГВ с N УЗО3 · перемычка BU↔BU · без ZK</dd></div>
+    <div><dt>лок.N</dt><dd>N DIN у R6 · VPR-2.5-BU</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#1 / слот 6</dd></div>
+  </dl>
+</article><article class="cable thick">
+  <header><span class="n">№7</span><span class="u uzo1">УЗО1</span></header>
+  <h4>Плита</h4>
+  <p class="auto">B32 плита</p>
+  <dl>
+    <div><dt>L</dt><dd>L 6–10 мм² DIN (UT 10 / Wago 2010)</dd></div>
+    <div><dt>N</dt><dd>ZK82B УЗО1↓ (есть) · ↔↑</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#1 / слот 7</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№8</span><span class="u uzo1">УЗО1</span></header>
+  <h4>Духовка</h4>
+  <p class="auto">B16 духовка</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN (фаза, серая)</dd></div>
+    <div><dt>N</dt><dd>ZK82B УЗО1↓ (есть) · ↔↑</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#1 / слот 8</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№9</span><span class="u uzo1">УЗО1</span></header>
+  <h4>Посудомойка</h4>
+  <p class="auto">B16 ПММ</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN (фаза, серая)</dd></div>
+    <div><dt>N</dt><dd>ZK82B УЗО1↓ (есть) · ↔↑</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#1 / слот 9</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№10</span><span class="u uzo1">УЗО1</span></header>
+  <h4>Измельчитель</h4>
+  <p class="auto">B10 измельч.</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN (фаза, серая)</dd></div>
+    <div><dt>N</dt><dd>ZK82B УЗО1↓ (есть) · ↔↑</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#1 / слот 10</dd></div>
+  </dl>
+</article><article class="cable jump">
+  <header><span class="n">№11</span><span class="u uzo6">УЗО6</span></header>
+  <h4>Холодильник</h4>
+  <p class="auto">B10 холод.</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN (фаза, серая)</dd></div>
+    <div><dt>N</dt><dd>лок.N → ↑ ПУГВ → ZK82B УЗО6 · зона ↑A</dd></div>
+    <div><dt>лок.N</dt><dd>N DIN у R6 · VPR-2.5-BU</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#1 / слот 11</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№12</span><span class="u uzo4">УЗО4</span></header>
+  <h4>Розетка диван</h4>
+  <p class="auto">B16 роз.жилые</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN (фаза, серая)</dd></div>
+    <div><dt>N</dt><dd>ZK144B (есть ×1)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#1 / слот 12</dd></div>
+  </dl>
+</article></div>
+</section>
+<section class="cards-sec" id="r6-cards-r">
+  <h2>R6↓ · право №13–24 — карточки</h2>
+  <p class="note">Позиции = право DIN #1…12 = кабели №13…24.</p>
+  <div class="cables"><article class="cable ">
+  <header><span class="n">№13</span><span class="u uzo4">УЗО4</span></header>
+  <h4>Розетка под тумбой</h4>
+  <p class="auto">B16 роз.жилые</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN (фаза, серая)</dd></div>
+    <div><dt>N</dt><dd>ZK144B (есть ×1)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#1 / слот 13</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№14</span><span class="u uzo4">УЗО4</span></header>
+  <h4>Розетка под ТВ (комната)</h4>
+  <p class="auto">B16 роз.жилые</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN (фаза, серая)</dd></div>
+    <div><dt>N</dt><dd>ZK144B (есть ×1)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#1 / слот 14</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№15</span><span class="u uzo5">УЗО5</span></header>
+  <h4>Тёплый пол кухня</h4>
+  <p class="auto">B16 ТП В+Кух</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN (фаза, серая)</dd></div>
+    <div><dt>N</dt><dd>ZK82B УЗО5 (есть)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#1 / слот 15</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№16</span><span class="u uzo4">УЗО4</span></header>
+  <h4>Розетка под ТВ (зона 2)</h4>
+  <p class="auto">B16 роз.жилые</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN (фаза, серая)</dd></div>
+    <div><dt>N</dt><dd>ZK144B (есть ×1)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#1 / слот 16</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№17</span><span class="u uzo4">УЗО4</span></header>
+  <h4>Розетка под столом</h4>
+  <p class="auto">B16 роз.жилые</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN (фаза, серая)</dd></div>
+    <div><dt>N</dt><dd>ZK144B (есть ×1)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#1 / слот 17</dd></div>
+  </dl>
+</article><article class="cable jump">
+  <header><span class="n">№18</span><span class="u uzo6">УЗО6</span></header>
+  <h4>Кондиционер · внешний блок (один)</h4>
+  <p class="auto">B16 кондей</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN (фаза, серая)</dd></div>
+    <div><dt>N</dt><dd>лок.N → ↑ ПУГВ → ZK82B УЗО6 · зона ↑A</dd></div>
+    <div><dt>лок.N</dt><dd>N DIN у R6 · VPR-2.5-BU</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#1 / слот 18</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№19</span><span class="u uzo4">УЗО4</span></header>
+  <h4>Розетка лоджия верх</h4>
+  <p class="auto">B16 лоджия</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN (фаза, серая)</dd></div>
+    <div><dt>N</dt><dd>ZK144B (есть ×1)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#1 / слот 19</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№20</span><span class="u uzo4">УЗО4</span></header>
+  <h4>Розетка лоджия низ</h4>
+  <p class="auto">B16 лоджия</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN (фаза, серая)</dd></div>
+    <div><dt>N</dt><dd>ZK144B (есть ×1)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#1 / слот 20</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№21</span><span class="u uzo4">УЗО4</span></header>
+  <h4>Розетка правая кровать</h4>
+  <p class="auto">B16 роз.жилые</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN (фаза, серая)</dd></div>
+    <div><dt>N</dt><dd>ZK144B (есть ×1)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK175G / слот ↓1</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№22</span><span class="u uzo4">УЗО4</span></header>
+  <h4>Розетка левая кровать</h4>
+  <p class="auto">B16 роз.жилые</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN (фаза, серая)</dd></div>
+    <div><dt>N</dt><dd>ZK144B (есть ×1)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK175G / слот ↓2</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№23</span><span class="u uzo4">УЗО4</span></header>
+  <h4>Розетка угол левый</h4>
+  <p class="auto">B16 роз.жилые</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN (фаза, серая)</dd></div>
+    <div><dt>N</dt><dd>ZK144B (есть ×1)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK175G / слот ↓3</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№24</span><span class="u uzo4">УЗО4</span></header>
+  <h4>Розетка кладовая низ</h4>
+  <p class="auto">B16 роз.жилые</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN (фаза, серая)</dd></div>
+    <div><dt>N</dt><dd>ZK144B (есть ×1)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK175G / слот ↓4</dd></div>
+  </dl>
+</article></div>
+</section>
+
+<section id="r1">
+  <h2>R1↑ — таблица №25+</h2>
+  <p class="note">Верхний ввод. L на DIN R1 → ПУГВ → автомат. PE: ZK206G#2 / ZK175G↑ / докуп PE. №35 — исключение (24В).</p>
+  <div class="table-wrap"><table>
+<thead><tr>
+  <th>№</th><th>Место</th><th>Кабель / нагрузка</th><th>УЗО</th><th>Автомат</th>
+  <th>Клемма L</th><th>N (куда)</th><th>Лок. N на DIN</th><th>PE блок / слот</th><th>WB / тип</th>
+</tr></thead>
+<tbody>
+<tr class="">
+  <td class="num">26</td>
+  <td class="pos">порядк. 1 / 35</td>
+  <td class="name">Розетка верх кладовая / сервер</td>
+  <td class="uzo uzo6">УЗО6</td>
+  <td class="auto">B16 сервер+IT</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK82B (есть) · общий ↓↑</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#2 / слот 1</td>
+  <td class="wb">неоткл. · —</td>
+</tr>
+<tr class="">
+  <td class="num">27</td>
+  <td class="pos">порядк. 2 / 35</td>
+  <td class="name">Лента шкаф/кладовая (230В → локальный БП 24В у шкафа)</td>
+  <td class="uzo uzo4">УЗО4</td>
+  <td class="auto">B10 кладовая</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B (купить #1)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#2 / слот 2</td>
+  <td class="wb">реле · MR6C#2 ch4 · 230В→БП→лента</td>
+</tr>
+<tr class="">
+  <td class="num">28</td>
+  <td class="pos">порядк. 3 / 35</td>
+  <td class="name">Свет кладовая</td>
+  <td class="uzo uzo4">УЗО4</td>
+  <td class="auto">B10 кладовая</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B (купить #1)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#2 / слот 3</td>
+  <td class="wb">реле · MR6C#2 ch5</td>
+</tr>
+<tr class="">
+  <td class="num">29</td>
+  <td class="pos">порядк. 4 / 35</td>
+  <td class="name">Бра левая кровать (диммер)</td>
+  <td class="uzo uzo4">УЗО4</td>
+  <td class="auto">B10 бра+кор</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B (купить #1)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#2 / слот 4</td>
+  <td class="wb">диммер · MDM3#3 ch2</td>
+</tr>
+<tr class="">
+  <td class="num">30</td>
+  <td class="pos">порядк. 5 / 35</td>
+  <td class="name">Основная люстра</td>
+  <td class="uzo uzo4">УЗО4</td>
+  <td class="auto">B10 комн.дим</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B (купить #1)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#2 / слот 5</td>
+  <td class="wb">диммер · MDM3#2 ch1</td>
+</tr>
+<tr class="">
+  <td class="num">31</td>
+  <td class="pos">порядк. 6 / 35</td>
+  <td class="name">Точки у люстры</td>
+  <td class="uzo uzo4">УЗО4</td>
+  <td class="auto">B10 комн.дим</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B (купить #1)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#2 / слот 6</td>
+  <td class="wb">диммер · MDM3#2 ch2</td>
+</tr>
+<tr class="">
+  <td class="num">32</td>
+  <td class="pos">порядк. 7 / 35</td>
+  <td class="name">Бра правая кровать (диммер)</td>
+  <td class="uzo uzo4">УЗО4</td>
+  <td class="auto">B10 бра+кор</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B (купить #1)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#2 / слот 7</td>
+  <td class="wb">диммер · MDM3#3 ch3</td>
+</tr>
+<tr class="">
+  <td class="num">34</td>
+  <td class="pos">порядк. 8 / 35</td>
+  <td class="name">Питание карниза комната</td>
+  <td class="uzo uzo4">УЗО4</td>
+  <td class="auto">B10 карниз.ж</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B (купить #1)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#2 / слот 8</td>
+  <td class="wb">карниз Modbus · сила B10 постоянно; упр. на шине BUSHUB</td>
+</tr>
+<tr class="selv">
+  <td class="num">35</td>
+  <td class="pos">порядк. 9 / 35</td>
+  <td class="name">Лента карниза · WB-LED в щите (R5: WB-LED→D6→ARV)</td>
+  <td class="uzo uzo7">УЗО7</td>
+  <td class="auto">D6 → ARV</td>
+  <td class="L"><div class="m">не L 230В DIN · +24/0 с WB-LED (R5)</div><div class="a">выход диммера → №35</div></td>
+  <td class="N"><div class="m">0В (не ZK N 230В)</div><div class="a">нет · 24В</div></td>
+  <td class="lok">—</td>
+  <td class="PE">PE кабеля №35 → PE ZK (если жила есть) / иначе без</td>
+  <td class="wb">R5 DIN: MDM#1·#2·#3→WB-LED→D6→ARV · +24/0 на №35 с WB-LED · RS-485 не через ARV · лента в поле</td>
+</tr>
+<tr class="">
+  <td class="num">37</td>
+  <td class="pos">порядк. 10 / 35</td>
+  <td class="name">Свет лоджия (диммер)</td>
+  <td class="uzo uzo4">УЗО4</td>
+  <td class="auto">B10 комн.дим</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B (купить #1)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#2 / слот 10</td>
+  <td class="wb">диммер · MDM3#2 ch3</td>
+</tr>
+<tr class="">
+  <td class="num">38</td>
+  <td class="pos">порядк. 11 / 35</td>
+  <td class="name">Питание карниза лоджия</td>
+  <td class="uzo uzo4">УЗО4</td>
+  <td class="auto">B10 карниз.ж</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B (купить #1)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#2 / слот 11</td>
+  <td class="wb">карниз Modbus · сила B10 постоянно; упр. на шине BUSHUB</td>
+</tr>
+<tr class="">
+  <td class="num">41</td>
+  <td class="pos">порядк. 12 / 35</td>
+  <td class="name">Питание розетка стол</td>
+  <td class="uzo uzo4">УЗО4</td>
+  <td class="auto">B16 роз.жилые</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B (купить #1)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#2 / слот 12</td>
+  <td class="wb">розетка · —</td>
+</tr>
+<tr class="">
+  <td class="num">43</td>
+  <td class="pos">порядк. 13 / 35</td>
+  <td class="name">Розетка ТВ комната</td>
+  <td class="uzo uzo4">УЗО4</td>
+  <td class="auto">B16 роз.жилые</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B (купить #1)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#2 / слот 13</td>
+  <td class="wb">розетка · —</td>
+</tr>
+<tr>
+  <td class="num">47</td>
+  <td class="pos">порядк. 14 / 35</td>
+  <td class="name">Розетка ТВ кухня</td>
+  <td class="uzo uzo1">УЗО1</td>
+  <td class="auto">B16 роз.кух</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B УЗО1↑ · зона ↑A</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#2 / слот 14</td>
+  <td class="wb">розетка · —</td>
+</tr>
+<tr>
+  <td class="num">48</td>
+  <td class="pos">порядк. 15 / 35</td>
+  <td class="name">Бра кухня</td>
+  <td class="uzo uzo1">УЗО1</td>
+  <td class="auto">B10 кух.реле</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B УЗО1↑ · зона ↑A</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#2 / слот 15</td>
+  <td class="wb">реле · MR6C#2 ch1</td>
+</tr>
+<tr>
+  <td class="num">50</td>
+  <td class="pos">порядк. 16 / 35</td>
+  <td class="name">Основной свет кухня (диммер)</td>
+  <td class="uzo uzo1">УЗО1</td>
+  <td class="auto">B10 кух.дим</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B УЗО1↑ · зона ↑A</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#2 / слот 16</td>
+  <td class="wb">диммер · MDM3#1 ch1</td>
+</tr>
+<tr>
+  <td class="num">51</td>
+  <td class="pos">порядк. 17 / 35</td>
+  <td class="name">Левый свет кухни (диммер)</td>
+  <td class="uzo uzo1">УЗО1</td>
+  <td class="auto">B10 кух.дим</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B УЗО1↑ · зона ↑A</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#2 / слот 17</td>
+  <td class="wb">диммер · MDM3#1 ch2</td>
+</tr>
+<tr>
+  <td class="num">52</td>
+  <td class="pos">порядк. 18 / 35</td>
+  <td class="name">Правый свет кухни (диммер)</td>
+  <td class="uzo uzo1">УЗО1</td>
+  <td class="auto">B10 кух.дим</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B УЗО1↑ · зона ↑A</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#2 / слот 18</td>
+  <td class="wb">диммер · MDM3#1 ch3</td>
+</tr>
+<tr>
+  <td class="num">53</td>
+  <td class="pos">порядк. 19 / 35</td>
+  <td class="name">Подсветка кухни</td>
+  <td class="uzo uzo1">УЗО1</td>
+  <td class="auto">B10 кух.реле</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B УЗО1↑ · зона ↑A</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#2 / слот 19</td>
+  <td class="wb">реле · MR6C#2 ch2</td>
+</tr>
+<tr>
+  <td class="num">54</td>
+  <td class="pos">порядк. 20 / 35</td>
+  <td class="name">Левая розетка кухни</td>
+  <td class="uzo uzo1">УЗО1</td>
+  <td class="auto">B16 роз.кух</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B УЗО1↑ · зона ↑A</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK206G#2 / слот 20</td>
+  <td class="wb">розетка · —</td>
+</tr>
+<tr>
+  <td class="num">55</td>
+  <td class="pos">порядк. 21 / 35</td>
+  <td class="name">Правая розетка кухни</td>
+  <td class="uzo uzo1">УЗО1</td>
+  <td class="auto">B16 роз.кух</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B УЗО1↑ · зона ↑A</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK175G / слот ↑1</td>
+  <td class="wb">розетка · —</td>
+</tr>
+<tr>
+  <td class="num">56</td>
+  <td class="pos">порядк. 22 / 35</td>
+  <td class="name">Вытяжка кухня</td>
+  <td class="uzo uzo1">УЗО1</td>
+  <td class="auto">B10 кух.реле</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B УЗО1↑ · зона ↑A</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK175G / слот ↑2</td>
+  <td class="wb">MR6C#2 ch3 (MR2.3)</td>
+</tr>
+<tr class="thick">
+  <td class="num">58</td>
+  <td class="pos">порядк. 23 / 35</td>
+  <td class="name">Проточный водонагреватель</td>
+  <td class="uzo uzo2">УЗО2</td>
+  <td class="auto">B32 проточный</td>
+  <td class="L"><div class="m">L 6–10 мм² DIN (UT 10 / Wago 2010)</div><div class="a">DKC/винт L 6–10 · счёт 1581</div></td>
+  <td class="N"><div class="m">ZK113B (есть)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK175G / слот ↑3</td>
+  <td class="wb">сила · —</td>
+</tr>
+<tr class="">
+  <td class="num">61</td>
+  <td class="pos">порядк. 24 / 35</td>
+  <td class="name">Свет ванна</td>
+  <td class="uzo uzo2">УЗО2</td>
+  <td class="auto">B10 свет.сан</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK113B (есть)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK175G / слот ↑4</td>
+  <td class="wb">реле · MR6C#3 ch1</td>
+</tr>
+<tr class="">
+  <td class="num">62</td>
+  <td class="pos">порядк. 25 / 35</td>
+  <td class="name">Зеркало ванна</td>
+  <td class="uzo uzo2">УЗО2</td>
+  <td class="auto">B10 свет.сан</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK113B (есть)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK175G / слот ↑5</td>
+  <td class="wb">реле · MR6C#3 ch2</td>
+</tr>
+<tr class="">
+  <td class="num">63</td>
+  <td class="pos">порядк. 26 / 35</td>
+  <td class="name">Розетка ванна</td>
+  <td class="uzo uzo2">УЗО2</td>
+  <td class="auto">B16 роз.сан</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK113B (есть)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK175G / слот ↑6</td>
+  <td class="wb">розетка · —</td>
+</tr>
+<tr class="">
+  <td class="num">64</td>
+  <td class="pos">порядк. 27 / 35</td>
+  <td class="name">Вытяжка ванна</td>
+  <td class="uzo uzo2">УЗО2</td>
+  <td class="auto">B10 свет.сан</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK113B (есть)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK175G / слот ↑7</td>
+  <td class="wb">реле · MR6C#3 ch3</td>
+</tr>
+<tr class="">
+  <td class="num">68</td>
+  <td class="pos">порядк. 28 / 35</td>
+  <td class="name">Свет коридор</td>
+  <td class="uzo uzo4">УЗО4</td>
+  <td class="auto">B10 бра+кор</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B (купить #1)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK175G / слот ↑8</td>
+  <td class="wb">диммер · MDM3#3 ch1</td>
+</tr>
+<tr class="">
+  <td class="num">69</td>
+  <td class="pos">порядк. 29 / 35</td>
+  <td class="name">Зеркало туалет</td>
+  <td class="uzo uzo2">УЗО2</td>
+  <td class="auto">B10 свет.сан</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK113B (есть)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK175G / слот ↑9</td>
+  <td class="wb">реле · MR6C#3 ch4</td>
+</tr>
+<tr class="">
+  <td class="num">70</td>
+  <td class="pos">порядк. 30 / 35</td>
+  <td class="name">Розетка туалет</td>
+  <td class="uzo uzo2">УЗО2</td>
+  <td class="auto">B16 роз.сан</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK113B (есть)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK175G / слот ↑10</td>
+  <td class="wb">розетка · —</td>
+</tr>
+<tr class="">
+  <td class="num">71</td>
+  <td class="pos">порядк. 31 / 35</td>
+  <td class="name">Свет туалет</td>
+  <td class="uzo uzo2">УЗО2</td>
+  <td class="auto">B10 свет.сан</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK113B (есть)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK175G / слот ↑11</td>
+  <td class="wb">реле · MR6C#3 ch5</td>
+</tr>
+<tr class="">
+  <td class="num">72</td>
+  <td class="pos">порядк. 32 / 35</td>
+  <td class="name">Вытяжка туалет</td>
+  <td class="uzo uzo2">УЗО2</td>
+  <td class="auto">B10 свет.сан</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK113B (есть)</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK175G / слот ↑12</td>
+  <td class="wb">реле · MR6C#3 ch6</td>
+</tr>
+<tr>
+  <td class="num">100</td>
+  <td class="pos">порядк. 33 / 35</td>
+  <td class="name">Питание карниза кухня</td>
+  <td class="uzo uzo1">УЗО1</td>
+  <td class="auto">B10 карниз.к</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK144B УЗО1↑ · зона ↑A</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">ZK175G / слот ↑13</td>
+  <td class="wb">карниз Modbus · сила B10 постоянно; упр. на шине BUSHUB</td>
+</tr>
+<tr class="must">
+  <td class="num">101</td>
+  <td class="pos">порядк. 34 / 35</td>
+  <td class="name">Розетка люк туалет (неоткл.)</td>
+  <td class="uzo uzo6">УЗО6</td>
+  <td class="auto">B16 люк</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK82B (есть) · общий ↓↑</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">PE-докуп клемма #1</td>
+  <td class="wb">неоткл. · мимо ESB · люк туалет</td>
+</tr>
+<tr class="must">
+  <td class="num">105</td>
+  <td class="pos">порядк. 35 / 35</td>
+  <td class="name">Роутер/коммутатор</td>
+  <td class="uzo uzo6">УЗО6</td>
+  <td class="auto">B16 сервер+IT</td>
+  <td class="L"><div class="m">L 2.5 мм² DIN R1↑ (серая feed-through)</div><div class="a">DKC VPR-2.5-GY · не VPRTT</div></td>
+  <td class="N"><div class="m">ZK82B (есть) · общий ↓↑</div><div class="a">нет · сразу в ZK</div></td>
+  <td class="lok">—</td>
+  <td class="PE">PE-докуп клемма #2</td>
+  <td class="wb">неоткл. · —</td>
+</tr>
+</tbody></table></div>
+</section>
+
+<section class="cards-sec" id="r1-cards">
+  <h2>R1↑ · все верхние кабели — карточки</h2>
+  <p class="note">Порядок по номеру кабеля. «порядк.» — не DIN-слот автомата.</p>
+  <div class="cables"><article class="cable ">
+  <header><span class="n">№26</span><span class="u uzo6">УЗО6</span></header>
+  <h4>Розетка верх кладовая / сервер</h4>
+  <p class="auto">B16 сервер+IT</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>ZK82B (есть) · общий ↓↑</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#2 / слот 1</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№27</span><span class="u uzo4">УЗО4</span></header>
+  <h4>Лента шкаф/кладовая (230В → локальный БП 24В у шкафа)</h4>
+  <p class="auto">B10 кладовая</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>ZK144B (купить #1)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#2 / слот 2</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№28</span><span class="u uzo4">УЗО4</span></header>
+  <h4>Свет кладовая</h4>
+  <p class="auto">B10 кладовая</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>ZK144B (купить #1)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#2 / слот 3</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№29</span><span class="u uzo4">УЗО4</span></header>
+  <h4>Бра левая кровать (диммер)</h4>
+  <p class="auto">B10 бра+кор</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>ZK144B (купить #1)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#2 / слот 4</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№30</span><span class="u uzo4">УЗО4</span></header>
+  <h4>Основная люстра</h4>
+  <p class="auto">B10 комн.дим</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>ZK144B (купить #1)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#2 / слот 5</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№31</span><span class="u uzo4">УЗО4</span></header>
+  <h4>Точки у люстры</h4>
+  <p class="auto">B10 комн.дим</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>ZK144B (купить #1)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#2 / слот 6</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№32</span><span class="u uzo4">УЗО4</span></header>
+  <h4>Бра правая кровать (диммер)</h4>
+  <p class="auto">B10 бра+кор</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>ZK144B (купить #1)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#2 / слот 7</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№34</span><span class="u uzo4">УЗО4</span></header>
+  <h4>Питание карниза комната</h4>
+  <p class="auto">B10 карниз.ж</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>ZK144B (купить #1)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#2 / слот 8</dd></div>
+  </dl>
+</article><article class="cable selv">
+  <header><span class="n">№35</span><span class="u uzo7">УЗО7</span></header>
+  <h4>Лента карниза · WB-LED в щите (R5: WB-LED→D6→ARV)</h4>
+  <p class="auto">DIN MDM#1·#2·#3→WB-LED→D6→ARV · 230В D6→ARV · 24В ARV→WB-LED</p>
+  <dl>
+    <div><dt>L</dt><dd>не L 230В DIN · +24/0 с WB-LED → кабель №35</dd></div>
+    <div><dt>N</dt><dd>0В (не ZK N 230В)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>PE кабеля №35 → PE ZK (если жила есть) / иначе без</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№37</span><span class="u uzo4">УЗО4</span></header>
+  <h4>Свет лоджия (диммер)</h4>
+  <p class="auto">B10 комн.дим</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>ZK144B (купить #1)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#2 / слот 10</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№38</span><span class="u uzo4">УЗО4</span></header>
+  <h4>Питание карниза лоджия</h4>
+  <p class="auto">B10 карниз.ж</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>ZK144B (купить #1)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#2 / слот 11</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№41</span><span class="u uzo4">УЗО4</span></header>
+  <h4>Питание розетка стол</h4>
+  <p class="auto">B16 роз.жилые</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>ZK144B (купить #1)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#2 / слот 12</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№43</span><span class="u uzo4">УЗО4</span></header>
+  <h4>Розетка ТВ комната</h4>
+  <p class="auto">B16 роз.жилые</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>ZK144B (купить #1)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#2 / слот 13</dd></div>
+  </dl>
+</article><article class="cable jump">
+  <header><span class="n">№47</span><span class="u uzo1">УЗО1</span></header>
+  <h4>Розетка ТВ кухня</h4>
+  <p class="auto">B16 роз.кух</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>сразу → ZK144B УЗО1↑ · зона ↑A</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#2 / слот 14</dd></div>
+  </dl>
+</article><article class="cable jump">
+  <header><span class="n">№48</span><span class="u uzo1">УЗО1</span></header>
+  <h4>Бра кухня</h4>
+  <p class="auto">B10 кух.реле</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>сразу → ZK144B УЗО1↑ · зона ↑A</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#2 / слот 15</dd></div>
+  </dl>
+</article><article class="cable jump">
+  <header><span class="n">№50</span><span class="u uzo1">УЗО1</span></header>
+  <h4>Основной свет кухня (диммер)</h4>
+  <p class="auto">B10 кух.дим</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>сразу → ZK144B УЗО1↑ · зона ↑A</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#2 / слот 16</dd></div>
+  </dl>
+</article><article class="cable jump">
+  <header><span class="n">№51</span><span class="u uzo1">УЗО1</span></header>
+  <h4>Левый свет кухни (диммер)</h4>
+  <p class="auto">B10 кух.дим</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>сразу → ZK144B УЗО1↑ · зона ↑A</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#2 / слот 17</dd></div>
+  </dl>
+</article><article class="cable jump">
+  <header><span class="n">№52</span><span class="u uzo1">УЗО1</span></header>
+  <h4>Правый свет кухни (диммер)</h4>
+  <p class="auto">B10 кух.дим</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>сразу → ZK144B УЗО1↑ · зона ↑A</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#2 / слот 18</dd></div>
+  </dl>
+</article><article class="cable jump">
+  <header><span class="n">№53</span><span class="u uzo1">УЗО1</span></header>
+  <h4>Подсветка кухни</h4>
+  <p class="auto">B10 кух.реле</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>сразу → ZK144B УЗО1↑ · зона ↑A</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#2 / слот 19</dd></div>
+  </dl>
+</article><article class="cable jump">
+  <header><span class="n">№54</span><span class="u uzo1">УЗО1</span></header>
+  <h4>Левая розетка кухни</h4>
+  <p class="auto">B16 роз.кух</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>сразу → ZK144B УЗО1↑ · зона ↑A</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK206G#2 / слот 20</dd></div>
+  </dl>
+</article><article class="cable jump">
+  <header><span class="n">№55</span><span class="u uzo1">УЗО1</span></header>
+  <h4>Правая розетка кухни</h4>
+  <p class="auto">B16 роз.кух</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>сразу → ZK144B УЗО1↑ · зона ↑A</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK175G / слот ↑1</dd></div>
+  </dl>
+</article><article class="cable jump">
+  <header><span class="n">№56</span><span class="u uzo1">УЗО1</span></header>
+  <h4>Вытяжка кухня</h4>
+  <p class="auto">B10 кух.реле · MR2.3</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>сразу → ZK144B УЗО1↑ · зона ↑A</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK175G / слот ↑2</dd></div>
+  </dl>
+</article><article class="cable thick">
+  <header><span class="n">№58</span><span class="u uzo2">УЗО2</span></header>
+  <h4>Проточный водонагреватель</h4>
+  <p class="auto">B32 проточный</p>
+  <dl>
+    <div><dt>L</dt><dd>L 6–10 мм² DIN (UT 10 / Wago 2010)</dd></div>
+    <div><dt>N</dt><dd>ZK113B (есть)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK175G / слот ↑3</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№61</span><span class="u uzo2">УЗО2</span></header>
+  <h4>Свет ванна</h4>
+  <p class="auto">B10 свет.сан</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>ZK113B (есть)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK175G / слот ↑4</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№62</span><span class="u uzo2">УЗО2</span></header>
+  <h4>Зеркало ванна</h4>
+  <p class="auto">B10 свет.сан</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>ZK113B (есть)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK175G / слот ↑5</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№63</span><span class="u uzo2">УЗО2</span></header>
+  <h4>Розетка ванна</h4>
+  <p class="auto">B16 роз.сан</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>ZK113B (есть)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK175G / слот ↑6</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№64</span><span class="u uzo2">УЗО2</span></header>
+  <h4>Вытяжка ванна</h4>
+  <p class="auto">B10 свет.сан</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>ZK113B (есть)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK175G / слот ↑7</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№68</span><span class="u uzo4">УЗО4</span></header>
+  <h4>Свет коридор</h4>
+  <p class="auto">B10 бра+кор</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>ZK144B (купить #1)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK175G / слот ↑8</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№69</span><span class="u uzo2">УЗО2</span></header>
+  <h4>Зеркало туалет</h4>
+  <p class="auto">B10 свет.сан</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>ZK113B (есть)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK175G / слот ↑9</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№70</span><span class="u uzo2">УЗО2</span></header>
+  <h4>Розетка туалет</h4>
+  <p class="auto">B16 роз.сан</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>ZK113B (есть)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK175G / слот ↑10</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№71</span><span class="u uzo2">УЗО2</span></header>
+  <h4>Свет туалет</h4>
+  <p class="auto">B10 свет.сан</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>ZK113B (есть)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK175G / слот ↑11</dd></div>
+  </dl>
+</article><article class="cable ">
+  <header><span class="n">№72</span><span class="u uzo2">УЗО2</span></header>
+  <h4>Вытяжка туалет</h4>
+  <p class="auto">B10 свет.сан</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>ZK113B (есть)</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK175G / слот ↑12</dd></div>
+  </dl>
+</article><article class="cable jump">
+  <header><span class="n">№100</span><span class="u uzo1">УЗО1</span></header>
+  <h4>Питание карниза кухня</h4>
+  <p class="auto">B10 карниз.к</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>сразу → ZK144B УЗО1↑ · зона ↑A</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>ZK175G / слот ↑13</dd></div>
+  </dl>
+</article><article class="cable must">
+  <header><span class="n">№101</span><span class="u uzo6">УЗО6</span></header>
+  <h4>Розетка люк туалет (неоткл.)</h4>
+  <p class="auto">B16 люк</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>ZK82B (есть) · общий ↓↑</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>PE-докуп клемма #1</dd></div>
+  </dl>
+</article><article class="cable must">
+  <header><span class="n">№105</span><span class="u uzo6">УЗО6</span></header>
+  <h4>Роутер/коммутатор</h4>
+  <p class="auto">B16 сервер+IT</p>
+  <dl>
+    <div><dt>L</dt><dd>L 2.5 мм² DIN R1↑ (серая feed-through)</dd></div>
+    <div><dt>N</dt><dd>ZK82B (есть) · общий ↓↑</dd></div>
+    <div><dt>лок.N</dt><dd>—</dd></div>
+    <div><dt>PE</dt><dd>PE-докуп клемма #2</dd></div>
+  </dl>
+</article></div>
+</section>
+
+<section>
+  <h2>Сводка</h2>
+  <div class="rules">
+    <div class="card"><strong>Силовых кабелей</strong>59 · низ 24 · верх 35</div>
+    <div class="card"><strong>N-перемычек</strong>4 · только R6: 5 · 6 · 11 · 18 · кухня без BU</div>
+    <div class="card"><strong>Толстые L 6–10</strong>№7 плита · №58 проточный</div>
+    <div class="card"><strong>Особые</strong>№35 = WB-LED R5 → 24В · №101 = B16 люк (УЗО6) · PE-докуп 101·105</div>
+  </div>
+  <p class="foot">Файл: <code>shit_ABB_AT62_R1_R6_klemmy.html</code> · рядом со схемой <code>shit_ABB_AT62_shema.html</code> · данные из Excel цепочек</p>
+</section>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,317 @@
+device	control	topic	type	suggested	units	title	value
+alarms	log	/devices/alarms/controls/log	text	raw		Лог	
+buzzer	enabled	/devices/buzzer/controls/enabled	switch	switch		Включен	0
+buzzer	frequency	/devices/buzzer/controls/frequency	range	range		Частота	4566
+buzzer	volume	/devices/buzzer/controls/volume	range	range		Громкость	100
+hwmon	Board Temperature	/devices/hwmon/controls/Board Temperature	temperature	sensor		hwmon · Board Temperature	39.125
+hwmon	CPU Temperature	/devices/hwmon/controls/CPU Temperature	temperature	sensor		hwmon · CPU Temperature	67.235
+knx	data	/devices/knx/controls/data	text	raw		Сообщение	i:0/0/0 i:0/0/0 GroupValueRead 0x00
+metrics	data_total_space	/devices/metrics/controls/data_total_space	value	sensor	MiB	metrics · data_total_space	56162
+metrics	data_used_space	/devices/metrics/controls/data_used_space	value	sensor	MiB	metrics · data_used_space	2137
+metrics	dev_root_linked_on	/devices/metrics/controls/dev_root_linked_on	text	raw		metrics · dev_root_linked_on	/dev/mmcblk0p2
+metrics	dev_root_total_space	/devices/metrics/controls/dev_root_total_space	value	sensor	MiB	metrics · dev_root_total_space	1984
+metrics	dev_root_used_space	/devices/metrics/controls/dev_root_used_space	value	sensor	MiB	metrics · dev_root_used_space	771
+metrics	load_average_15min	/devices/metrics/controls/load_average_15min	value	sensor	tasks	metrics · load_average_15min	0.74
+metrics	load_average_1min	/devices/metrics/controls/load_average_1min	value	sensor	tasks	metrics · load_average_1min	1.54
+metrics	load_average_5min	/devices/metrics/controls/load_average_5min	value	sensor	tasks	metrics · load_average_5min	0.91
+metrics	ram_available	/devices/metrics/controls/ram_available	value	sensor	MiB	metrics · ram_available	1611
+metrics	ram_total	/devices/metrics/controls/ram_total	value	sensor	MiB	metrics · ram_total	2012
+metrics	ram_used	/devices/metrics/controls/ram_used	value	sensor	MiB	metrics · ram_used	352
+metrics	swap_total	/devices/metrics/controls/swap_total	value	sensor	MiB	metrics · swap_total	255
+metrics	swap_used	/devices/metrics/controls/swap_used	value	sensor	MiB	metrics · swap_used	0
+network	Active Connections	/devices/network/controls/Active Connections	text	raw		Активные соединения	"[""lo"",""wb-eth0""]"
+network	Default Interface	/devices/network/controls/Default Interface	text	raw		Интерфейс по умолчанию	eth0
+network	Ethernet 2 IP	/devices/network/controls/Ethernet 2 IP	text	raw		network · Ethernet 2 IP	
+network	Ethernet 2 IP Connection Enabled	/devices/network/controls/Ethernet 2 IP Connection Enabled	switch	switch		Ethernet 2 Включен	0
+network	Ethernet 2 IP Online Status	/devices/network/controls/Ethernet 2 IP Online Status	switch	switch		Ethernet 2 Доступ к интернету	0
+network	Ethernet IP	/devices/network/controls/Ethernet IP	text	raw		Ethernet 1 IP	"192.168.1.9
+"
+network	Ethernet IP Connection Enabled	/devices/network/controls/Ethernet IP Connection Enabled	switch	switch		Ethernet 1 Включен	1
+network	Ethernet IP Online Status	/devices/network/controls/Ethernet IP Online Status	switch	switch		Ethernet 1 Доступ к интернету	1
+network	GPRS IP	/devices/network/controls/GPRS IP	text	raw		network · GPRS IP	
+network	GPRS IP Connection Enabled	/devices/network/controls/GPRS IP Connection Enabled	switch	switch		GPRS IP Включен	0
+network	GPRS IP Online Status	/devices/network/controls/GPRS IP Online Status	switch	switch		GPRS IP Доступ к интернету	0
+network	Internet Connection	/devices/network/controls/Internet Connection	text	raw		Интернет соединение	wb-eth0
+network	Wi-Fi 2 IP	/devices/network/controls/Wi-Fi 2 IP	text	raw		Wi-Fi 2 IP	
+network	Wi-Fi 2 IP Connection Enabled	/devices/network/controls/Wi-Fi 2 IP Connection Enabled	switch	switch		Wi-Fi 2 Включен	0
+network	Wi-Fi 2 IP Online Status	/devices/network/controls/Wi-Fi 2 IP Online Status	switch	switch		Wi-Fi 2 Доступ к интернету	0
+network	Wi-Fi IP	/devices/network/controls/Wi-Fi IP	text	raw		Wi-Fi 1 IP	
+network	Wi-Fi IP Connection Enabled	/devices/network/controls/Wi-Fi IP Connection Enabled	switch	switch		Wi-Fi 1 Включен	0
+network	Wi-Fi IP Online Status	/devices/network/controls/Wi-Fi IP Online Status	switch	switch		Wi-Fi 1 Доступ к интернету	0
+power_status	Vin	/devices/power_status/controls/Vin	voltage	sensor		Входное напряжение	20.4
+power_status	working on battery	/devices/power_status/controls/working on battery	switch	switch		Работа от батареи	0
+system	Batch No	/devices/system/controls/Batch No	text	raw		Номер партии	7.3.3C/7 655
+system	Current uptime	/devices/system/controls/Current uptime	text	raw		Время работы	19d 11h 45m
+system	DTS Version	/devices/system/controls/DTS Version	text	raw		Версия DTS	"733
+"
+system	HW Revision	/devices/system/controls/HW Revision	text	raw		Версия контроллера	7.3.3
+system	Manufacturing Date	/devices/system/controls/Manufacturing Date	text	raw		Дата производства	2022-10-31 12:05:57
+system	Reboot	/devices/system/controls/Reboot	pushbutton	switch		Перезагрузить	
+system	Release name	/devices/system/controls/Release name	text	raw		Название релиза	wb-2501
+system	Release suite	/devices/system/controls/Release suite	text	raw		Тип релиза	stable
+system	Short SN	/devices/system/controls/Short SN	text	raw		Серийный номер	AZBDNV3C
+system	Temperature Grade	/devices/system/controls/Temperature Grade	text	raw		Температурный диапазон	commercial
+system__networks__0f098677-2b49-4167-a534-207567b1751b	Active	/devices/system__networks__0f098677-2b49-4167-a534-207567b1751b/controls/Active	switch	switch		system__networks__0f098677-2b49-4167-a534-207567b1751b · Active	0
+system__networks__0f098677-2b49-4167-a534-207567b1751b	Address	/devices/system__networks__0f098677-2b49-4167-a534-207567b1751b/controls/Address	text	raw		system__networks__0f098677-2b49-4167-a534-207567b1751b · Address	
+system__networks__0f098677-2b49-4167-a534-207567b1751b	Connectivity	/devices/system__networks__0f098677-2b49-4167-a534-207567b1751b/controls/Connectivity	switch	switch		system__networks__0f098677-2b49-4167-a534-207567b1751b · Connectivity	0
+system__networks__0f098677-2b49-4167-a534-207567b1751b	Device	/devices/system__networks__0f098677-2b49-4167-a534-207567b1751b/controls/Device	text	raw		system__networks__0f098677-2b49-4167-a534-207567b1751b · Device	
+system__networks__0f098677-2b49-4167-a534-207567b1751b	Name	/devices/system__networks__0f098677-2b49-4167-a534-207567b1751b/controls/Name	text	raw		system__networks__0f098677-2b49-4167-a534-207567b1751b · Name	wb-debug
+system__networks__0f098677-2b49-4167-a534-207567b1751b	State	/devices/system__networks__0f098677-2b49-4167-a534-207567b1751b/controls/State	text	raw		system__networks__0f098677-2b49-4167-a534-207567b1751b · State	deactivated
+system__networks__0f098677-2b49-4167-a534-207567b1751b	Type	/devices/system__networks__0f098677-2b49-4167-a534-207567b1751b/controls/Type	text	raw		system__networks__0f098677-2b49-4167-a534-207567b1751b · Type	802-3-ethernet
+system__networks__0f098677-2b49-4167-a534-207567b1751b	UUID	/devices/system__networks__0f098677-2b49-4167-a534-207567b1751b/controls/UUID	text	raw		system__networks__0f098677-2b49-4167-a534-207567b1751b · UUID	0f098677-2b49-4167-a534-207567b1751b
+system__networks__0f098677-2b49-4167-a534-207567b1751b	UpDown	/devices/system__networks__0f098677-2b49-4167-a534-207567b1751b/controls/UpDown	pushbutton	switch		Up	
+system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac	Active	/devices/system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac/controls/Active	switch	switch		system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac · Active	0
+system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac	Address	/devices/system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac/controls/Address	text	raw		system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac · Address	
+system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac	Connectivity	/devices/system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac/controls/Connectivity	switch	switch		system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac · Connectivity	0
+system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac	Device	/devices/system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac/controls/Device	text	raw		system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac · Device	
+system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac	Name	/devices/system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac/controls/Name	text	raw		system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac · Name	MGTS_GPON_FFD5
+system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac	State	/devices/system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac/controls/State	text	raw		system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac · State	deactivated
+system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac	Type	/devices/system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac/controls/Type	text	raw		system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac · Type	802-11-wireless
+system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac	UUID	/devices/system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac/controls/UUID	text	raw		system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac · UUID	89adb663-5456-4fb5-9bf7-f815e3d8bbac
+system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac	UpDown	/devices/system__networks__89adb663-5456-4fb5-9bf7-f815e3d8bbac/controls/UpDown	pushbutton	switch		Up	
+system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e	Active	/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/Active	switch	switch		system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e · Active	1
+system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e	Address	/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/Address	text	raw		system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e · Address	192.168.1.9
+system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e	Connectivity	/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/Connectivity	switch	switch		system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e · Connectivity	1
+system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e	Device	/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/Device	text	raw		system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e · Device	eth0
+system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e	Name	/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/Name	text	raw		system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e · Name	wb-eth0
+system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e	State	/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/State	text	raw		system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e · State	activated
+system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e	Type	/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/Type	text	raw		system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e · Type	802-3-ethernet
+system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e	UUID	/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/UUID	text	raw		system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e · UUID	91f1c71d-2d97-4675-886f-ecbe52b8451e
+system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e	UpDown	/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/UpDown	pushbutton	switch		Down	
+system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718	Active	/devices/system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718/controls/Active	switch	switch		system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718 · Active	1
+system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718	Address	/devices/system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718/controls/Address	text	raw		system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718 · Address	127.0.0.1
+system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718	Connectivity	/devices/system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718/controls/Connectivity	switch	switch		system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718 · Connectivity	1
+system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718	Device	/devices/system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718/controls/Device	text	raw		system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718 · Device	lo
+system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718	Name	/devices/system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718/controls/Name	text	raw		system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718 · Name	lo
+system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718	State	/devices/system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718/controls/State	text	raw		system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718 · State	activated
+system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718	Type	/devices/system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718/controls/Type	text	raw		system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718 · Type	loopback
+system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718	UUID	/devices/system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718/controls/UUID	text	raw		system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718 · UUID	a5e01d8c-0857-40c8-a920-f24a171f0718
+system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718	UpDown	/devices/system__networks__a5e01d8c-0857-40c8-a920-f24a171f0718/controls/UpDown	pushbutton	switch		Down	
+system__networks__c3e38405-9c17-4155-ad70-664311b49066	Active	/devices/system__networks__c3e38405-9c17-4155-ad70-664311b49066/controls/Active	switch	switch		system__networks__c3e38405-9c17-4155-ad70-664311b49066 · Active	0
+system__networks__c3e38405-9c17-4155-ad70-664311b49066	Address	/devices/system__networks__c3e38405-9c17-4155-ad70-664311b49066/controls/Address	text	raw		system__networks__c3e38405-9c17-4155-ad70-664311b49066 · Address	
+system__networks__c3e38405-9c17-4155-ad70-664311b49066	Connectivity	/devices/system__networks__c3e38405-9c17-4155-ad70-664311b49066/controls/Connectivity	switch	switch		system__networks__c3e38405-9c17-4155-ad70-664311b49066 · Connectivity	0
+system__networks__c3e38405-9c17-4155-ad70-664311b49066	Device	/devices/system__networks__c3e38405-9c17-4155-ad70-664311b49066/controls/Device	text	raw		system__networks__c3e38405-9c17-4155-ad70-664311b49066 · Device	
+system__networks__c3e38405-9c17-4155-ad70-664311b49066	Name	/devices/system__networks__c3e38405-9c17-4155-ad70-664311b49066/controls/Name	text	raw		system__networks__c3e38405-9c17-4155-ad70-664311b49066 · Name	wb-eth1
+system__networks__c3e38405-9c17-4155-ad70-664311b49066	State	/devices/system__networks__c3e38405-9c17-4155-ad70-664311b49066/controls/State	text	raw		system__networks__c3e38405-9c17-4155-ad70-664311b49066 · State	deactivated
+system__networks__c3e38405-9c17-4155-ad70-664311b49066	Type	/devices/system__networks__c3e38405-9c17-4155-ad70-664311b49066/controls/Type	text	raw		system__networks__c3e38405-9c17-4155-ad70-664311b49066 · Type	802-3-ethernet
+system__networks__c3e38405-9c17-4155-ad70-664311b49066	UUID	/devices/system__networks__c3e38405-9c17-4155-ad70-664311b49066/controls/UUID	text	raw		system__networks__c3e38405-9c17-4155-ad70-664311b49066 · UUID	c3e38405-9c17-4155-ad70-664311b49066
+system__networks__c3e38405-9c17-4155-ad70-664311b49066	UpDown	/devices/system__networks__c3e38405-9c17-4155-ad70-664311b49066/controls/UpDown	pushbutton	switch		Up	
+system__wb-cloud-agent__default	activation_link	/devices/system__wb-cloud-agent__default/controls/activation_link	text	raw		Link	https://wirenboard.cloud/controllers?add=f20590e2c0bec731dedca66c1e76b0a9c6e25dd299e04a070d8ebe4e210a
+system__wb-cloud-agent__default	cloud_base_url	/devices/system__wb-cloud-agent__default/controls/cloud_base_url	text	raw		URL	https://wirenboard.cloud
+system__wb-cloud-agent__default	status	/devices/system__wb-cloud-agent__default/controls/status	text	raw		Status	ok
+wb-adc	A1	/devices/wb-adc/controls/A1	voltage	sensor		wb-adc · A1	0.2
+wb-adc	A2	/devices/wb-adc/controls/A2	voltage	sensor		wb-adc · A2	0.1
+wb-adc	A3	/devices/wb-adc/controls/A3	voltage	sensor		wb-adc · A3	0.1
+wb-adc	Vin	/devices/wb-adc/controls/Vin	voltage	sensor		wb-adc · Vin	20.4
+wb-gpio	5V_OUT	/devices/wb-gpio/controls/5V_OUT	switch	switch		wb-gpio · 5V_OUT	0
+wb-gpio	A1_IN	/devices/wb-gpio/controls/A1_IN	switch	switch		wb-gpio · A1_IN	0
+wb-gpio	A1_OUT	/devices/wb-gpio/controls/A1_OUT	switch	switch		wb-gpio · A1_OUT	0
+wb-gpio	A2_IN	/devices/wb-gpio/controls/A2_IN	switch	switch		wb-gpio · A2_IN	0
+wb-gpio	A2_OUT	/devices/wb-gpio/controls/A2_OUT	switch	switch		wb-gpio · A2_OUT	0
+wb-gpio	A3_IN	/devices/wb-gpio/controls/A3_IN	switch	switch		wb-gpio · A3_IN	0
+wb-gpio	A3_OUT	/devices/wb-gpio/controls/A3_OUT	switch	switch		wb-gpio · A3_OUT	0
+wb-gpio	D1_IN	/devices/wb-gpio/controls/D1_IN	switch	switch		wb-gpio · D1_IN	0
+wb-gpio	D1_OUT	/devices/wb-gpio/controls/D1_OUT	switch	switch		wb-gpio · D1_OUT	0
+wb-gpio	EXT1_K1	/devices/wb-gpio/controls/EXT1_K1	switch	switch		wb-gpio · EXT1_K1	1
+wb-gpio	EXT1_K2	/devices/wb-gpio/controls/EXT1_K2	switch	switch		wb-gpio · EXT1_K2	1
+wb-gpio	EXT1_K3	/devices/wb-gpio/controls/EXT1_K3	switch	switch		wb-gpio · EXT1_K3	0
+wb-gpio	EXT1_K4	/devices/wb-gpio/controls/EXT1_K4	switch	switch		wb-gpio · EXT1_K4	0
+wb-gpio	EXT1_K5	/devices/wb-gpio/controls/EXT1_K5	switch	switch		wb-gpio · EXT1_K5	0
+wb-gpio	EXT1_K6	/devices/wb-gpio/controls/EXT1_K6	switch	switch		wb-gpio · EXT1_K6	0
+wb-gpio	EXT1_K7	/devices/wb-gpio/controls/EXT1_K7	switch	switch		wb-gpio · EXT1_K7	0
+wb-gpio	EXT1_K8	/devices/wb-gpio/controls/EXT1_K8	switch	switch		wb-gpio · EXT1_K8	0
+wb-gpio	V_OUT	/devices/wb-gpio/controls/V_OUT	switch	switch		wb-gpio · V_OUT	1
+wb-led_221	Allowed Power	/devices/wb-led_221/controls/Allowed Power	value	sensor	%	Разрешенная мощность	100
+wb-led_221	Board Temperature	/devices/wb-led_221/controls/Board Temperature	value	sensor	deg C	Температура платы	30
+wb-led_221	Channel 4	/devices/wb-led_221/controls/Channel 4	switch	switch		Канал 4	0
+wb-led_221	Channel 4 Brightness	/devices/wb-led_221/controls/Channel 4 Brightness	range	range		Яркость канала 4	100
+wb-led_221	Hue Changing	/devices/wb-led_221/controls/Hue Changing	switch	switch		Изменение оттенка RGB ленты	0
+wb-led_221	Hue Changing Rate	/devices/wb-led_221/controls/Hue Changing Rate	value	sensor		Время изменения оттенка (Hue) на 1° (мс)	30
+wb-led_221	Input 1	/devices/wb-led_221/controls/Input 1	switch	switch		Вход 1	0
+wb-led_221	Input 1 Counter	/devices/wb-led_221/controls/Input 1 Counter	value	sensor		Счетчик 1	0
+wb-led_221	Input 2	/devices/wb-led_221/controls/Input 2	switch	switch		Вход 2	0
+wb-led_221	Input 2 Counter	/devices/wb-led_221/controls/Input 2 Counter	value	sensor		Счетчик 2	0
+wb-led_221	Input 3	/devices/wb-led_221/controls/Input 3	switch	switch		Вход 3	0
+wb-led_221	Input 3 Counter	/devices/wb-led_221/controls/Input 3 Counter	value	sensor		Счетчик 3	0
+wb-led_221	Input 4	/devices/wb-led_221/controls/Input 4	switch	switch		Вход 4	0
+wb-led_221	Input 4 Counter	/devices/wb-led_221/controls/Input 4 Counter	value	sensor		Счетчик 4	0
+wb-led_221	Overcurrent	/devices/wb-led_221/controls/Overcurrent	switch	switch		Перегрузка по току	0
+wb-led_221	RGB Palette	/devices/wb-led_221/controls/RGB Palette	rgb	raw		Палитра RGB	76;0;130
+wb-led_221	RGB Strip	/devices/wb-led_221/controls/RGB Strip	switch	switch		Лента RGB	0
+wb-led_221	RGB Strip Brightness	/devices/wb-led_221/controls/RGB Strip Brightness	range	range		Яркость RGB ленты (V)	51
+wb-led_221	RGB Strip Hue	/devices/wb-led_221/controls/RGB Strip Hue	range	range		Оттенок RGB ленты (H)	275
+wb-led_221	RGB Strip Saturation	/devices/wb-led_221/controls/RGB Strip Saturation	range	range		Насыщенность цвета RGB ленты (S)	100
+wb-led_221	Serial	/devices/wb-led_221/controls/Serial	text	raw		Серийный номер	105855
+wb-mdm3_218	AC on L-N	/devices/wb-mdm3_218/controls/AC on L-N	switch	switch		Напряжение на клеммах L-N	1
+wb-mdm3_218	Channel 1	/devices/wb-mdm3_218/controls/Channel 1	range	range		Канал 1	100
+wb-mdm3_218	Channel 2	/devices/wb-mdm3_218/controls/Channel 2	range	range		Канал 2	100
+wb-mdm3_218	Channel 3	/devices/wb-mdm3_218/controls/Channel 3	range	range		Канал 3	100
+wb-mdm3_218	Input 1	/devices/wb-mdm3_218/controls/Input 1	switch	switch		Вход 1	0
+wb-mdm3_218	Input 1 Long Press Counter	/devices/wb-mdm3_218/controls/Input 1 Long Press Counter	value	sensor		Счетчик длинных нажатий входа 1	0
+wb-mdm3_218	Input 1 Single Press Counter	/devices/wb-mdm3_218/controls/Input 1 Single Press Counter	value	sensor		Счетчик коротких нажатий входа 1	0
+wb-mdm3_218	Input 1 counter	/devices/wb-mdm3_218/controls/Input 1 counter	value	sensor		Счетчик 1	0
+wb-mdm3_218	Input 2	/devices/wb-mdm3_218/controls/Input 2	switch	switch		Вход 2	0
+wb-mdm3_218	Input 2 Long Press Counter	/devices/wb-mdm3_218/controls/Input 2 Long Press Counter	value	sensor		Счетчик длинных нажатий входа 2	0
+wb-mdm3_218	Input 2 Single Press Counter	/devices/wb-mdm3_218/controls/Input 2 Single Press Counter	value	sensor		Счетчик коротких нажатий входа 2	0
+wb-mdm3_218	Input 2 counter	/devices/wb-mdm3_218/controls/Input 2 counter	value	sensor		Счетчик 2	0
+wb-mdm3_218	Input 3	/devices/wb-mdm3_218/controls/Input 3	switch	switch		Вход 3	0
+wb-mdm3_218	Input 3 Long Press Counter	/devices/wb-mdm3_218/controls/Input 3 Long Press Counter	value	sensor		Счетчик длинных нажатий входа 3	0
+wb-mdm3_218	Input 3 Single Press Counter	/devices/wb-mdm3_218/controls/Input 3 Single Press Counter	value	sensor		Счетчик коротких нажатий входа 3	0
+wb-mdm3_218	Input 3 counter	/devices/wb-mdm3_218/controls/Input 3 counter	value	sensor		Счетчик 3	0
+wb-mdm3_218	Input 4	/devices/wb-mdm3_218/controls/Input 4	switch	switch		Вход 4	0
+wb-mdm3_218	Input 4 Long Press Counter	/devices/wb-mdm3_218/controls/Input 4 Long Press Counter	value	sensor		Счетчик длинных нажатий входа 4	0
+wb-mdm3_218	Input 4 Single Press Counter	/devices/wb-mdm3_218/controls/Input 4 Single Press Counter	value	sensor		Счетчик коротких нажатий входа 4	0
+wb-mdm3_218	Input 4 counter	/devices/wb-mdm3_218/controls/Input 4 counter	value	sensor		Счетчик 4	0
+wb-mdm3_218	Input 5	/devices/wb-mdm3_218/controls/Input 5	switch	switch		Вход 5	0
+wb-mdm3_218	Input 5 Long Press Counter	/devices/wb-mdm3_218/controls/Input 5 Long Press Counter	value	sensor		Счетчик длинных нажатий входа 5	0
+wb-mdm3_218	Input 5 Single Press Counter	/devices/wb-mdm3_218/controls/Input 5 Single Press Counter	value	sensor		Счетчик коротких нажатий входа 5	0
+wb-mdm3_218	Input 5 counter	/devices/wb-mdm3_218/controls/Input 5 counter	value	sensor		Счетчик 5	0
+wb-mdm3_218	Input 6	/devices/wb-mdm3_218/controls/Input 6	switch	switch		Вход 6	0
+wb-mdm3_218	Input 6 Long Press Counter	/devices/wb-mdm3_218/controls/Input 6 Long Press Counter	value	sensor		Счетчик длинных нажатий входа 6	0
+wb-mdm3_218	Input 6 Single Press Counter	/devices/wb-mdm3_218/controls/Input 6 Single Press Counter	value	sensor		Счетчик коротких нажатий входа 6	0
+wb-mdm3_218	Input 6 counter	/devices/wb-mdm3_218/controls/Input 6 counter	value	sensor		Счетчик 6	0
+wb-mdm3_218	K1	/devices/wb-mdm3_218/controls/K1	switch	switch		wb-mdm3_218 · K1	0
+wb-mdm3_218	K2	/devices/wb-mdm3_218/controls/K2	switch	switch		wb-mdm3_218 · K2	1
+wb-mdm3_218	K3	/devices/wb-mdm3_218/controls/K3	switch	switch		wb-mdm3_218 · K3	1
+wb-mdm3_218	Overcurrent	/devices/wb-mdm3_218/controls/Overcurrent	switch	switch		Перегрузка по току	0
+wb-mdm3_218	Serial	/devices/wb-mdm3_218/controls/Serial	text	raw		Серийный номер	431016
+wb-mdm3_75	AC on L-N	/devices/wb-mdm3_75/controls/AC on L-N	switch	switch		Напряжение на клеммах L-N	1
+wb-mdm3_75	Channel 1	/devices/wb-mdm3_75/controls/Channel 1	range	range		Канал 1	100
+wb-mdm3_75	Channel 2	/devices/wb-mdm3_75/controls/Channel 2	range	range		Канал 2	100
+wb-mdm3_75	Channel 3	/devices/wb-mdm3_75/controls/Channel 3	range	range		Канал 3	100
+wb-mdm3_75	Input 1	/devices/wb-mdm3_75/controls/Input 1	switch	switch		Вход 1	0
+wb-mdm3_75	Input 1 Long Press Counter	/devices/wb-mdm3_75/controls/Input 1 Long Press Counter	value	sensor		Счетчик длинных нажатий входа 1	0
+wb-mdm3_75	Input 1 Single Press Counter	/devices/wb-mdm3_75/controls/Input 1 Single Press Counter	value	sensor		Счетчик коротких нажатий входа 1	0
+wb-mdm3_75	Input 1 counter	/devices/wb-mdm3_75/controls/Input 1 counter	value	sensor		Счетчик 1	0
+wb-mdm3_75	Input 2	/devices/wb-mdm3_75/controls/Input 2	switch	switch		Вход 2	0
+wb-mdm3_75	Input 2 Long Press Counter	/devices/wb-mdm3_75/controls/Input 2 Long Press Counter	value	sensor		Счетчик длинных нажатий входа 2	0
+wb-mdm3_75	Input 2 Single Press Counter	/devices/wb-mdm3_75/controls/Input 2 Single Press Counter	value	sensor		Счетчик коротких нажатий входа 2	0
+wb-mdm3_75	Input 2 counter	/devices/wb-mdm3_75/controls/Input 2 counter	value	sensor		Счетчик 2	0
+wb-mdm3_75	Input 3	/devices/wb-mdm3_75/controls/Input 3	switch	switch		Вход 3	0
+wb-mdm3_75	Input 3 Long Press Counter	/devices/wb-mdm3_75/controls/Input 3 Long Press Counter	value	sensor		Счетчик длинных нажатий входа 3	0
+wb-mdm3_75	Input 3 Single Press Counter	/devices/wb-mdm3_75/controls/Input 3 Single Press Counter	value	sensor		Счетчик коротких нажатий входа 3	0
+wb-mdm3_75	Input 3 counter	/devices/wb-mdm3_75/controls/Input 3 counter	value	sensor		Счетчик 3	0
+wb-mdm3_75	Input 4	/devices/wb-mdm3_75/controls/Input 4	switch	switch		Вход 4	0
+wb-mdm3_75	Input 4 Long Press Counter	/devices/wb-mdm3_75/controls/Input 4 Long Press Counter	value	sensor		Счетчик длинных нажатий входа 4	0
+wb-mdm3_75	Input 4 Single Press Counter	/devices/wb-mdm3_75/controls/Input 4 Single Press Counter	value	sensor		Счетчик коротких нажатий входа 4	0
+wb-mdm3_75	Input 4 counter	/devices/wb-mdm3_75/controls/Input 4 counter	value	sensor		Счетчик 4	0
+wb-mdm3_75	Input 5	/devices/wb-mdm3_75/controls/Input 5	switch	switch		Вход 5	0
+wb-mdm3_75	Input 5 Long Press Counter	/devices/wb-mdm3_75/controls/Input 5 Long Press Counter	value	sensor		Счетчик длинных нажатий входа 5	0
+wb-mdm3_75	Input 5 Single Press Counter	/devices/wb-mdm3_75/controls/Input 5 Single Press Counter	value	sensor		Счетчик коротких нажатий входа 5	0
+wb-mdm3_75	Input 5 counter	/devices/wb-mdm3_75/controls/Input 5 counter	value	sensor		Счетчик 5	0
+wb-mdm3_75	Input 6	/devices/wb-mdm3_75/controls/Input 6	switch	switch		Вход 6	0
+wb-mdm3_75	Input 6 Long Press Counter	/devices/wb-mdm3_75/controls/Input 6 Long Press Counter	value	sensor		Счетчик длинных нажатий входа 6	0
+wb-mdm3_75	Input 6 Single Press Counter	/devices/wb-mdm3_75/controls/Input 6 Single Press Counter	value	sensor		Счетчик коротких нажатий входа 6	0
+wb-mdm3_75	Input 6 counter	/devices/wb-mdm3_75/controls/Input 6 counter	value	sensor		Счетчик 6	0
+wb-mdm3_75	K1	/devices/wb-mdm3_75/controls/K1	switch	switch		wb-mdm3_75 · K1	0
+wb-mdm3_75	K2	/devices/wb-mdm3_75/controls/K2	switch	switch		wb-mdm3_75 · K2	1
+wb-mdm3_75	K3	/devices/wb-mdm3_75/controls/K3	switch	switch		wb-mdm3_75 · K3	1
+wb-mdm3_75	Overcurrent	/devices/wb-mdm3_75/controls/Overcurrent	switch	switch		Перегрузка по току	0
+wb-mdm3_75	Serial	/devices/wb-mdm3_75/controls/Serial	text	raw		Серийный номер	169332
+wb-mdm3_76	AC on L-N	/devices/wb-mdm3_76/controls/AC on L-N	switch	switch		Напряжение на клеммах L-N	1
+wb-mdm3_76	Channel 1	/devices/wb-mdm3_76/controls/Channel 1	range	range		Канал 1	100
+wb-mdm3_76	Channel 2	/devices/wb-mdm3_76/controls/Channel 2	range	range		Канал 2	100
+wb-mdm3_76	Channel 3	/devices/wb-mdm3_76/controls/Channel 3	range	range		Канал 3	100
+wb-mdm3_76	Input 1	/devices/wb-mdm3_76/controls/Input 1	switch	switch		Вход 1	0
+wb-mdm3_76	Input 1 Long Press Counter	/devices/wb-mdm3_76/controls/Input 1 Long Press Counter	value	sensor		Счетчик длинных нажатий входа 1	0
+wb-mdm3_76	Input 1 Single Press Counter	/devices/wb-mdm3_76/controls/Input 1 Single Press Counter	value	sensor		Счетчик коротких нажатий входа 1	0
+wb-mdm3_76	Input 1 counter	/devices/wb-mdm3_76/controls/Input 1 counter	value	sensor		Счетчик 1	0
+wb-mdm3_76	Input 2	/devices/wb-mdm3_76/controls/Input 2	switch	switch		Вход 2	0
+wb-mdm3_76	Input 2 Long Press Counter	/devices/wb-mdm3_76/controls/Input 2 Long Press Counter	value	sensor		Счетчик длинных нажатий входа 2	0
+wb-mdm3_76	Input 2 Single Press Counter	/devices/wb-mdm3_76/controls/Input 2 Single Press Counter	value	sensor		Счетчик коротких нажатий входа 2	0
+wb-mdm3_76	Input 2 counter	/devices/wb-mdm3_76/controls/Input 2 counter	value	sensor		Счетчик 2	0
+wb-mdm3_76	Input 3	/devices/wb-mdm3_76/controls/Input 3	switch	switch		Вход 3	0
+wb-mdm3_76	Input 3 Long Press Counter	/devices/wb-mdm3_76/controls/Input 3 Long Press Counter	value	sensor		Счетчик длинных нажатий входа 3	0
+wb-mdm3_76	Input 3 Single Press Counter	/devices/wb-mdm3_76/controls/Input 3 Single Press Counter	value	sensor		Счетчик коротких нажатий входа 3	0
+wb-mdm3_76	Input 3 counter	/devices/wb-mdm3_76/controls/Input 3 counter	value	sensor		Счетчик 3	0
+wb-mdm3_76	Input 4	/devices/wb-mdm3_76/controls/Input 4	switch	switch		Вход 4	0
+wb-mdm3_76	Input 4 Long Press Counter	/devices/wb-mdm3_76/controls/Input 4 Long Press Counter	value	sensor		Счетчик длинных нажатий входа 4	0
+wb-mdm3_76	Input 4 Single Press Counter	/devices/wb-mdm3_76/controls/Input 4 Single Press Counter	value	sensor		Счетчик коротких нажатий входа 4	0
+wb-mdm3_76	Input 4 counter	/devices/wb-mdm3_76/controls/Input 4 counter	value	sensor		Счетчик 4	0
+wb-mdm3_76	Input 5	/devices/wb-mdm3_76/controls/Input 5	switch	switch		Вход 5	0
+wb-mdm3_76	Input 5 Long Press Counter	/devices/wb-mdm3_76/controls/Input 5 Long Press Counter	value	sensor		Счетчик длинных нажатий входа 5	0
+wb-mdm3_76	Input 5 Single Press Counter	/devices/wb-mdm3_76/controls/Input 5 Single Press Counter	value	sensor		Счетчик коротких нажатий входа 5	0
+wb-mdm3_76	Input 5 counter	/devices/wb-mdm3_76/controls/Input 5 counter	value	sensor		Счетчик 5	0
+wb-mdm3_76	Input 6	/devices/wb-mdm3_76/controls/Input 6	switch	switch		Вход 6	0
+wb-mdm3_76	Input 6 Long Press Counter	/devices/wb-mdm3_76/controls/Input 6 Long Press Counter	value	sensor		Счетчик длинных нажатий входа 6	0
+wb-mdm3_76	Input 6 Single Press Counter	/devices/wb-mdm3_76/controls/Input 6 Single Press Counter	value	sensor		Счетчик коротких нажатий входа 6	0
+wb-mdm3_76	Input 6 counter	/devices/wb-mdm3_76/controls/Input 6 counter	value	sensor		Счетчик 6	0
+wb-mdm3_76	K1	/devices/wb-mdm3_76/controls/K1	switch	switch		wb-mdm3_76 · K1	1
+wb-mdm3_76	K2	/devices/wb-mdm3_76/controls/K2	switch	switch		wb-mdm3_76 · K2	1
+wb-mdm3_76	K3	/devices/wb-mdm3_76/controls/K3	switch	switch		wb-mdm3_76 · K3	1
+wb-mdm3_76	Overcurrent	/devices/wb-mdm3_76/controls/Overcurrent	switch	switch		Перегрузка по току	0
+wb-mdm3_76	Serial	/devices/wb-mdm3_76/controls/Serial	text	raw		Серийный номер	169333
+wb-mr6cu_43	K1	/devices/wb-mr6cu_43/controls/K1	switch	switch		wb-mr6cu_43 · K1	1
+wb-mr6cu_43	K2	/devices/wb-mr6cu_43/controls/K2	switch	switch		wb-mr6cu_43 · K2	0
+wb-mr6cu_43	K3	/devices/wb-mr6cu_43/controls/K3	switch	switch		wb-mr6cu_43 · K3	0
+wb-mr6cu_43	K4	/devices/wb-mr6cu_43/controls/K4	switch	switch		wb-mr6cu_43 · K4	0
+wb-mr6cu_43	K5	/devices/wb-mr6cu_43/controls/K5	switch	switch		wb-mr6cu_43 · K5	0
+wb-mr6cu_43	K6	/devices/wb-mr6cu_43/controls/K6	switch	switch		wb-mr6cu_43 · K6	0
+wb-mr6cu_43	Serial	/devices/wb-mr6cu_43/controls/Serial	text	raw		Серийный номер	4262603572
+wb-mr6cv3_225	Bus Power Supply	/devices/wb-mr6cv3_225/controls/Bus Power Supply	switch	switch		Состояние питания на шине	1
+wb-mr6cv3_225	Input 0	/devices/wb-mr6cv3_225/controls/Input 0	switch	switch		Вход 0	0
+wb-mr6cv3_225	Input 0 counter	/devices/wb-mr6cv3_225/controls/Input 0 counter	value	sensor		Счетчик 0	0
+wb-mr6cv3_225	Input 1	/devices/wb-mr6cv3_225/controls/Input 1	switch	switch		Вход 1	0
+wb-mr6cv3_225	Input 1 counter	/devices/wb-mr6cv3_225/controls/Input 1 counter	value	sensor		Счетчик 1	0
+wb-mr6cv3_225	Input 2	/devices/wb-mr6cv3_225/controls/Input 2	switch	switch		Вход 2	0
+wb-mr6cv3_225	Input 2 counter	/devices/wb-mr6cv3_225/controls/Input 2 counter	value	sensor		Счетчик 2	0
+wb-mr6cv3_225	Input 3	/devices/wb-mr6cv3_225/controls/Input 3	switch	switch		Вход 3	0
+wb-mr6cv3_225	Input 3 counter	/devices/wb-mr6cv3_225/controls/Input 3 counter	value	sensor		Счетчик 3	0
+wb-mr6cv3_225	Input 4	/devices/wb-mr6cv3_225/controls/Input 4	switch	switch		Вход 4	0
+wb-mr6cv3_225	Input 4 counter	/devices/wb-mr6cv3_225/controls/Input 4 counter	value	sensor		Счетчик 4	0
+wb-mr6cv3_225	Input 5	/devices/wb-mr6cv3_225/controls/Input 5	switch	switch		Вход 5	0
+wb-mr6cv3_225	Input 5 counter	/devices/wb-mr6cv3_225/controls/Input 5 counter	value	sensor		Счетчик 5	0
+wb-mr6cv3_225	Input 6	/devices/wb-mr6cv3_225/controls/Input 6	switch	switch		Вход 6	0
+wb-mr6cv3_225	Input 6 counter	/devices/wb-mr6cv3_225/controls/Input 6 counter	value	sensor		Счетчик 6	0
+wb-mr6cv3_225	K1	/devices/wb-mr6cv3_225/controls/K1	switch	switch		wb-mr6cv3_225 · K1	1
+wb-mr6cv3_225	K2	/devices/wb-mr6cv3_225/controls/K2	switch	switch		wb-mr6cv3_225 · K2	1
+wb-mr6cv3_225	K3	/devices/wb-mr6cv3_225/controls/K3	switch	switch		wb-mr6cv3_225 · K3	1
+wb-mr6cv3_225	K4	/devices/wb-mr6cv3_225/controls/K4	switch	switch		wb-mr6cv3_225 · K4	1
+wb-mr6cv3_225	K5	/devices/wb-mr6cv3_225/controls/K5	switch	switch		wb-mr6cv3_225 · K5	1
+wb-mr6cv3_225	K6	/devices/wb-mr6cv3_225/controls/K6	switch	switch		wb-mr6cv3_225 · K6	1
+wb-mr6cv3_225	Serial	/devices/wb-mr6cv3_225/controls/Serial	text	raw		Серийный номер	161672
+wb-mr6cv3_227	Bus Power Supply	/devices/wb-mr6cv3_227/controls/Bus Power Supply	switch	switch		Состояние питания на шине	1
+wb-mr6cv3_227	Input 0	/devices/wb-mr6cv3_227/controls/Input 0	switch	switch		Вход 0	0
+wb-mr6cv3_227	Input 0 counter	/devices/wb-mr6cv3_227/controls/Input 0 counter	value	sensor		Счетчик 0	0
+wb-mr6cv3_227	Input 1	/devices/wb-mr6cv3_227/controls/Input 1	switch	switch		Вход 1	0
+wb-mr6cv3_227	Input 1 counter	/devices/wb-mr6cv3_227/controls/Input 1 counter	value	sensor		Счетчик 1	0
+wb-mr6cv3_227	Input 2	/devices/wb-mr6cv3_227/controls/Input 2	switch	switch		Вход 2	0
+wb-mr6cv3_227	Input 2 counter	/devices/wb-mr6cv3_227/controls/Input 2 counter	value	sensor		Счетчик 2	0
+wb-mr6cv3_227	Input 3	/devices/wb-mr6cv3_227/controls/Input 3	switch	switch		Вход 3	0
+wb-mr6cv3_227	Input 3 counter	/devices/wb-mr6cv3_227/controls/Input 3 counter	value	sensor		Счетчик 3	0
+wb-mr6cv3_227	Input 4	/devices/wb-mr6cv3_227/controls/Input 4	switch	switch		Вход 4	0
+wb-mr6cv3_227	Input 4 counter	/devices/wb-mr6cv3_227/controls/Input 4 counter	value	sensor		Счетчик 4	0
+wb-mr6cv3_227	Input 5	/devices/wb-mr6cv3_227/controls/Input 5	switch	switch		Вход 5	0
+wb-mr6cv3_227	Input 5 counter	/devices/wb-mr6cv3_227/controls/Input 5 counter	value	sensor		Счетчик 5	0
+wb-mr6cv3_227	Input 6	/devices/wb-mr6cv3_227/controls/Input 6	switch	switch		Вход 6	0
+wb-mr6cv3_227	Input 6 counter	/devices/wb-mr6cv3_227/controls/Input 6 counter	value	sensor		Счетчик 6	0
+wb-mr6cv3_227	K1	/devices/wb-mr6cv3_227/controls/K1	switch	switch		wb-mr6cv3_227 · K1	0
+wb-mr6cv3_227	K2	/devices/wb-mr6cv3_227/controls/K2	switch	switch		wb-mr6cv3_227 · K2	1
+wb-mr6cv3_227	K3	/devices/wb-mr6cv3_227/controls/K3	switch	switch		wb-mr6cv3_227 · K3	1
+wb-mr6cv3_227	K4	/devices/wb-mr6cv3_227/controls/K4	switch	switch		wb-mr6cv3_227 · K4	1
+wb-mr6cv3_227	K5	/devices/wb-mr6cv3_227/controls/K5	switch	switch		wb-mr6cv3_227 · K5	1
+wb-mr6cv3_227	K6	/devices/wb-mr6cv3_227/controls/K6	switch	switch		wb-mr6cv3_227 · K6	1
+wb-mr6cv3_227	Serial	/devices/wb-mr6cv3_227/controls/Serial	text	raw		Серийный номер	161680
+wb-mr6cv3_239	Bus Power Supply	/devices/wb-mr6cv3_239/controls/Bus Power Supply	switch	switch		Состояние питания на шине	1
+wb-mr6cv3_239	Input 0	/devices/wb-mr6cv3_239/controls/Input 0	switch	switch		Вход 0	0
+wb-mr6cv3_239	Input 0 counter	/devices/wb-mr6cv3_239/controls/Input 0 counter	value	sensor		Счетчик 0	0
+wb-mr6cv3_239	Input 1	/devices/wb-mr6cv3_239/controls/Input 1	switch	switch		Вход 1	0
+wb-mr6cv3_239	Input 1 counter	/devices/wb-mr6cv3_239/controls/Input 1 counter	value	sensor		Счетчик 1	0
+wb-mr6cv3_239	Input 2	/devices/wb-mr6cv3_239/controls/Input 2	switch	switch		Вход 2	0
+wb-mr6cv3_239	Input 2 counter	/devices/wb-mr6cv3_239/controls/Input 2 counter	value	sensor		Счетчик 2	0
+wb-mr6cv3_239	Input 3	/devices/wb-mr6cv3_239/controls/Input 3	switch	switch		Вход 3	0
+wb-mr6cv3_239	Input 3 counter	/devices/wb-mr6cv3_239/controls/Input 3 counter	value	sensor		Счетчик 3	0
+wb-mr6cv3_239	Input 4	/devices/wb-mr6cv3_239/controls/Input 4	switch	switch		Вход 4	0
+wb-mr6cv3_239	Input 4 counter	/devices/wb-mr6cv3_239/controls/Input 4 counter	value	sensor		Счетчик 4	0
+wb-mr6cv3_239	Input 5	/devices/wb-mr6cv3_239/controls/Input 5	switch	switch		Вход 5	0
+wb-mr6cv3_239	Input 5 counter	/devices/wb-mr6cv3_239/controls/Input 5 counter	value	sensor		Счетчик 5	0
+wb-mr6cv3_239	Input 6	/devices/wb-mr6cv3_239/controls/Input 6	switch	switch		Вход 6	0
+wb-mr6cv3_239	Input 6 counter	/devices/wb-mr6cv3_239/controls/Input 6 counter	value	sensor		Счетчик 6	0
+wb-mr6cv3_239	K1	/devices/wb-mr6cv3_239/controls/K1	switch	switch		wb-mr6cv3_239 · K1	0
+wb-mr6cv3_239	K2	/devices/wb-mr6cv3_239/controls/K2	switch	switch		wb-mr6cv3_239 · K2	0
+wb-mr6cv3_239	K3	/devices/wb-mr6cv3_239/controls/K3	switch	switch		wb-mr6cv3_239 · K3	0
+wb-mr6cv3_239	K4	/devices/wb-mr6cv3_239/controls/K4	switch	switch		wb-mr6cv3_239 · K4	0
+wb-mr6cv3_239	K5	/devices/wb-mr6cv3_239/controls/K5	switch	switch		wb-mr6cv3_239 · K5	0
+wb-mr6cv3_239	K6	/devices/wb-mr6cv3_239/controls/K6	switch	switch		wb-mr6cv3_239 · K6	0
+wb-mr6cv3_239	Serial	/devices/wb-mr6cv3_239/controls/Serial	text	raw		Серийный номер	161739
+wbrules	Rule debugging	/devices/wbrules/controls/Rule debugging	switch	switch		Отладка правил	

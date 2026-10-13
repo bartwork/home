@@ -66,8 +66,21 @@ func (s *Service) UpdateDevice(ctx context.Context, id int64, name, mqttTopic, d
 	if name == "" || mqttTopic == "" || deviceType == "" {
 		return dto.Device{}, errors.ErrBadRequest
 	}
+
+	cur, err := s.repo.Get(ctx, id)
+	if err != nil {
+		return dto.Device{}, err
+	}
+
 	row, err := s.repo.Update(ctx, id, repository.WriteDevice{
-		Name: name, MqttTopic: mqttTopic, DeviceType: deviceType, Unit: strings.TrimSpace(unit), Active: active,
+		Name:       name,
+		MqttTopic:  mqttTopic,
+		DeviceType: deviceType,
+		Unit:       strings.TrimSpace(unit),
+		Active:     active,
+		WbDevice:   cur.WbDevice,
+		WbControl:  cur.WbControl,
+		Source:     cur.Source,
 	})
 	if err != nil {
 		return dto.Device{}, err
@@ -86,5 +99,6 @@ func toDTO(d repository.Device) dto.Device {
 	return dto.Device{
 		ID: d.ID, Name: d.Name, MqttTopic: d.MqttTopic, DeviceType: d.DeviceType,
 		Unit: d.Unit, Active: d.Active, CreatedAt: d.CreatedAt,
+		WbDevice: d.WbDevice, WbControl: d.WbControl, Source: d.Source,
 	}
 }

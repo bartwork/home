@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ABB AT62 — выходы УЗО1…7 куда идут</title>
+  <style>
+    :root {
+      --bg: #eef1f4;
+      --ink: #15202b;
+      --muted: #5a6570;
+      --card: #fff;
+      --line: #cfd6dd;
+      --u1: #e67e22;
+      --u2: #2980b9;
+      --u3: #27ae60;
+      --u4: #e74c3c;
+      --u5: #c0392b;
+      --u6: #8e44ad;
+      --u7: #148f77;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.35;
+    }
+    header {
+      background: linear-gradient(120deg, #143a5c, #1f4e79 55%, #2a6f97);
+      color: #fff;
+      padding: 1.25rem 1.5rem 1.1rem;
+    }
+    header h1 { margin: 0 0 .35rem; font-size: 1.35rem; font-weight: 700; }
+    header p { margin: 0; opacity: .92; font-size: .92rem; max-width: 960px; }
+    .nav { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .65rem; }
+    .nav a {
+      color: #fff; text-decoration: none;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.28);
+      border-radius: 8px;
+      padding: .3rem .65rem;
+      font-size: .8rem;
+    }
+    main { max-width: 1100px; margin: 0 auto; padding: 1.1rem 1.25rem 3rem; }
+    section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1rem 1.1rem 1.15rem;
+      margin-bottom: 1rem;
+    }
+    h2 { margin: 0 0 .65rem; font-size: 1.05rem; }
+    h3 { margin: 0 0 .45rem; font-size: .95rem; }
+    .note { margin: .45rem 0 0; font-size: .84rem; color: var(--muted); }
+    .rule {
+      background: #fff8e6;
+      border: 1px solid #f0d78c;
+      border-radius: 10px;
+      padding: .65rem .8rem;
+      font-size: .86rem;
+      margin-bottom: .85rem;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+    th, td { border: 1px solid var(--line); padding: .4rem .5rem; text-align: left; vertical-align: top; }
+    th { background: #1f4e79; color: #fff; }
+    tr:nth-child(even) { background: #f8fafb; }
+    .uzo {
+      border-left: 6px solid #999;
+      border-radius: 12px;
+      padding: .85rem 1rem;
+      margin-bottom: .85rem;
+      background: #f7f9fb;
+      border: 1px solid var(--line);
+      border-left-width: 6px;
+    }
+    .uzo.u1 { border-left-color: var(--u1); }
+    .uzo.u2 { border-left-color: var(--u2); }
+    .uzo.u3 { border-left-color: var(--u3); }
+    .uzo.u4 { border-left-color: var(--u4); }
+    .uzo.u5 { border-left-color: var(--u5); }
+    .uzo.u6 { border-left-color: var(--u6); }
+    .uzo.u7 { border-left-color: var(--u7); }
+    .uzo h3 { display: flex; flex-wrap: wrap; align-items: baseline; gap: .35rem .7rem; }
+    .pill {
+      display: inline-block;
+      font-size: .72rem;
+      padding: .12rem .45rem;
+      border-radius: 999px;
+      background: #e8eef4;
+      font-weight: 600;
+    }
+    .pill.alw { background: #d5f5e3; color: #145a32; }
+    .pill.esb { background: #fadbd8; color: #7b241c; }
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .65rem;
+      margin-top: .55rem;
+    }
+    @media (max-width: 720px) { .grid2 { grid-template-columns: 1fr; } }
+    .box {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: .55rem .7rem;
+      font-size: .84rem;
+    }
+    .box b { display: block; margin-bottom: .25rem; font-size: .88rem; }
+    .box ul { margin: .2rem 0 0; padding-left: 1.1rem; }
+    .box li { margin: .15rem 0; }
+    .toc { font-size: .86rem; }
+    .toc a { color: #1f4e79; margin-right: .55rem; }
+    code { font-size: .8rem; background: #eef2f6; padding: .05rem .3rem; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ABB AT62 · выходы всех УЗО</h1>
+    <p>С клемм L и N каждого УЗО — куда идут жилы. Отводы с N-шин — отдельно от клеммы УЗО.</p>
+    <div class="nav">
+      <a href="shit_ABB_AT62_vnutri_sheita.html">Внутри щита</a>
+      <a href="shit_ABB_AT62_shema.html">Лицо щита</a>
+      <a href="shit_ABB_AT62_polnaya_tsepochka.html">Полные цепочки</a>
+      <a href="shit_ABB_AT62_avtomaty_pugv.html">От автоматов ПУГВ</a>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <p class="toc">
+        <a href="#summary">Сводка</a>
+        <a href="#u1">УЗО1</a>
+        <a href="#u2">УЗО2</a>
+        <a href="#u3">УЗО3</a>
+        <a href="#u4">УЗО4</a>
+        <a href="#u5">УЗО5</a>
+        <a href="#u6">УЗО6</a>
+        <a href="#u7">УЗО7</a>
+        <a href="shit_ABB_AT62_avtomaty_pugv.html">от автоматов ПУГВ</a>
+        <a href="shit_ABB_AT62_shema.html">лицо</a>
+      </p>
+      <div class="rule">
+        <strong>Правило:</strong> с клеммы <b>N</b> УЗО уходит <b>одна</b> жила в свой N-блок.
+        Полевые N и A2/БП — уже <b>отводы с шины</b>, не вторые провода в зажим УЗО.
+        N разных УЗО между собой <b>не мостить</b>.
+      </div>
+    </section>
+
+    <section id="summary">
+      <h2>Сводка</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>УЗО</th>
+            <th>Вход с</th>
+            <th>Выход L →</th>
+            <th>Выход N →</th>
+            <th>Жил L с клеммы</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1</strong> кухня</td>
+            <td>ESB</td>
+            <td>ПУГВ → гребёнка R3 ×8</td>
+            <td>ZK82B N УЗО1↓ + ZK144B УЗО1↑</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td><strong>2</strong> сан</td>
+            <td>ESB</td>
+            <td>ПУГВ → гребёнка R3 ×3</td>
+            <td>ZK113B N УЗО2 ↑B</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td><strong>3</strong> стирка</td>
+            <td>ESB</td>
+            <td>ПУГВ → гребёнка R3 ×2</td>
+            <td>N с УЗО3 → синие BU №5·6 на R6</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td><strong>4</strong> жилые</td>
+            <td>ESB</td>
+            <td>ПУГВ → гребёнка R3 ×6</td>
+            <td>ZK144B ↓A + ZK144B ↑A</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td><strong>5</strong> полы</td>
+            <td>ESB</td>
+            <td>ПУГВ → гребёнка R3 ×2</td>
+            <td>ZK82B N УЗО5 ↓A</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td><strong>6</strong> IT</td>
+            <td>УЗМ (мимо ESB)</td>
+            <td>ПУГВ → гребёнка R4 ×4</td>
+            <td>ZK82B N УЗО6 ↑A</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td><strong>7</strong> авт.</td>
+            <td>УЗМ (мимо ESB)</td>
+            <td>D10 · D6 · C2</td>
+            <td>шина N УЗО7 ↑B (3-я справа)</td>
+            <td><strong>3</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="note">УЗО1…6: с выхода L — <strong>одна</strong> жила ПУГВ 6–10 мм² на вход гребёнки куста. УЗО7 гребёнки куста нет — три отвода L.</p>
+    </section>
+
+    <!-- УЗО1 -->
+    <section id="u1" class="uzo u1">
+      <h3>УЗО1 · кухня <span class="pill esb">после ESB</span> <span class="pill">R2</span></h3>
+      <div class="grid2">
+        <div class="box">
+          <b>Выход L</b>
+          <ul>
+            <li><strong>1</strong> ПУГВ → гребёнка R3 куст <strong>×8</strong></li>
+            <li>B32 плита · B16 духовка · B16 ПММ · B16 роз.кух · B10 измельч · B10 кух.дим · B10 кух.реле · B10 карниз.к</li>
+            <li>Сила: №7, 8, 9, 10, 47, 48, 50–56, 100 <em>(№49 — упр. BUSHUB, не сила УЗО1)</em></li>
+          </ul>
+        </div>
+        <div class="box">
+          <b>Выход N</b>
+          <ul>
+            <li><strong>1</strong> ПУГВ → <code>ZK82B N УЗО1↓</code> ↓A (есть · №7–10 · ≈7/10)</li>
+            <li>Кухня верх → <code>ZK144B N УЗО1↑</code> ↑A (купить · бывший пустой слот)</li>
+            <li>Перемычка <strong>УЗО1↓ ↔ УЗО1↑</strong> (ставишь сам · один потенциал · в слот 4 мм²)</li>
+            <li>С шины: №7–10↓ + №47, 48, 50–56, 100↑</li>
+            <li>N плиты №7 → слот 25 мм² · ПУГВ с УЗО → второй 25 · у ZK82 только 2×25</li>
+            <li><strong>MDM#1</strong> N (50·51·52) — с этой шины, не мостить с MDM УЗО4</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- УЗО2 -->
+    <section id="u2" class="uzo u2">
+      <h3>УЗО2 · санузлы <span class="pill esb">после ESB</span></h3>
+      <div class="grid2">
+        <div class="box">
+          <b>Выход L</b>
+          <ul>
+            <li><strong>1</strong> ПУГВ → гребёнка R3 куст <strong>×3</strong></li>
+            <li>B32 проточный · B16 роз.сан · B10 свет.сан</li>
+            <li>Сила: №58, 61, 62, 63, 64, 69, 70, 71, 72</li>
+          </ul>
+        </div>
+        <div class="box">
+          <b>Выход N</b>
+          <ul>
+            <li><strong>1</strong> ПУГВ → <code>ZK113B N УЗО2</code> ↑B (2-я справа сверху)</li>
+            <li>С шины: 9 жил (№58 + свет 61·62·64·69·71·72 + роз. 63·70)</li>
+            <li>№58 N → слот 25 мм²</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- УЗО3 -->
+    <section id="u3" class="uzo u3">
+      <h3>УЗО3 · стирка <span class="pill esb">после ESB</span></h3>
+      <div class="grid2">
+        <div class="box">
+          <b>Выход L</b>
+          <ul>
+            <li><strong>1</strong> ПУГВ → гребёнка R3 куст <strong>×2</strong></li>
+            <li>B16 стиралка · B16 сушилка</li>
+            <li>Сила: №6 прямо · №5 через <b>контактор←MR6CU#1</b></li>
+          </ul>
+        </div>
+        <div class="box">
+          <b>Выход N</b>
+          <ul>
+            <li><strong>1</strong> ПУГВ с N УЗО3 → синие <code>VPR-2.5-BU</code> №5·6 на R6</li>
+            <li>Между BU — перемычка · <strong>без ZK82B</strong> (всего 2 нуля)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- УЗО4 -->
+    <section id="u4" class="uzo u4">
+      <h3>УЗО4 · жилые <span class="pill esb">после ESB</span></h3>
+      <div class="grid2">
+        <div class="box">
+          <b>Выход L</b>
+          <ul>
+            <li><strong>1</strong> ПУГВ → гребёнка R3 куст <strong>×6</strong></li>
+            <li>B16 роз.жилые · B16 роз.лоджия · B10 комн.дим (MDM#2) · B10 бра+кор (MDM#3) · B10 карниз.ж · B10 кладовая</li>
+            <li>Низ: №2, 12–14, 16, 17, 19–24 · верх: №27–32, 34, 37, 38, 41, 43, 68</li>
+            <li><em>Не сюда:</em> №15 (УЗО5), №18 (УЗО6) · <b>1 автомат = 1 MDM</b></li>
+          </ul>
+        </div>
+        <div class="box">
+          <b>Выход N</b>
+          <ul>
+            <li><strong>1</strong> ПУГВ с УЗО → потенциал N УЗО4 (слот 25 мм²)</li>
+            <li><code>ZK144B N УЗО4↓</code> ↓A · есть · №2,12–14,16,17,19–24</li>
+            <li><code>ZK144B N УЗО4↑</code> ↑A · <strong>купить</strong> · №27–32,34,37,38,41,43,68</li>
+            <li>Два блока — один N; не мостить с другими УЗО</li>
+            <li><strong>MDM#1</strong> слева на R5 (N УЗО1) · <strong>MDM#2 + MDM#3</strong> справа рядом: перемычка N + отвод с ZK N УЗО4</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- УЗО5 -->
+    <section id="u5" class="uzo u5">
+      <h3>УЗО5 · тёплые полы <span class="pill esb">после ESB</span></h3>
+      <div class="grid2">
+        <div class="box">
+          <b>Выход L</b>
+          <ul>
+            <li><strong>1</strong> ПУГВ → гребёнка R3 куст <strong>×2</strong></li>
+            <li>B16 ТП К+Т (№1·3) → <b>C1</b> MR6C#1 · B16 ТП В+Кух (№4·15) → <b>C2</b> MR6C#1</li>
+            <li>Один автомат на один COM · модуль на 24В UPS; N модуля пусто</li>
+          </ul>
+        </div>
+        <div class="box">
+          <b>Выход N</b>
+          <ul>
+            <li><strong>1</strong> ПУГВ → <code>ZK82B N УЗО5</code> ↓A</li>
+            <li>С шины: №1, 3, 4, 15</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- УЗО6 -->
+    <section id="u6" class="uzo u6">
+      <h3>УЗО6 · IT / холод / кондей <span class="pill alw">мимо ESB</span></h3>
+      <div class="grid2">
+        <div class="box">
+          <b>Выход L</b>
+          <ul>
+            <li><strong>1</strong> ПУГВ → гребёнка R4 куст <strong>×4</strong></li>
+            <li>B10 холод · B16 кондей · B16 люк · B16 сервер+IT</li>
+            <li>Сила: №11, 18↓ · №101, 26, 105↑ · люк отдельно от кондея</li>
+          </ul>
+        </div>
+        <div class="box">
+          <b>Выход N</b>
+          <ul>
+            <li><strong>1</strong> ПУГВ → <code>ZK82B N УЗО6 ↓↑</code> ↑A (один блок на 5 жил)</li>
+            <li>С шины: №11, 18 + №101, 26, 105</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- УЗО7 -->
+    <section id="u7" class="uzo u7">
+      <h3>УЗО7 · автоматика / WB <span class="pill alw">мимо ESB</span></h3>
+      <div class="grid2">
+        <div class="box">
+          <b>Выход L — 3 направления</b>
+          <ul>
+            <li><strong>1 → D10</strong> (R4, рядом) → MORNSUN → UPS → WB7 · с UPS <strong>24В</strong> на MR/MDM/CU (+V/GND)</li>
+            <li><strong>2 → D6</strong> (R5, ПУГВ) → ARV 230В · 24В → WB-LED → №35</li>
+            <li><strong>3 → C2</strong> (R2, ПУГВ) → MR6CU#2(NO) → A1</li>
+          </ul>
+        </div>
+        <div class="box">
+          <b>Выход N</b>
+          <ul>
+            <li><strong>1</strong> ПУГВ → шина <code>PE DIN + N УЗО7</code> ↑B · <strong>3-я справа сверху</strong></li>
+            <li>С шины отводы (не в зажим УЗО):</li>
+            <li>→ <strong>MORNSUN</strong> N</li>
+            <li>→ <strong>ARV</strong> N</li>
+            <li>→ <strong>A2</strong> катушки ESB</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">
+        №35 = <strong>0В 24В</strong> с WB-LED, не N 230В.
+        VPR PE ×7 на той же полке — PE, не N УЗО7.
+        D10 можно короткой гребёнкой УЗО7↔D10 вместо ПУГВ.
+      </p>
+    </section>
+
+    <section>
+      <h2>Связанные файлы</h2>
+      <p class="note" style="margin:0">
+        Порядок монтажа: <code>shit_ABB_AT62_vnutri_sheita.html</code> §0 / §0a ·
+        Лицо и ZK: <code>shit_ABB_AT62_shema.html</code> ·
+        Цепочки по кабелям: <code>shit_ABB_AT62_polnaya_tsepochka.html</code>
+      </p>
+    </section>
+  </main>
+</body>
+</html>

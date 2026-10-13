@@ -1,21 +1,24 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   Alert,
   AppBar,
+  Badge,
   Box,
   Button,
   Chip,
   Container,
-  List,
-  ListItem,
   Paper,
   Stack,
   Switch,
   Toolbar,
   Typography,
 } from '@mui/material'
-import { Navigate } from 'react-router-dom'
-import { listDevices, type Device } from '../../shared/api/client'
+import { Link as RouterLink, Navigate } from 'react-router-dom'
+import {
+  countDiscovered,
+  listDevices,
+  type Device,
+} from '../../shared/api/client'
 import { useAuth } from '../../shared/auth/AuthContext'
 import { useRealtime } from '../../shared/realtime/useRealtime'
 import { APP_NAME, pageTitle } from '../../shared/brand'
@@ -25,11 +28,16 @@ function switchOn(value: string) {
   return value === '1' || value === 'true' || value === 'on'
 }
 
+function groupKey(d: Device) {
+  return d.wbDevice || 'Прочее'
+}
+
 export function HomePage() {
   useDocumentTitle(pageTitle('Устройства'))
   const { token, user, logout } = useAuth()
   const { connected, values, sendCmd } = useRealtime()
   const [devices, setDevices] = useState<Device[]>([])
+  const [discoveredCount, setDiscoveredCount] = useState(0)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -42,10 +50,34 @@ export function HomePage() {
       .catch((err: Error) => {
         if (!cancelled) setError(err.message)
       })
+    countDiscovered()
+      .then((res) => {
+        if (!cancelled) setDiscoveredCount(res.count ?? 0)
+      })
+      .catch(() => {
+        /* ignore */
+      })
+    const t = window.setInterval(() => {
+      countDiscovered()
+        .then((res) => setDiscoveredCount(res.count ?? 0))
+        .catch(() => undefined)
+    }, 5000)
     return () => {
       cancelled = true
+      window.clearInterval(t)
     }
   }, [token])
+
+  const groups = useMemo(() => {
+    const map = new Map<string, Device[]>()
+    for (const d of devices) {
+      const key = groupKey(d)
+      const list = map.get(key) ?? []
+      list.push(d)
+      map.set(key, list)
+    }
+    return [...map.entries()]
+  }, [devices])
 
   if (!token) {
     return <Navigate to="/login" replace />
@@ -81,6 +113,11 @@ export function HomePage() {
               variant="outlined"
               sx={{ textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600 }}
             />
+            <Badge badgeContent={discoveredCount} color="primary" max={99}>
+              <Button component={RouterLink} to="/discovered" size="small" color="inherit">
+                Обнаружено
+              </Button>
+            </Badge>
             <Button variant="outlined" color="inherit" onClick={logout} size="small">
               Выйти
             </Button>
@@ -94,8 +131,8 @@ export function HomePage() {
         </Typography>
         <Typography color="text.secondary" sx={{ mb: 3 }}>
           {user
-            ? `${user.login}${user.firstName ? ` · ${user.firstName}` : ''} · MQTT → WebSocket`
-            : 'MQTT → WebSocket'}
+            ? `${user.login}${user.firstName ? ` · ${user.firstName}` : ''}`
+            : 'Виджеты по типу'}
         </Typography>
 
         {error ? (
@@ -104,59 +141,91 @@ export function HomePage() {
           </Alert>
         ) : null}
 
-        <List disablePadding sx={{ display: 'grid', gap: 1.5 }}>
-          {devices.map((d) => {
-            const value = values[d.mqttTopic] ?? '—'
-            const on = switchOn(value)
-            return (
-              <ListItem
-                key={d.id}
-                component={Paper}
-                elevation={0}
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: 2,
-                  px: 2,
-                  py: 1.75,
-                  border: 1,
-                  borderColor: 'divider',
-                  bgcolor: 'rgba(18, 26, 36, 0.72)',
-                }}
-              >
-                <Box sx={{ minWidth: 0 }}>
-                  <Typography sx={{ fontWeight: 600 }}>{d.name}</Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ wordBreak: 'break-all', mt: 0.25 }}
-                  >
-                    {d.mqttTopic}
-                  </Typography>
-                </Box>
-                <Box sx={{ flexShrink: 0 }}>
-                  {d.deviceType === 'switch' ? (
-                    <Switch
-                      checked={on}
-                      color="primary"
-                      slotProps={{ input: { 'aria-label': d.name } }}
-                      onChange={(_, checked) => sendCmd(d.mqttTopic, checked ? '1' : '0')}
-                    />
-                  ) : (
-                    <Typography
-                      variant="h3"
-                      sx={{ fontSize: '1.25rem', fontFamily: '"Syne", sans-serif' }}
-                    >
-                      {value}
-                      {d.unit ? ` ${d.unit}` : ''}
-                    </Typography>
-                  )}
-                </Box>
-              </ListItem>
-            )
-          })}
-        </List>
+        {devices.length === 0 ? (
+          <Paper
+            elevation={0}
+            sx={{ p: 3, border: 1, borderColor: 'divider', bgcolor: 'rgba(18, 26, 36, 0.72)' }}
+          >
+            <Typography color="text.secondary" sx={{ mb: 1.5 }}>
+              Пока нет устройств. Дождитесь MQTT или примите найденные control’ы.
+            </Typography>
+            <Button component={RouterLink} to="/discovered" variant="contained" size="small">
+              К обнаруженным
+            </Button>
+          </Paper>
+        ) : (
+          <Stack spacing={3}>
+            {groups.map(([group, list]) => (
+              <Box key={group}>
+                <Typography
+                  variant="overline"
+                  color="text.secondary"
+                  sx={{ letterSpacing: '0.12em', mb: 1, display: 'block' }}
+                >
+                  {group}
+                </Typography>
+                <Stack spacing={1.25}>
+                  {list.map((d) => {
+                    const value = values[d.mqttTopic] ?? '—'
+                    const on = switchOn(value)
+                    return (
+                      <Paper
+                        key={d.id}
+                        elevation={0}
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          gap: 2,
+                          px: 2,
+                          py: 1.75,
+                          border: 1,
+                          borderColor: 'divider',
+                          bgcolor: 'rgba(18, 26, 36, 0.72)',
+                        }}
+                      >
+                        <Box sx={{ minWidth: 0 }}>
+                          <Typography sx={{ fontWeight: 600 }}>{d.name}</Typography>
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ wordBreak: 'break-all', mt: 0.25 }}
+                          >
+                            {d.mqttTopic}
+                          </Typography>
+                        </Box>
+                        <Box sx={{ flexShrink: 0 }}>
+                          {d.deviceType === 'switch' ? (
+                            <Switch
+                              checked={on}
+                              color="primary"
+                              slotProps={{ input: { 'aria-label': d.name } }}
+                              onChange={(_, checked) =>
+                                sendCmd(d.mqttTopic, checked ? '1' : '0')
+                              }
+                            />
+                          ) : d.deviceType === 'sensor' || d.deviceType === 'range' ? (
+                            <Typography
+                              variant="h3"
+                              sx={{ fontSize: '1.25rem', fontFamily: '"Syne", sans-serif' }}
+                            >
+                              {value}
+                              {d.unit ? ` ${d.unit}` : ''}
+                            </Typography>
+                          ) : (
+                            <Typography variant="body2" color="text.secondary">
+                              {value}
+                            </Typography>
+                          )}
+                        </Box>
+                      </Paper>
+                    )
+                  })}
+                </Stack>
+              </Box>
+            ))}
+          </Stack>
+        )}
       </Container>
     </Box>
   )

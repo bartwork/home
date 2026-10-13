@@ -12,6 +12,23 @@ type Device struct {
 	Unit       string `json:"unit"`
 	IsActive   bool   `json:"is_active"`
 	CreatedAt  string `json:"created_at"`
+	WbDevice   string `json:"wb_device"`
+	WbControl  string `json:"wb_control"`
+	Source     string `json:"source"`
+}
+
+type DiscoveredDevice struct {
+	ID            int64  `json:"id"`
+	MqttTopic     string `json:"mqtt_topic"`
+	WbDevice      string `json:"wb_device"`
+	WbControl     string `json:"wb_control"`
+	Title         string `json:"title"`
+	SuggestedType string `json:"suggested_type"`
+	Unit          string `json:"unit"`
+	LastPayload   string `json:"last_payload"`
+	LastSeenAt    string `json:"last_seen_at"`
+	Status        string `json:"status"`
+	CreatedAt     string `json:"created_at"`
 }
 
 type User struct {

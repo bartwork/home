@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ABB AT62 — R1↑ расстановка клемм (блоки + JXB)</title>
+<style>
+:root {
+  --ink:#15202b; --muted:#5a6570; --line:#c5ced6;
+  --gy:#d5d8dc; --gyink:#2b3340;
+  --th:#c4b5fd; --think:#3b0764;
+  --sk:#e2e8f0; --skink:#64748b;
+  --ut:#e9d5ff; --hub:#f9a8d4;
+  --pe:#a8e6cf; --peink:#0b3d32;
+  --j3:#fdba74; --j4:#93c5fd; --j5:#f9a8d4; --j6:#c4b5fd;
+  --u1:#fff0e6;
+}
+* { box-sizing:border-box; }
+body { margin:0; font-family:"Segoe UI",system-ui,sans-serif; background:#e8ecf0; color:var(--ink); }
+header { background:#1a3d5c; color:#fff; padding:1rem 1.2rem; }
+header h1 { margin:0 0 .35rem; font-size:1.25rem; }
+header p { margin:0; font-size:.9rem; opacity:.93; max-width:1100px; }
+.nav { display:flex; flex-wrap:wrap; gap:.4rem; margin:.6rem 0 0; }
+.nav a {
+  color:#fff; text-decoration:none; border:1px solid rgba(255,255,255,.3);
+  border-radius:7px; padding:.28rem .6rem; font-size:.8rem; background:rgba(255,255,255,.1);
+}
+main { max-width:1180px; margin:0 auto; padding:1rem 1rem 2.5rem; }
+.card {
+  background:#fff; border:1px solid var(--line); border-radius:12px;
+  padding:.9rem 1rem 1.05rem; margin-bottom:.9rem;
+}
+.card h2 { margin:0 0 .35rem; font-size:1.1rem; }
+.note { font-size:.84rem; color:var(--muted); margin:.15rem 0 .55rem; }
+.rules { margin:0; padding-left:1.15rem; font-size:.88rem; }
+.rules li { margin:.2rem 0; }
+.half {
+  font-size:.75rem; font-weight:700; color:#fff; background:#5b6772;
+  padding:3px 10px; margin:10px 0 6px; display:inline-block; border-radius:4px;
+}
+.bar {
+  display:flex; align-items:stretch; gap:0;
+  background:#8a939c; padding:7px 7px 9px; border-radius:6px;
+  overflow-x:auto;
+}
+.cell {
+  flex:0 0 auto; width:36px; min-height:86px;
+  border:1px solid #4b5560; margin-left:-1px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; line-height:1.05; padding:4px 2px 3px;
+}
+.cell:first-child { margin-left:0; border-radius:3px 0 0 3px; }
+.cell:last-child { border-radius:0 3px 3px 0; }
+.cell .n { font-weight:800; font-size:.78rem; }
+.cell .k { font-size:.58rem; font-weight:800; }
+.cell .m { font-size:.5rem; opacity:.85; margin-top:1px; }
+.L { background:var(--gy); color:var(--gyink); }
+.T { background:var(--th); color:var(--think); width:48px; }
+.S { background:var(--sk); color:var(--skink); border-style:dashed; }
+.U { background:var(--ut); color:#5b21b6; width:52px; }
+.H { background:var(--hub); color:#831843; width:52px; }
+.j3 { background:var(--j3); color:#7c2d12; box-shadow:inset 0 0 0 2px #c2410c; }
+.j4 { background:var(--j4); color:#1e3a8a; box-shadow:inset 0 0 0 2px #1d4ed8; }
+.j5 { background:var(--j5); color:#831843; box-shadow:inset 0 0 0 2px #be185d; }
+.j6 { background:var(--j6); color:#4c1d95; box-shadow:inset 0 0 0 2px #7c3aed; }
+.legend { display:flex; flex-wrap:wrap; gap:.45rem .9rem; font-size:.8rem; margin:.55rem 0 0; color:var(--muted); }
+.sw { display:inline-block; width:.85rem; height:.85rem; border:1px solid #666; vertical-align:middle; margin-right:.25rem; }
+.buy {
+  background:#fff8e6; border:1px solid #e8c96a; border-radius:10px;
+  padding:.7rem .9rem; margin-bottom:.9rem; font-size:.88rem;
+}
+.callout {
+  background:#e8f5e9; border:2px solid #2e7d32; border-radius:10px;
+  padding:.65rem .85rem; margin-bottom:.9rem; font-size:.88rem; color:#1b5e20;
+}
+table { width:100%; border-collapse:collapse; font-size:.84rem; }
+th, td { text-align:left; padding:.38rem .45rem; border-bottom:1px solid #e6ebef; vertical-align:top; }
+th { color:var(--muted); font-weight:600; font-size:.74rem; }
+tr.u1 { background:var(--u1); }
+tr.thick { background:#f5f0ff; }
+tr.skip { background:#f1f5f9; color:#64748b; }
+tr.j3 { background:#ffedd5; }
+tr.j4 { background:#dbeafe; }
+tr.j5 { background:#fce7f3; }
+tr.j6 { background:#ede9fe; }
+.tag {
+  display:inline-block; font-size:.68rem; font-weight:700;
+  padding:.1rem .35rem; border-radius:4px; margin-right:.2rem;
+}
+.tag.gy { background:var(--gy); color:var(--gyink); }
+.tag.th { background:var(--th); color:var(--think); }
+.tag.pe { background:var(--pe); color:var(--peink); }
+.tag.u1 { background:#e67e22; color:#fff; }
+.tag.skip { background:#cbd5e1; color:#334155; }
+.tag.j3 { background:var(--j3); color:#7c2d12; }
+.tag.j4 { background:var(--j4); color:#1e3a8a; }
+.tag.j5 { background:var(--j5); color:#831843; }
+.tag.j6 { background:var(--j6); color:#4c1d95; }
+.zk { font-size:.78rem; color:#334; }
+.zk b { color:#0b3d6e; }
+@media print {
+  header .nav { display:none; }
+  .card, .buy { break-inside:avoid; }
+  .bar, .cell { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>R1↑ · расстановка клемм · блоки J3–J6</h1>
+  <p>Верх щита · слева → направо. Розеточные кусты с <b>JXB-ST-2.5-10pin</b> (обрезка 2–3 pin). На DIN только L. N/PE сразу в ZK↑. Синих BU нет.</p>
+  <nav class="nav">
+    <a href="#bar">Ряд</a>
+    <a href="#force">IT+свет+J5</a>
+    <a href="#kitchen">кухня+J3</a>
+    <a href="#tail">сан+J4</a>
+    <a href="#zk">ZK</a>
+    <a href="shit_ABB_AT62_R6_klemmy_rasstanovka.html">R6↓</a>
+    <a href="shit_ABB_AT62_klemmy_na_reyki.html">R6+R1 вместе</a>
+    <a href="shit_ABB_AT62_avtomaty_pugv.html">ПУГВ</a>
+    <a href="shit_ABB_AT62_shema.html">Лицо</a>
+  </nav>
+</header>
+<main>
+
+<div class="buy">
+  <strong>Купить на R1:</strong>
+  GY×33 · торец D-VPR · №58 = L 6–10 ·
+  <b>JXB</b>: J6=2pin (26·105) · J5=2pin (41·43) · J3=3pin (47·54·55) · J4=2pin (63·70).
+  Синих BU на R1 не ставить.
+</div>
+
+<div class="callout">
+  <strong>J5 = тот же B16 роз.жилые, что J1 на R6.</strong>
+  ПУГВ с автомата только в J1 (№2). С J1 → ПУГВ на №41. Не вторая жила из зажима автомата.
+</div>
+
+<section class="card">
+  <h2>Правила ряда</h2>
+  <ul class="rules">
+    <li>Порядок = блоки ниже (не арифметика номеров).</li>
+    <li>Дырка №35 — пусто (лента 24В на R5 / WB-LED).</li>
+    <li>N полевого кабеля → сразу ZK своего УЗО.</li>
+    <li>Розеточные перемычки только на L; свет/MDM/MR — без JXB между разными автоматами.</li>
+  </ul>
+</section>
+
+<section class="card" id="bar">
+  <h2>Ряд как втыкать · слева → направо</h2>
+
+  <div class="half" id="force">J6 IT · свет/карнизы · J5 стол/ТВ</div>
+  <div class="bar">
+    <div class="cell j6"><span class="n">26</span><span class="k">L</span><span class="m">←ПУГВ</span></div>
+    <div class="cell j6"><span class="n">105</span><span class="k">L</span><span class="m">J6</span></div>
+    <div class="cell L"><span class="n">27</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">28</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">29</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">30</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">31</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">32</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">34</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell S"><span class="n">35</span><span class="k">—</span><span class="m">дырка</span></div>
+    <div class="cell L"><span class="n">37</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">38</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell j5"><span class="n">41</span><span class="k">L</span><span class="m">←с J1</span></div>
+    <div class="cell j5"><span class="n">43</span><span class="k">L</span><span class="m">J5</span></div>
+  </div>
+
+  <div class="half" id="kitchen">кухня свет · J3 роз.кух · проточный</div>
+  <div class="bar">
+    <div class="cell L"><span class="n">48</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">50</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">51</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">52</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">53</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">56</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">100</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell j3"><span class="n">47</span><span class="k">L</span><span class="m">←ПУГВ</span></div>
+    <div class="cell j3"><span class="n">54</span><span class="k">L</span><span class="m">J3</span></div>
+    <div class="cell j3"><span class="n">55</span><span class="k">L</span><span class="m">J3</span></div>
+    <div class="cell T"><span class="n">58</span><span class="k">L</span><span class="m">6–10</span></div>
+  </div>
+
+  <div class="half" id="tail">сан свет · J4 роз.сан · люк · хвост</div>
+  <div class="bar">
+    <div class="cell L"><span class="n">61</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">62</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">64</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">68</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">69</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">71</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell L"><span class="n">72</span><span class="k">L</span><span class="m">GY</span></div>
+    <div class="cell j4"><span class="n">63</span><span class="k">L</span><span class="m">←ПУГВ</span></div>
+    <div class="cell j4"><span class="n">70</span><span class="k">L</span><span class="m">J4</span></div>
+    <div class="cell L"><span class="n">101</span><span class="k">L</span><span class="m">люк</span></div>
+    <div class="cell U"><span class="n">UTP</span><span class="k">сеть</span><span class="m">хвост</span></div>
+    <div class="cell H"><span class="n">HUB</span><span class="k">BUS</span><span class="m">хвост</span></div>
+  </div>
+
+  <p class="legend">
+    <span><i class="sw j6"></i>J6 IT</span>
+    <span><i class="sw j5"></i>J5 ← с J1</span>
+    <span><i class="sw j3"></i>J3 кухня</span>
+    <span><i class="sw j4"></i>J4 сан</span>
+    <span><i class="sw S"></i>№35</span>
+    <span><i class="sw T"></i>№58</span>
+  </p>
+</section>
+
+<section class="card">
+  <h2>IT · свет · J5</h2>
+  <table>
+    <thead><tr><th>№</th><th></th><th>Нагрузка</th><th>N → ZK</th><th>PE</th></tr></thead>
+    <tbody>
+      <tr class="j6"><td>26</td><td><span class="tag j6">J6</span> ←ПУГВ</td><td>Сервер / IT</td><td class="zk"><b>ZK82B УЗО6</b></td><td class="zk"><span class="tag pe">PE</span> ZK206G#2 / 1</td></tr>
+      <tr class="j6"><td>105</td><td><span class="tag j6">J6</span></td><td>Роутер / коммутатор</td><td class="zk"><b>ZK82B УЗО6</b></td><td class="zk"><span class="tag pe">PE</span> докуп #2</td></tr>
+      <tr><td>27</td><td><span class="tag gy">L</span></td><td>Лента шкаф/кладовая</td><td class="zk"><b>ZK144B УЗО4↑</b></td><td class="zk"><span class="tag pe">PE</span> / 2</td></tr>
+      <tr><td>28</td><td><span class="tag gy">L</span></td><td>Свет кладовая</td><td class="zk"><b>ZK144B УЗО4↑</b></td><td class="zk"><span class="tag pe">PE</span> / 3</td></tr>
+      <tr><td>29</td><td><span class="tag gy">L</span></td><td>Бра левая</td><td class="zk"><b>ZK144B УЗО4↑</b></td><td class="zk"><span class="tag pe">PE</span> / 4</td></tr>
+      <tr><td>30</td><td><span class="tag gy">L</span></td><td>Люстра</td><td class="zk"><b>ZK144B УЗО4↑</b></td><td class="zk"><span class="tag pe">PE</span> / 5</td></tr>
+      <tr><td>31</td><td><span class="tag gy">L</span></td><td>Точки</td><td class="zk"><b>ZK144B УЗО4↑</b></td><td class="zk"><span class="tag pe">PE</span> / 6</td></tr>
+      <tr><td>32</td><td><span class="tag gy">L</span></td><td>Бра правая</td><td class="zk"><b>ZK144B УЗО4↑</b></td><td class="zk"><span class="tag pe">PE</span> / 7</td></tr>
+      <tr><td>34</td><td><span class="tag gy">L</span></td><td>Карниз комната</td><td class="zk"><b>ZK144B УЗО4↑</b></td><td class="zk"><span class="tag pe">PE</span> / 8</td></tr>
+      <tr class="skip"><td>35</td><td><span class="tag skip">дырка</span></td><td>Лента 24В</td><td class="zk">не на R1 · WB-LED</td><td class="zk">слот 9 свободен</td></tr>
+      <tr><td>37</td><td><span class="tag gy">L</span></td><td>Свет лоджия</td><td class="zk"><b>ZK144B УЗО4↑</b></td><td class="zk"><span class="tag pe">PE</span> / 10</td></tr>
+      <tr><td>38</td><td><span class="tag gy">L</span></td><td>Карниз лоджия</td><td class="zk"><b>ZK144B УЗО4↑</b></td><td class="zk"><span class="tag pe">PE</span> / 11</td></tr>
+      <tr class="j5"><td>41</td><td><span class="tag j5">J5</span> ←с J1</td><td>Розетка стол</td><td class="zk"><b>ZK144B УЗО4↑</b></td><td class="zk"><span class="tag pe">PE</span> / 12</td></tr>
+      <tr class="j5"><td>43</td><td><span class="tag j5">J5</span></td><td>Розетка ТВ комната</td><td class="zk"><b>ZK144B УЗО4↑</b></td><td class="zk"><span class="tag pe">PE</span> / 13</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="card">
+  <h2>Кухня · свет отдельно · J3 розетки</h2>
+  <p class="note">Свет/вытяжка/карниз — свои автоматы (MDM/MR/прямо). Розеточный B16 только на J3.</p>
+  <table>
+    <thead><tr><th>№</th><th></th><th>Нагрузка</th><th>N</th><th>PE</th></tr></thead>
+    <tbody>
+      <tr class="u1"><td>48</td><td><span class="tag gy">L</span></td><td>Бра кухня</td><td class="zk"><span class="tag u1">N</span> ZK144B УЗО1↑</td><td class="zk"><span class="tag pe">PE</span> / 15</td></tr>
+      <tr class="u1"><td>50</td><td><span class="tag gy">L</span></td><td>Основной свет</td><td class="zk"><span class="tag u1">N</span> ZK144B УЗО1↑</td><td class="zk"><span class="tag pe">PE</span> / 16</td></tr>
+      <tr class="u1"><td>51</td><td><span class="tag gy">L</span></td><td>Левый свет</td><td class="zk"><span class="tag u1">N</span> ZK144B УЗО1↑</td><td class="zk"><span class="tag pe">PE</span> / 17</td></tr>
+      <tr class="u1"><td>52</td><td><span class="tag gy">L</span></td><td>Правый свет</td><td class="zk"><span class="tag u1">N</span> ZK144B УЗО1↑</td><td class="zk"><span class="tag pe">PE</span> / 18</td></tr>
+      <tr class="u1"><td>53</td><td><span class="tag gy">L</span></td><td>Подсветка</td><td class="zk"><span class="tag u1">N</span> ZK144B УЗО1↑</td><td class="zk"><span class="tag pe">PE</span> / 19</td></tr>
+      <tr class="u1"><td>56</td><td><span class="tag gy">L</span></td><td>Вытяжка</td><td class="zk"><span class="tag u1">N</span> ZK144B УЗО1↑</td><td class="zk"><span class="tag pe">PE</span> ZK175G ↑2</td></tr>
+      <tr class="u1"><td>100</td><td><span class="tag gy">L</span></td><td>Карниз кухня</td><td class="zk"><span class="tag u1">N</span> ZK144B УЗО1↑</td><td class="zk"><span class="tag pe">PE</span> ZK175G ↑13</td></tr>
+      <tr class="j3"><td>47</td><td><span class="tag j3">J3</span> ←ПУГВ</td><td>Розетка ТВ кухня</td><td class="zk"><span class="tag u1">N</span> ZK144B УЗО1↑</td><td class="zk"><span class="tag pe">PE</span> / 14</td></tr>
+      <tr class="j3"><td>54</td><td><span class="tag j3">J3</span></td><td>Левая розетка кухни</td><td class="zk"><span class="tag u1">N</span> ZK144B УЗО1↑</td><td class="zk"><span class="tag pe">PE</span> / 20</td></tr>
+      <tr class="j3"><td>55</td><td><span class="tag j3">J3</span></td><td>Правая розетка кухни</td><td class="zk"><span class="tag u1">N</span> ZK144B УЗО1↑</td><td class="zk"><span class="tag pe">PE</span> ZK175G ↑1</td></tr>
+      <tr class="thick"><td>58</td><td><span class="tag th">L 6–10</span></td><td>Проточный</td><td class="zk">N 25 → <b>ZK113B УЗО2</b></td><td class="zk"><span class="tag pe">PE</span> ZK175G ↑3</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="card">
+  <h2>Сан · свет отдельно · J4 розетки · люк</h2>
+  <table>
+    <thead><tr><th>№</th><th></th><th>Нагрузка</th><th>N</th><th>PE</th></tr></thead>
+    <tbody>
+      <tr><td>61</td><td><span class="tag gy">L</span></td><td>Свет ванна</td><td class="zk"><b>ZK113B УЗО2</b></td><td class="zk"><span class="tag pe">PE</span> ↑4</td></tr>
+      <tr><td>62</td><td><span class="tag gy">L</span></td><td>Зеркало ванна</td><td class="zk"><b>ZK113B УЗО2</b></td><td class="zk"><span class="tag pe">PE</span> ↑5</td></tr>
+      <tr><td>64</td><td><span class="tag gy">L</span></td><td>Вытяжка ванна</td><td class="zk"><b>ZK113B УЗО2</b></td><td class="zk"><span class="tag pe">PE</span> ↑7</td></tr>
+      <tr><td>68</td><td><span class="tag gy">L</span></td><td>Свет коридор</td><td class="zk"><b>ZK144B УЗО4↑</b></td><td class="zk"><span class="tag pe">PE</span> ↑8</td></tr>
+      <tr><td>69</td><td><span class="tag gy">L</span></td><td>Зеркало туалет</td><td class="zk"><b>ZK113B УЗО2</b></td><td class="zk"><span class="tag pe">PE</span> ↑9</td></tr>
+      <tr><td>71</td><td><span class="tag gy">L</span></td><td>Свет туалет</td><td class="zk"><b>ZK113B УЗО2</b></td><td class="zk"><span class="tag pe">PE</span> ↑11</td></tr>
+      <tr><td>72</td><td><span class="tag gy">L</span></td><td>Вытяжка туалет</td><td class="zk"><b>ZK113B УЗО2</b></td><td class="zk"><span class="tag pe">PE</span> ↑12</td></tr>
+      <tr class="j4"><td>63</td><td><span class="tag j4">J4</span> ←ПУГВ</td><td>Розетка ванна</td><td class="zk"><b>ZK113B УЗО2</b></td><td class="zk"><span class="tag pe">PE</span> ↑6</td></tr>
+      <tr class="j4"><td>70</td><td><span class="tag j4">J4</span></td><td>Розетка туалет</td><td class="zk"><b>ZK113B УЗО2</b></td><td class="zk"><span class="tag pe">PE</span> ↑10</td></tr>
+      <tr><td>101</td><td><span class="tag gy">L</span></td><td>Розетка люк (свой B16)</td><td class="zk"><b>ZK82B УЗО6</b></td><td class="zk"><span class="tag pe">PE</span> докуп #1</td></tr>
+      <tr class="skip"><td>UTP</td><td>—</td><td>сеть / PoE</td><td class="zk">не ZK</td><td class="zk">—</td></tr>
+      <tr class="skip"><td>HUB</td><td>—</td><td>BUSHUB</td><td class="zk">A/B + 24В</td><td class="zk">—</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="card" id="zk">
+  <h2>ZK13 над R1</h2>
+  <p class="note">N разных УЗО не мостить. Перемычки JXB только на фазе L.</p>
+  <table>
+    <thead><tr><th>Блок</th><th>Кабели с R1</th></tr></thead>
+    <tbody>
+      <tr><td><b>ZK144B УЗО4↑</b></td><td>27–34·37·38 · J5 41·43 · 68</td></tr>
+      <tr><td><b>ZK144B УЗО1↑</b></td><td>кухня свет 48·50–53·56·100 · J3 47·54·55</td></tr>
+      <tr><td><b>ZK113B УЗО2</b></td><td>58 · свет сан · J4 63·70</td></tr>
+      <tr><td><b>ZK82B УЗО6</b></td><td>J6 26·105 · 101</td></tr>
+    </tbody>
+  </table>
+</section>
+
+</main>
+</body>
+</html>
