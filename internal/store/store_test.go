@@ -70,6 +70,35 @@ func TestOpenMigratesUsers(t *testing.T) {
 	if !cols["mqtt_topic"] || !cols["status"] {
 		t.Fatal("discovered_devices incomplete")
 	}
+
+	cols = map[string]bool{}
+	devRows, err := db.Query(`PRAGMA table_info(devices)`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer devRows.Close()
+	for devRows.Next() {
+		var cid int
+		var name, typ string
+		var notnull, pk int
+		var dflt any
+		if err := devRows.Scan(&cid, &name, &typ, &notnull, &dflt, &pk); err != nil {
+			t.Fatal(err)
+		}
+		cols[name] = true
+	}
+	for _, want := range []string{"mqtt_topic", "device_type", "power_topic", "room_id", "icon", "x", "y", "w", "h", "wb_device"} {
+		if !cols[want] {
+			t.Fatalf("devices missing column %q", want)
+		}
+	}
+	var nRooms int
+	if err := db.QueryRow(`SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='rooms'`).Scan(&nRooms); err != nil {
+		t.Fatal(err)
+	}
+	if nRooms != 1 {
+		t.Fatal("rooms table missing")
+	}
 }
 
 func TestDatabaseFileIsEncrypted(t *testing.T) {

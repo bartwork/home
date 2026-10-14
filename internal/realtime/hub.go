@@ -8,10 +8,9 @@ import (
 )
 
 type Envelope struct {
-	Type     string `json:"type"`
-	Topic    string `json:"topic,omitempty"`
-	Payload  string `json:"payload,omitempty"`
-	DeviceID int64  `json:"deviceId,omitempty"`
+	Type    string `json:"type"`
+	Topic   string `json:"topic,omitempty"`
+	Payload string `json:"payload,omitempty"`
 }
 
 type Client interface {
@@ -23,6 +22,7 @@ type Hub struct {
 	mu      sync.RWMutex
 	clients map[Client]struct{}
 	last    map[string]string
+	mqttOK  bool
 }
 
 func NewHub(log zerolog.Logger) *Hub {
@@ -36,18 +36,16 @@ func NewHub(log zerolog.Logger) *Hub {
 func (h *Hub) Register(c Client) {
 	h.mu.Lock()
 	h.clients[c] = struct{}{}
-	snapshot := make([]Envelope, 0, len(h.last))
+	mqttOK := h.mqttOK
+	states := make([]Envelope, 0, len(h.last))
 	for topic, payload := range h.last {
-		snapshot = append(snapshot, Envelope{Type: "state", Topic: topic, Payload: payload})
+		states = append(states, Envelope{Type: "state", Topic: topic, Payload: payload})
 	}
 	h.mu.Unlock()
 
-	for _, env := range snapshot {
-		b, err := json.Marshal(env)
-		if err != nil {
-			continue
-		}
-		_ = c.Send(b)
+	h.send(c, mqttEnvelope(mqttOK))
+	for _, env := range states {
+		h.send(c, env)
 	}
 }
 
@@ -57,22 +55,62 @@ func (h *Hub) Unregister(c Client) {
 	h.mu.Unlock()
 }
 
+func (h *Hub) SetMQTT(ok bool) {
+	h.mu.Lock()
+	if h.mqttOK == ok {
+		h.mu.Unlock()
+		return
+	}
+	h.mqttOK = ok
+	clients := h.clientListLocked()
+	h.mu.Unlock()
+
+	env := mqttEnvelope(ok)
+	for _, c := range clients {
+		h.send(c, env)
+	}
+}
+
+func (h *Hub) MQTTConnected() bool {
+	h.mu.RLock()
+	defer h.mu.RUnlock()
+	return h.mqttOK
+}
+
 func (h *Hub) BroadcastState(topic, payload string) {
 	h.mu.Lock()
 	h.last[topic] = payload
+	clients := h.clientListLocked()
+	h.mu.Unlock()
+
+	env := Envelope{Type: "state", Topic: topic, Payload: payload}
+	for _, c := range clients {
+		h.send(c, env)
+	}
+}
+
+func (h *Hub) clientListLocked() []Client {
 	clients := make([]Client, 0, len(h.clients))
 	for c := range h.clients {
 		clients = append(clients, c)
 	}
-	h.mu.Unlock()
+	return clients
+}
 
-	b, err := json.Marshal(Envelope{Type: "state", Topic: topic, Payload: payload})
+func (h *Hub) send(c Client, env Envelope) {
+	b, err := json.Marshal(env)
 	if err != nil {
 		return
 	}
-	for _, c := range clients {
-		if err := c.Send(b); err != nil {
-			h.log.Debug().Err(err).Msg("ws send")
-		}
+	if err := c.Send(b); err != nil {
+		h.log.Debug().Err(err).Str("type", env.Type).Msg("ws send")
 	}
+}
+
+func mqttEnvelope(ok bool) Envelope {
+	payload := "0"
+	if ok {
+		payload = "1"
+	}
+	return Envelope{Type: "mqtt", Payload: payload}
 }

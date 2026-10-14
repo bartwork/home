@@ -17,9 +17,8 @@ type ParsedTopic struct {
 type TopicKind int
 
 const (
-	KindIgnore TopicKind = iota
-	KindState
-	KindControlMetaJSON // …/controls/x/meta  (JSON body)
+	KindState TopicKind = iota
+	KindControlMetaJSON  // …/controls/x/meta  (JSON body)
 	KindControlMetaField // …/controls/x/meta/type
 )
 

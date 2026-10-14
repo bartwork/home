@@ -1,5 +1,7 @@
 import { createTheme } from '@mui/material/styles'
 
+const fontFamily = '"Montserrat", system-ui, sans-serif'
+
 export const theme = createTheme({
   cssVariables: true,
   palette: {
@@ -27,22 +29,10 @@ export const theme = createTheme({
     divider: 'rgba(232, 238, 246, 0.12)',
   },
   typography: {
-    fontFamily: '"DM Sans", system-ui, sans-serif',
-    h1: {
-      fontFamily: '"Syne", sans-serif',
-      fontWeight: 700,
-      letterSpacing: '-0.03em',
-    },
-    h2: {
-      fontFamily: '"Syne", sans-serif',
-      fontWeight: 700,
-      letterSpacing: '-0.03em',
-    },
-    h3: {
-      fontFamily: '"Syne", sans-serif',
-      fontWeight: 700,
-      letterSpacing: '-0.02em',
-    },
+    fontFamily,
+    h1: { fontWeight: 700, letterSpacing: '-0.02em' },
+    h2: { fontWeight: 700, letterSpacing: '-0.02em' },
+    h3: { fontWeight: 700, letterSpacing: '-0.01em' },
     button: {
       textTransform: 'none',
       fontWeight: 600,

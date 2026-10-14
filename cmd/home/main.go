@@ -19,6 +19,8 @@ import (
 	"github.com/bartwork/home/internal/mqttbridge"
 	"github.com/bartwork/home/internal/realtime"
 	"github.com/bartwork/home/internal/repository"
+	"github.com/bartwork/home/internal/rooms"
+	"github.com/bartwork/home/internal/seed"
 	"github.com/bartwork/home/internal/store"
 	"github.com/bartwork/home/internal/transport"
 	"github.com/bartwork/home/internal/users"
@@ -45,17 +47,23 @@ func main() {
 	usersRepo := repository.NewUsers(database)
 	devicesRepo := repository.NewDevices(database)
 	discoveredRepo := repository.NewDiscovered(database)
+	roomsRepo := repository.NewRooms(database)
+	roomsSvc := rooms.New(roomsRepo)
 
 	if err := auth.SeedAdmin(ctx, usersRepo); err != nil {
 		log.Fatal().Err(err).Msg("seed admin")
+	}
+	if err := seed.Run(ctx, log.Logger, roomsRepo, devicesRepo); err != nil {
+		log.Fatal().Err(err).Msg("seed catalog")
 	}
 
 	tokens := auth.NewTokens(cfg.JWTSecret)
 	hub := realtime.NewHub(log.Logger)
 	engine := discovery.NewEngine(log.Logger, discoveredRepo, devicesRepo)
-	discoSvc := discovery.NewService(discoveredRepo, devicesRepo)
+	discoSvc := discovery.NewService(discoveredRepo, devicesRepo, roomsRepo)
 
-	bridge := mqttbridge.New(log.Logger, hub, engine, cfg.MQTTBroker, cfg.MQTTClientID)
+	mqttID := cfg.MQTTClientIDUnique()
+	bridge := mqttbridge.New(log.Logger, hub, engine, cfg.MQTTBroker, mqttID)
 	bridge.Start()
 	defer bridge.Close()
 
@@ -77,6 +85,7 @@ func main() {
 
 	app := srv.Fiber()
 	discovery.Mount(app, discoSvc)
+	rooms.Mount(app, roomsSvc)
 	realtime.MountWS(app, hub, bridge, log.Logger)
 	if err := webui.Mount(app); err != nil {
 		log.Fatal().Err(err).Msg("mount webui")
@@ -89,6 +98,7 @@ func main() {
 			Str("bind", cfg.Bind).
 			Str("db", cfg.DBPath).
 			Str("mqtt", cfg.MQTTBroker).
+			Str("mqttClient", mqttID).
 			Msg("listen")
 		if err := app.Listen(cfg.Bind); err != nil {
 			log.Error().Err(err).Msg("listen stopped")

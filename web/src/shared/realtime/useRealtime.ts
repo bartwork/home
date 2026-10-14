@@ -2,16 +2,19 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { getToken } from '../api/client'
 
 export type WsEnvelope = {
-  type: 'hello' | 'state' | 'cmd' | 'error'
+  type: 'hello' | 'state' | 'cmd' | 'error' | 'mqtt'
   topic?: string
   payload?: string
-  deviceId?: number
 }
 
 export function useRealtime() {
-  const [connected, setConnected] = useState(false)
+  const [wsConnected, setWsConnected] = useState(false)
+  const [mqttConnected, setMqttConnected] = useState(false)
   const [values, setValues] = useState<Record<string, string>>({})
+  const [lastError, setLastError] = useState<string | null>(null)
   const wsRef = useRef<WebSocket | null>(null)
+  const mqttRef = useRef(false)
+  const prevRef = useRef<Record<string, string>>({})
 
   useEffect(() => {
     const token = getToken()
@@ -28,20 +31,39 @@ export function useRealtime() {
       ws = new WebSocket(url)
       wsRef.current = ws
 
-      ws.onopen = () => setConnected(true)
+      ws.onopen = () => setWsConnected(true)
       ws.onclose = () => {
-        setConnected(false)
+        setWsConnected(false)
+        mqttRef.current = false
+        setMqttConnected(false)
         wsRef.current = null
         if (!closed) {
           retryTimer = window.setTimeout(connect, 2000)
         }
       }
-      ws.onerror = () => setConnected(false)
+      ws.onerror = () => setWsConnected(false)
       ws.onmessage = (ev) => {
         try {
           const msg = JSON.parse(String(ev.data)) as WsEnvelope
+          if (msg.type === 'mqtt') {
+            const ok = msg.payload === '1'
+            mqttRef.current = ok
+            setMqttConnected(ok)
+            return
+          }
           if (msg.type === 'state' && msg.topic) {
+            delete prevRef.current[msg.topic]
             setValues((prev) => ({ ...prev, [msg.topic!]: msg.payload ?? '' }))
+            return
+          }
+          if (msg.type === 'error') {
+            const topic = msg.topic
+            if (topic && topic in prevRef.current) {
+              const restore = prevRef.current[topic]
+              setValues((prev) => ({ ...prev, [topic]: restore }))
+              delete prevRef.current[topic]
+            }
+            setLastError(msg.payload || 'Ошибка команды')
           }
         } catch {
           /* ignore */
@@ -61,9 +83,30 @@ export function useRealtime() {
 
   const sendCmd = useCallback((topic: string, payload: string) => {
     const ws = wsRef.current
-    if (!ws || ws.readyState !== WebSocket.OPEN) return
+    if (!ws || ws.readyState !== WebSocket.OPEN) {
+      setLastError('Нет связи с сервером (WebSocket)')
+      return
+    }
+    if (!mqttRef.current) {
+      setLastError('MQTT не подключён — команда не уйдёт на Wiren Board')
+      return
+    }
+    setLastError(null)
+    setValues((prev) => {
+      prevRef.current[topic] = prev[topic] ?? '—'
+      return { ...prev, [topic]: payload }
+    })
     ws.send(JSON.stringify({ type: 'cmd', topic, payload } satisfies WsEnvelope))
   }, [])
 
-  return { connected, values, sendCmd }
+  const clearError = useCallback(() => setLastError(null), [])
+
+  return {
+    connected: wsConnected,
+    mqttConnected,
+    values,
+    sendCmd,
+    lastError,
+    clearError,
+  }
 }

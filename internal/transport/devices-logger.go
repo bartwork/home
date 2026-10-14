@@ -62,7 +62,7 @@ func (m loggerDevices) GetDevice(ctx context.Context, id int64) (device dto.Devi
 	return m.next.GetDevice(ctx, id)
 }
 
-func (m loggerDevices) CreateDevice(ctx context.Context, name string, mqttTopic string, deviceType string, unit string, active bool) (device dto.Device, err error) {
+func (m loggerDevices) CreateDevice(ctx context.Context, name string, mqttTopic string, deviceType string, unit string, powerTopic string, roomId int64, icon string, x float64, y float64, w float64, h float64, active bool) (device dto.Device, err error) {
 	logger := log.Ctx(ctx).With().Str("service", "Devices").Str("method", "createDevice").Logger()
 	defer func(_begin time.Time) {
 		logHandle := func(ev *zerolog.Event) {
@@ -71,9 +71,16 @@ func (m loggerDevices) CreateDevice(ctx context.Context, name string, mqttTopic 
 				"request": viewer.Sprintf("%+v", requestDevicesCreateDevice{
 					Active:     active,
 					DeviceType: deviceType,
+					H:          h,
+					Icon:       icon,
 					MqttTopic:  mqttTopic,
 					Name:       name,
+					PowerTopic: powerTopic,
+					RoomId:     roomId,
 					Unit:       unit,
+					W:          w,
+					X:          x,
+					Y:          y,
 				}),
 				"response": viewer.Sprintf("%+v", responseDevicesCreateDevice{Device: device}),
 			}
@@ -85,10 +92,10 @@ func (m loggerDevices) CreateDevice(ctx context.Context, name string, mqttTopic 
 		}
 		logger.Info().Func(logHandle).Msg("call createDevice")
 	}(time.Now())
-	return m.next.CreateDevice(ctx, name, mqttTopic, deviceType, unit, active)
+	return m.next.CreateDevice(ctx, name, mqttTopic, deviceType, unit, powerTopic, roomId, icon, x, y, w, h, active)
 }
 
-func (m loggerDevices) UpdateDevice(ctx context.Context, id int64, name string, mqttTopic string, deviceType string, unit string, active bool) (device dto.Device, err error) {
+func (m loggerDevices) UpdateDevice(ctx context.Context, id int64, name string, mqttTopic string, deviceType string, unit string, powerTopic string, roomId int64, icon string, x float64, y float64, w float64, h float64, active bool) (device dto.Device, err error) {
 	logger := log.Ctx(ctx).With().Str("service", "Devices").Str("method", "updateDevice").Logger()
 	defer func(_begin time.Time) {
 		logHandle := func(ev *zerolog.Event) {
@@ -97,10 +104,17 @@ func (m loggerDevices) UpdateDevice(ctx context.Context, id int64, name string, 
 				"request": viewer.Sprintf("%+v", requestDevicesUpdateDevice{
 					Active:     active,
 					DeviceType: deviceType,
+					H:          h,
+					Icon:       icon,
 					Id:         id,
 					MqttTopic:  mqttTopic,
 					Name:       name,
+					PowerTopic: powerTopic,
+					RoomId:     roomId,
 					Unit:       unit,
+					W:          w,
+					X:          x,
+					Y:          y,
 				}),
 				"response": viewer.Sprintf("%+v", responseDevicesUpdateDevice{Device: device}),
 			}
@@ -112,7 +126,7 @@ func (m loggerDevices) UpdateDevice(ctx context.Context, id int64, name string, 
 		}
 		logger.Info().Func(logHandle).Msg("call updateDevice")
 	}(time.Now())
-	return m.next.UpdateDevice(ctx, id, name, mqttTopic, deviceType, unit, active)
+	return m.next.UpdateDevice(ctx, id, name, mqttTopic, deviceType, unit, powerTopic, roomId, icon, x, y, w, h, active)
 }
 
 func (m loggerDevices) DeleteDevice(ctx context.Context, id int64) (err error) {

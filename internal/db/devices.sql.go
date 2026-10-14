@@ -10,19 +10,28 @@ import (
 )
 
 const createDevice = `-- name: CreateDevice :execlastid
-INSERT INTO devices (name, mqtt_topic, device_type, unit, is_active, wb_device, wb_control, source)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+INSERT INTO devices (
+    name, mqtt_topic, device_type, unit, power_topic, room_id, icon, x, y, w, h,
+    is_active, wb_device, wb_control, source
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 `
 
 type CreateDeviceParams struct {
-	Name       string `json:"name"`
-	MqttTopic  string `json:"mqtt_topic"`
-	DeviceType string `json:"device_type"`
-	Unit       string `json:"unit"`
-	IsActive   bool   `json:"is_active"`
-	WbDevice   string `json:"wb_device"`
-	WbControl  string `json:"wb_control"`
-	Source     string `json:"source"`
+	Name       string  `json:"name"`
+	MqttTopic  string  `json:"mqtt_topic"`
+	DeviceType string  `json:"device_type"`
+	Unit       string  `json:"unit"`
+	PowerTopic string  `json:"power_topic"`
+	RoomID     *int64  `json:"room_id"`
+	Icon       string  `json:"icon"`
+	X          float64 `json:"x"`
+	Y          float64 `json:"y"`
+	W          float64 `json:"w"`
+	H          float64 `json:"h"`
+	IsActive   bool    `json:"is_active"`
+	WbDevice   string  `json:"wb_device"`
+	WbControl  string  `json:"wb_control"`
+	Source     string  `json:"source"`
 }
 
 func (q *Queries) CreateDevice(ctx context.Context, arg CreateDeviceParams) (int64, error) {
@@ -31,6 +40,13 @@ func (q *Queries) CreateDevice(ctx context.Context, arg CreateDeviceParams) (int
 		arg.MqttTopic,
 		arg.DeviceType,
 		arg.Unit,
+		arg.PowerTopic,
+		arg.RoomID,
+		arg.Icon,
+		arg.X,
+		arg.Y,
+		arg.W,
+		arg.H,
 		arg.IsActive,
 		arg.WbDevice,
 		arg.WbControl,
@@ -56,20 +72,54 @@ func (q *Queries) DeleteDevice(ctx context.Context, id int64) (int64, error) {
 }
 
 const getDevice = `-- name: GetDevice :one
-SELECT id, name, mqtt_topic, device_type, unit, is_active, created_at, wb_device, wb_control, source
-FROM devices
-WHERE id = ?
+SELECT
+    d.id, d.name, d.mqtt_topic, d.device_type, d.unit, d.power_topic,
+    d.room_id, COALESCE(r.name, '') AS room_name,
+    d.icon, d.x, d.y, d.w, d.h,
+    d.is_active, d.created_at, d.wb_device, d.wb_control, d.source
+FROM devices d
+LEFT JOIN rooms r ON r.id = d.room_id
+WHERE d.id = ?
 `
 
-func (q *Queries) GetDevice(ctx context.Context, id int64) (Device, error) {
+type GetDeviceRow struct {
+	ID         int64   `json:"id"`
+	Name       string  `json:"name"`
+	MqttTopic  string  `json:"mqtt_topic"`
+	DeviceType string  `json:"device_type"`
+	Unit       string  `json:"unit"`
+	PowerTopic string  `json:"power_topic"`
+	RoomID     *int64  `json:"room_id"`
+	RoomName   string  `json:"room_name"`
+	Icon       string  `json:"icon"`
+	X          float64 `json:"x"`
+	Y          float64 `json:"y"`
+	W          float64 `json:"w"`
+	H          float64 `json:"h"`
+	IsActive   bool    `json:"is_active"`
+	CreatedAt  string  `json:"created_at"`
+	WbDevice   string  `json:"wb_device"`
+	WbControl  string  `json:"wb_control"`
+	Source     string  `json:"source"`
+}
+
+func (q *Queries) GetDevice(ctx context.Context, id int64) (GetDeviceRow, error) {
 	row := q.db.QueryRowContext(ctx, getDevice, id)
-	var i Device
+	var i GetDeviceRow
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
 		&i.MqttTopic,
 		&i.DeviceType,
 		&i.Unit,
+		&i.PowerTopic,
+		&i.RoomID,
+		&i.RoomName,
+		&i.Icon,
+		&i.X,
+		&i.Y,
+		&i.W,
+		&i.H,
 		&i.IsActive,
 		&i.CreatedAt,
 		&i.WbDevice,
@@ -80,20 +130,54 @@ func (q *Queries) GetDevice(ctx context.Context, id int64) (Device, error) {
 }
 
 const getDeviceByTopic = `-- name: GetDeviceByTopic :one
-SELECT id, name, mqtt_topic, device_type, unit, is_active, created_at, wb_device, wb_control, source
-FROM devices
-WHERE mqtt_topic = ?
+SELECT
+    d.id, d.name, d.mqtt_topic, d.device_type, d.unit, d.power_topic,
+    d.room_id, COALESCE(r.name, '') AS room_name,
+    d.icon, d.x, d.y, d.w, d.h,
+    d.is_active, d.created_at, d.wb_device, d.wb_control, d.source
+FROM devices d
+LEFT JOIN rooms r ON r.id = d.room_id
+WHERE d.mqtt_topic = ?
 `
 
-func (q *Queries) GetDeviceByTopic(ctx context.Context, mqttTopic string) (Device, error) {
+type GetDeviceByTopicRow struct {
+	ID         int64   `json:"id"`
+	Name       string  `json:"name"`
+	MqttTopic  string  `json:"mqtt_topic"`
+	DeviceType string  `json:"device_type"`
+	Unit       string  `json:"unit"`
+	PowerTopic string  `json:"power_topic"`
+	RoomID     *int64  `json:"room_id"`
+	RoomName   string  `json:"room_name"`
+	Icon       string  `json:"icon"`
+	X          float64 `json:"x"`
+	Y          float64 `json:"y"`
+	W          float64 `json:"w"`
+	H          float64 `json:"h"`
+	IsActive   bool    `json:"is_active"`
+	CreatedAt  string  `json:"created_at"`
+	WbDevice   string  `json:"wb_device"`
+	WbControl  string  `json:"wb_control"`
+	Source     string  `json:"source"`
+}
+
+func (q *Queries) GetDeviceByTopic(ctx context.Context, mqttTopic string) (GetDeviceByTopicRow, error) {
 	row := q.db.QueryRowContext(ctx, getDeviceByTopic, mqttTopic)
-	var i Device
+	var i GetDeviceByTopicRow
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
 		&i.MqttTopic,
 		&i.DeviceType,
 		&i.Unit,
+		&i.PowerTopic,
+		&i.RoomID,
+		&i.RoomName,
+		&i.Icon,
+		&i.X,
+		&i.Y,
+		&i.W,
+		&i.H,
 		&i.IsActive,
 		&i.CreatedAt,
 		&i.WbDevice,
@@ -104,26 +188,60 @@ func (q *Queries) GetDeviceByTopic(ctx context.Context, mqttTopic string) (Devic
 }
 
 const listDevices = `-- name: ListDevices :many
-SELECT id, name, mqtt_topic, device_type, unit, is_active, created_at, wb_device, wb_control, source
-FROM devices
-ORDER BY wb_device, id
+SELECT
+    d.id, d.name, d.mqtt_topic, d.device_type, d.unit, d.power_topic,
+    d.room_id, COALESCE(r.name, '') AS room_name,
+    d.icon, d.x, d.y, d.w, d.h,
+    d.is_active, d.created_at, d.wb_device, d.wb_control, d.source
+FROM devices d
+LEFT JOIN rooms r ON r.id = d.room_id
+ORDER BY COALESCE(r.sort_order, 9999), room_name, d.y, d.x, d.id
 `
 
-func (q *Queries) ListDevices(ctx context.Context) ([]Device, error) {
+type ListDevicesRow struct {
+	ID         int64   `json:"id"`
+	Name       string  `json:"name"`
+	MqttTopic  string  `json:"mqtt_topic"`
+	DeviceType string  `json:"device_type"`
+	Unit       string  `json:"unit"`
+	PowerTopic string  `json:"power_topic"`
+	RoomID     *int64  `json:"room_id"`
+	RoomName   string  `json:"room_name"`
+	Icon       string  `json:"icon"`
+	X          float64 `json:"x"`
+	Y          float64 `json:"y"`
+	W          float64 `json:"w"`
+	H          float64 `json:"h"`
+	IsActive   bool    `json:"is_active"`
+	CreatedAt  string  `json:"created_at"`
+	WbDevice   string  `json:"wb_device"`
+	WbControl  string  `json:"wb_control"`
+	Source     string  `json:"source"`
+}
+
+func (q *Queries) ListDevices(ctx context.Context) ([]ListDevicesRow, error) {
 	rows, err := q.db.QueryContext(ctx, listDevices)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []Device{}
+	items := []ListDevicesRow{}
 	for rows.Next() {
-		var i Device
+		var i ListDevicesRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.Name,
 			&i.MqttTopic,
 			&i.DeviceType,
 			&i.Unit,
+			&i.PowerTopic,
+			&i.RoomID,
+			&i.RoomName,
+			&i.Icon,
+			&i.X,
+			&i.Y,
+			&i.W,
+			&i.H,
 			&i.IsActive,
 			&i.CreatedAt,
 			&i.WbDevice,
@@ -145,19 +263,28 @@ func (q *Queries) ListDevices(ctx context.Context) ([]Device, error) {
 
 const updateDevice = `-- name: UpdateDevice :execrows
 UPDATE devices
-SET name = ?, mqtt_topic = ?, device_type = ?, unit = ?, is_active = ?, wb_device = ?, wb_control = ?
+SET name = ?, mqtt_topic = ?, device_type = ?, unit = ?, power_topic = ?,
+    room_id = ?, icon = ?, x = ?, y = ?, w = ?, h = ?,
+    is_active = ?, wb_device = ?, wb_control = ?
 WHERE id = ?
 `
 
 type UpdateDeviceParams struct {
-	Name       string `json:"name"`
-	MqttTopic  string `json:"mqtt_topic"`
-	DeviceType string `json:"device_type"`
-	Unit       string `json:"unit"`
-	IsActive   bool   `json:"is_active"`
-	WbDevice   string `json:"wb_device"`
-	WbControl  string `json:"wb_control"`
-	ID         int64  `json:"id"`
+	Name       string  `json:"name"`
+	MqttTopic  string  `json:"mqtt_topic"`
+	DeviceType string  `json:"device_type"`
+	Unit       string  `json:"unit"`
+	PowerTopic string  `json:"power_topic"`
+	RoomID     *int64  `json:"room_id"`
+	Icon       string  `json:"icon"`
+	X          float64 `json:"x"`
+	Y          float64 `json:"y"`
+	W          float64 `json:"w"`
+	H          float64 `json:"h"`
+	IsActive   bool    `json:"is_active"`
+	WbDevice   string  `json:"wb_device"`
+	WbControl  string  `json:"wb_control"`
+	ID         int64   `json:"id"`
 }
 
 func (q *Queries) UpdateDevice(ctx context.Context, arg UpdateDeviceParams) (int64, error) {
@@ -166,6 +293,13 @@ func (q *Queries) UpdateDevice(ctx context.Context, arg UpdateDeviceParams) (int
 		arg.MqttTopic,
 		arg.DeviceType,
 		arg.Unit,
+		arg.PowerTopic,
+		arg.RoomID,
+		arg.Icon,
+		arg.X,
+		arg.Y,
+		arg.W,
+		arg.H,
 		arg.IsActive,
 		arg.WbDevice,
 		arg.WbControl,

@@ -7,6 +7,7 @@ import (
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/rs/zerolog"
 
+	"github.com/bartwork/home/internal/discovery"
 	"github.com/bartwork/home/internal/realtime"
 )
 
@@ -37,6 +38,7 @@ func New(log zerolog.Logger, hub *realtime.Hub, observer Observer, broker, clien
 	opts := mqtt.NewClientOptions().
 		AddBroker(broker).
 		SetClientID(clientID).
+		SetCleanSession(true).
 		SetAutoReconnect(true).
 		SetConnectRetry(true).
 		SetConnectRetryInterval(3 * time.Second).
@@ -44,7 +46,8 @@ func New(log zerolog.Logger, hub *realtime.Hub, observer Observer, broker, clien
 		SetOrderMatters(false)
 
 	opts.SetOnConnectHandler(func(c mqtt.Client) {
-		b.log.Info().Str("broker", broker).Str("sub", b.subscribe).Msg("mqtt connected")
+		b.log.Info().Str("broker", broker).Str("client", clientID).Str("sub", b.subscribe).Msg("mqtt connected")
+		b.hub.SetMQTT(true)
 		token := c.Subscribe(b.subscribe, 0, b.onMessage)
 		token.Wait()
 		if err := token.Error(); err != nil {
@@ -53,6 +56,7 @@ func New(log zerolog.Logger, hub *realtime.Hub, observer Observer, broker, clien
 	})
 	opts.SetConnectionLostHandler(func(_ mqtt.Client, err error) {
 		b.log.Warn().Err(err).Msg("mqtt connection lost")
+		b.hub.SetMQTT(false)
 	})
 
 	b.client = mqtt.NewClient(opts)
@@ -87,7 +91,9 @@ func (b *Bridge) Publish(topic, payload string) error {
 func (b *Bridge) onMessage(_ mqtt.Client, msg mqtt.Message) {
 	topic := msg.Topic()
 	payload := string(msg.Payload())
-	b.hub.BroadcastState(topic, payload)
+	if parsed, ok := discovery.ParseTopic(topic); ok && parsed.Kind == discovery.KindState {
+		b.hub.BroadcastState(parsed.StateTopic, payload)
+	}
 	if b.observer != nil {
 		b.observer.Observe(topic, payload)
 	}

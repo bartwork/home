@@ -1,6 +1,6 @@
-import type { Device, Discovered, LoginResponse, User } from './types'
+import type { Device, Discovered, LoginResponse, Room, User } from './types'
 
-export type { Device, Discovered, LoginResponse, User } from './types'
+export type { Device, Discovered, LoginResponse, Room, User } from './types'
 
 const TOKEN_KEY = 'home.token'
 const USER_KEY = 'home.user'
@@ -81,20 +81,73 @@ export function login(login: string, password: string) {
   })
 }
 
-export function listDevices() {
-  return api<{ devices: Device[] }>('/api/v1/devices')
+export async function listDevices(): Promise<Device[]> {
+  const res = await api<{ devices?: Device[] }>('/api/v1/devices')
+  return res.devices ?? []
 }
 
-export function listDiscovered() {
-  return api<{ discovered: Discovered[] }>('/api/v1/discovered')
+export function updateDevice(device: Device) {
+  return api<{ device: Device }>(`/api/v1/devices/${device.id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      id: device.id,
+      name: device.name,
+      mqttTopic: device.mqttTopic,
+      deviceType: device.deviceType,
+      unit: device.unit,
+      powerTopic: device.powerTopic ?? '',
+      roomId: device.roomId ?? 0,
+      icon: device.icon,
+      x: device.x,
+      y: device.y,
+      w: device.w,
+      h: device.h,
+      active: device.active,
+    }),
+  })
 }
 
-export function countDiscovered() {
-  return api<{ count: number }>('/api/v1/discovered/count')
+export async function listRooms(): Promise<Room[]> {
+  const res = await api<{ rooms?: Room[] }>('/api/v1/rooms')
+  return res.rooms ?? []
 }
 
-export function acceptDiscovered(id: number) {
-  return api<{ device: Device }>(`/api/v1/discovered/${id}/accept`, { method: 'POST' })
+export function createRoom(room: Omit<Room, 'id'>) {
+  return api<{ room: Room }>('/api/v1/rooms', {
+    method: 'POST',
+    body: JSON.stringify(room),
+  })
+}
+
+export function updateRoom(room: Room) {
+  return api<{ room: Room }>(`/api/v1/rooms/${room.id}`, {
+    method: 'PUT',
+    body: JSON.stringify(room),
+  })
+}
+
+export function deleteRoom(id: number) {
+  return api<void>(`/api/v1/rooms/${id}`, { method: 'DELETE' })
+}
+
+export async function listDiscovered(): Promise<Discovered[]> {
+  const res = await api<{ discovered?: Discovered[] }>('/api/v1/discovered')
+  return res.discovered ?? []
+}
+
+export async function countDiscovered(): Promise<number> {
+  const res = await api<{ count?: number }>('/api/v1/discovered/count')
+  return res.count ?? 0
+}
+
+export function acceptDiscovered(
+  id: number,
+  opts?: { name?: string; roomId?: number; icon?: string },
+) {
+  return api<{ device: Device }>(`/api/v1/discovered/${id}/accept`, {
+    method: 'POST',
+    body: JSON.stringify(opts ?? {}),
+  })
 }
 
 export function ignoreDiscovered(id: number) {

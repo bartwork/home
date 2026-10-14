@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"time"
@@ -27,6 +28,15 @@ type CfgService struct {
 
 	MQTTBroker   string `envconfig:"MQTT_BROKER" default:"tcp://127.0.0.1:1883"`
 	MQTTClientID string `envconfig:"MQTT_CLIENT_ID" default:"home-controller"`
+}
+
+// MQTTClientIDUnique — уникальный id, чтобы два процесса не выбивали друг друга с брокера.
+func (cfg CfgService) MQTTClientIDUnique() string {
+	id := cfg.MQTTClientID
+	if id == "" {
+		id = "home-controller"
+	}
+	return fmt.Sprintf("%s-%d", id, os.Getpid())
 }
 
 var service *CfgService

@@ -6,7 +6,6 @@ import (
 
 	"github.com/bartwork/home/contracts/dto"
 	"github.com/bartwork/home/internal/repository"
-	"github.com/bartwork/home/internal/usermap"
 	"github.com/bartwork/home/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -26,7 +25,7 @@ func (s *Service) ListUsers(ctx context.Context) ([]dto.User, error) {
 	}
 	out := make([]dto.User, 0, len(rows))
 	for _, row := range rows {
-		out = append(out, usermap.DTO(row))
+		out = append(out, row.ToDTO())
 	}
 	return out, nil
 }
@@ -39,7 +38,7 @@ func (s *Service) GetUser(ctx context.Context, id int64) (dto.User, error) {
 	if err != nil {
 		return dto.User{}, err
 	}
-	return usermap.DTO(row), nil
+	return row.ToDTO(), nil
 }
 
 func (s *Service) CreateUser(ctx context.Context, in dto.CreateUser) (dto.User, error) {
@@ -71,7 +70,7 @@ func (s *Service) CreateUser(ctx context.Context, in dto.CreateUser) (dto.User, 
 	if err != nil {
 		return dto.User{}, err
 	}
-	return usermap.DTO(row), nil
+	return row.ToDTO(), nil
 }
 
 func (s *Service) UpdateUser(ctx context.Context, id int64, in dto.UpdateUser) (dto.User, error) {
@@ -111,7 +110,7 @@ func (s *Service) UpdateUser(ctx context.Context, id int64, in dto.UpdateUser) (
 		}
 	}
 
-	return usermap.DTO(row), nil
+	return row.ToDTO(), nil
 }
 
 func (s *Service) DeleteUser(ctx context.Context, id int64) error {

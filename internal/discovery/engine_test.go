@@ -20,8 +20,9 @@ func TestEngineObserveAndAccept(t *testing.T) {
 
 	disco := repository.NewDiscovered(db)
 	devs := repository.NewDevices(db)
+	rooms := repository.NewRooms(db)
 	engine := discovery.NewEngine(zerolog.Nop(), disco, devs)
-	svc := discovery.NewService(disco, devs)
+	svc := discovery.NewService(disco, devs, rooms)
 	ctx := context.Background()
 
 	engine.Observe("/devices/wb-gpio/controls/K1/meta/type", "switch")
@@ -39,7 +40,7 @@ func TestEngineObserveAndAccept(t *testing.T) {
 		t.Fatalf("%+v", list[0])
 	}
 
-	dev, err := svc.Accept(ctx, list[0].ID)
+	dev, err := svc.Accept(ctx, list[0].ID, discovery.AcceptOpts{Name: "тест реле"})
 	if err != nil {
 		t.Fatal(err)
 	}

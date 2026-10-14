@@ -6,16 +6,27 @@
 
 ```bash
 task deps
-task run
+MQTT_BROKER=tcp://192.168.1.9:1883 task run
 ```
 
 http://localhost:9000 · `admin` / `admin`
 
-При смене схемы: `rm -f data/home.db*` и перезапуск.
+Если `:9000` занят (часто Docker):
+
+```bash
+BIND_SERVICE=:9020 MQTT_BROKER=tcp://192.168.1.9:1883 task run
+```
+
+→ http://localhost:9020
+
+При смене схемы БД: `rm -f data/home.db*` и перезапуск.
+
+Не запускай два `home` сразу — MQTT client id уникален по PID, но два подписчика на один брокер всё равно путают отладку.
 
 ## Discovery
 
-`MQTT_BROKER` (по умолчанию `tcp://127.0.0.1:1883`) → `/devices/#` → staging → UI **Обнаружено** → accept → виджеты.
+`MQTT_BROKER` → `/devices/#` → staging → UI **Обнаружено** → accept → виджеты.  
+Команды пишутся в `…/controls/X/on` (конвенция Wiren Board).
 
 ## Taskfile
 
@@ -23,10 +34,16 @@ http://localhost:9000 · `admin` / `admin`
 |--------|----------|
 | `task run` | фронт + сервер |
 | `task build` | бинарь `bin/home` |
-| `task web:dev` | Vite, proxy `/api`+WS → `:9000` |
+| `task web:dev` | Vite, proxy `/api`+WS → `HOME_API` (по умолчанию `:9000`) |
 | `task generate` | sqlc + tg |
 | `task test` | Go-тесты |
 | `task smoke` | curl login |
+
+Vite на другой порт API:
+
+```bash
+HOME_API=http://127.0.0.1:9020 task web:dev
+```
 
 ## API
 

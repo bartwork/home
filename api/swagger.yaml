@@ -236,13 +236,30 @@ components:
                 - name
                 - mqttTopic
                 - deviceType
+                - unit
+                - powerTopic
+                - roomName
+                - icon
+                - x
+                - "y"
+                - w
+                - h
                 - active
+                - createdAt
+                - wbDevice
+                - wbControl
+                - source
             properties:
                 active:
                     type: boolean
                 createdAt:
                     type: string
                 deviceType:
+                    type: string
+                h:
+                    type: number
+                    format: float
+                icon:
                     type: string
                 id:
                     type: number
@@ -251,8 +268,32 @@ components:
                     type: string
                 name:
                     type: string
+                powerTopic:
+                    type: string
+                roomId:
+                    oneOf:
+                        - type: number
+                          format: int64
+                        - nullable: true
+                roomName:
+                    type: string
+                source:
+                    type: string
                 unit:
                     type: string
+                w:
+                    type: number
+                    format: float
+                wbControl:
+                    type: string
+                wbDevice:
+                    type: string
+                x:
+                    type: number
+                    format: float
+                "y":
+                    type: number
+                    format: float
         dto.UpdateUser:
             type: object
             required:
@@ -330,18 +371,44 @@ components:
                 - mqttTopic
                 - deviceType
                 - unit
+                - powerTopic
+                - roomId
+                - icon
+                - x
+                - "y"
+                - w
+                - h
                 - active
             properties:
                 active:
                     type: boolean
                 deviceType:
                     type: string
+                h:
+                    type: number
+                    format: float
+                icon:
+                    type: string
                 mqttTopic:
                     type: string
                 name:
                     type: string
+                powerTopic:
+                    type: string
+                roomId:
+                    type: number
+                    format: int64
                 unit:
                     type: string
+                w:
+                    type: number
+                    format: float
+                x:
+                    type: number
+                    format: float
+                "y":
+                    type: number
+                    format: float
         requestDevicesDeleteDevice:
             type: object
         requestDevicesGetDevice:
@@ -355,18 +422,44 @@ components:
                 - mqttTopic
                 - deviceType
                 - unit
+                - powerTopic
+                - roomId
+                - icon
+                - x
+                - "y"
+                - w
+                - h
                 - active
             properties:
                 active:
                     type: boolean
                 deviceType:
                     type: string
+                h:
+                    type: number
+                    format: float
+                icon:
+                    type: string
                 mqttTopic:
                     type: string
                 name:
                     type: string
+                powerTopic:
+                    type: string
+                roomId:
+                    type: number
+                    format: int64
                 unit:
                     type: string
+                w:
+                    type: number
+                    format: float
+                x:
+                    type: number
+                    format: float
+                "y":
+                    type: number
+                    format: float
         requestUsersCreateUser:
             type: object
             required:

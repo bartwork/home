@@ -57,12 +57,12 @@ func (srv *serverDevices) GetDevice(ctx context.Context, id int64) (device dto.D
 	return srv.getDevice(ctx, id)
 }
 
-func (srv *serverDevices) CreateDevice(ctx context.Context, name string, mqttTopic string, deviceType string, unit string, active bool) (device dto.Device, err error) {
-	return srv.createDevice(ctx, name, mqttTopic, deviceType, unit, active)
+func (srv *serverDevices) CreateDevice(ctx context.Context, name string, mqttTopic string, deviceType string, unit string, powerTopic string, roomId int64, icon string, x float64, y float64, w float64, h float64, active bool) (device dto.Device, err error) {
+	return srv.createDevice(ctx, name, mqttTopic, deviceType, unit, powerTopic, roomId, icon, x, y, w, h, active)
 }
 
-func (srv *serverDevices) UpdateDevice(ctx context.Context, id int64, name string, mqttTopic string, deviceType string, unit string, active bool) (device dto.Device, err error) {
-	return srv.updateDevice(ctx, id, name, mqttTopic, deviceType, unit, active)
+func (srv *serverDevices) UpdateDevice(ctx context.Context, id int64, name string, mqttTopic string, deviceType string, unit string, powerTopic string, roomId int64, icon string, x float64, y float64, w float64, h float64, active bool) (device dto.Device, err error) {
+	return srv.updateDevice(ctx, id, name, mqttTopic, deviceType, unit, powerTopic, roomId, icon, x, y, w, h, active)
 }
 
 func (srv *serverDevices) DeleteDevice(ctx context.Context, id int64) (err error) {

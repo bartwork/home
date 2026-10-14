@@ -1,11 +1,8 @@
-package usermap
+package repository
 
-import (
-	"github.com/bartwork/home/contracts/dto"
-	"github.com/bartwork/home/internal/repository"
-)
+import "github.com/bartwork/home/contracts/dto"
 
-func DTO(u repository.User) dto.User {
+func (u User) ToDTO() dto.User {
 	out := dto.User{
 		ID:         u.ID,
 		Login:      u.Login,

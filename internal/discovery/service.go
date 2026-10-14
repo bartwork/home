@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/bartwork/home/contracts/dto"
+	"github.com/bartwork/home/internal/layout"
 	"github.com/bartwork/home/internal/repository"
 	"github.com/bartwork/home/pkg/errors"
 )
@@ -12,10 +13,11 @@ import (
 type Service struct {
 	disco repository.DiscoveredStore
 	devs  repository.DeviceStore
+	rooms repository.RoomStore
 }
 
-func NewService(disco repository.DiscoveredStore, devs repository.DeviceStore) *Service {
-	return &Service{disco: disco, devs: devs}
+func NewService(disco repository.DiscoveredStore, devs repository.DeviceStore, rooms repository.RoomStore) *Service {
+	return &Service{disco: disco, devs: devs, rooms: rooms}
 }
 
 func (s *Service) ListNew(ctx context.Context) ([]dto.Discovered, error) {
@@ -30,7 +32,13 @@ func (s *Service) CountNew(ctx context.Context) (int64, error) {
 	return s.disco.CountNew(ctx)
 }
 
-func (s *Service) Accept(ctx context.Context, id int64) (dto.Device, error) {
+type AcceptOpts struct {
+	Name   string
+	RoomID int64
+	Icon   string
+}
+
+func (s *Service) Accept(ctx context.Context, id int64, opts AcceptOpts) (dto.Device, error) {
 	if id <= 0 {
 		return dto.Device{}, errors.ErrBadRequest
 	}
@@ -44,7 +52,7 @@ func (s *Service) Accept(ctx context.Context, id int64) (dto.Device, error) {
 			if err != nil {
 				return dto.Device{}, err
 			}
-			return deviceDTO(dev), nil
+			return dev.ToDTO(), nil
 		}
 		return dto.Device{}, errors.ErrBadRequest
 	}
@@ -53,16 +61,52 @@ func (s *Service) Accept(ctx context.Context, id int64) (dto.Device, error) {
 	if typ == "" {
 		typ = "raw"
 	}
-	name := row.Title
+	name := strings.TrimSpace(opts.Name)
+	if name == "" {
+		name = row.Title
+	}
 	if name == "" {
 		name = DefaultTitle(row.WbDevice, row.WbControl)
 	}
 
+	var roomID *int64
+	if opts.RoomID > 0 {
+		if s.rooms != nil {
+			if _, err := s.rooms.Get(ctx, opts.RoomID); err != nil {
+				return dto.Device{}, err
+			}
+		}
+		roomID = &opts.RoomID
+	}
+
+	idx := 0
+	if all, lerr := s.devs.List(ctx); lerr == nil {
+		for _, d := range all {
+			if roomID != nil && d.RoomID != nil && *d.RoomID == *roomID {
+				idx++
+			} else if roomID == nil && d.RoomID == nil {
+				idx++
+			}
+		}
+	}
+	x, y, w, h := layout.Tile(idx, 3)
+
+	power := ""
+	if typ == "range" {
+		power = layout.InferPowerTopic(row.MqttTopic)
+	}
 	dev, err := s.devs.Create(ctx, repository.WriteDevice{
 		Name:       name,
 		MqttTopic:  row.MqttTopic,
 		DeviceType: typ,
 		Unit:       row.Unit,
+		PowerTopic: power,
+		RoomID:     roomID,
+		Icon:       layout.IconFor(strings.TrimSpace(opts.Icon), name, typ),
+		X:          x,
+		Y:          y,
+		W:          w,
+		H:          h,
 		Active:     true,
 		WbDevice:   row.WbDevice,
 		WbControl:  row.WbControl,
@@ -75,14 +119,14 @@ func (s *Service) Accept(ctx context.Context, id int64) (dto.Device, error) {
 				return dto.Device{}, err
 			}
 			_ = s.disco.SetStatus(ctx, id, "accepted")
-			return deviceDTO(existing), nil
+			return existing.ToDTO(), nil
 		}
 		return dto.Device{}, err
 	}
 	if err := s.disco.SetStatus(ctx, id, "accepted"); err != nil {
 		return dto.Device{}, err
 	}
-	return deviceDTO(dev), nil
+	return dev.ToDTO(), nil
 }
 
 func (s *Service) Ignore(ctx context.Context, id int64) error {
@@ -114,7 +158,7 @@ func (s *Service) AcceptAll(ctx context.Context, typ string) (accepted int, err 
 		if typ == "" && (row.SuggestedType == "" || row.SuggestedType == "raw") {
 			continue
 		}
-		if _, err := s.Accept(ctx, row.ID); err != nil {
+		if _, err := s.Accept(ctx, row.ID, AcceptOpts{}); err != nil {
 			continue
 		}
 		accepted++
@@ -125,26 +169,7 @@ func (s *Service) AcceptAll(ctx context.Context, typ string) (accepted int, err 
 func mapList(rows []repository.Discovered) []dto.Discovered {
 	out := make([]dto.Discovered, 0, len(rows))
 	for _, r := range rows {
-		out = append(out, dto.Discovered{
-			ID:            r.ID,
-			MqttTopic:     r.MqttTopic,
-			WbDevice:      r.WbDevice,
-			WbControl:     r.WbControl,
-			Title:         r.Title,
-			SuggestedType: r.SuggestedType,
-			Unit:          r.Unit,
-			LastPayload:   r.LastPayload,
-			LastSeenAt:    r.LastSeenAt,
-			Status:        r.Status,
-		})
+		out = append(out, r.ToDTO())
 	}
 	return out
-}
-
-func deviceDTO(d repository.Device) dto.Device {
-	return dto.Device{
-		ID: d.ID, Name: d.Name, MqttTopic: d.MqttTopic, DeviceType: d.DeviceType,
-		Unit: d.Unit, Active: d.Active, CreatedAt: d.CreatedAt,
-		WbDevice: d.WbDevice, WbControl: d.WbControl, Source: d.Source,
-	}
 }

@@ -82,7 +82,7 @@ func (http *httpDevices) serveGetDevice(ctx *fiber.Ctx) (err error) {
 }
 func (http *httpDevices) createDevice(ctx context.Context, request requestDevicesCreateDevice) (response responseDevicesCreateDevice, err error) {
 
-	response.Device, err = http.svc.CreateDevice(ctx, request.Name, request.MqttTopic, request.DeviceType, request.Unit, request.Active)
+	response.Device, err = http.svc.CreateDevice(ctx, request.Name, request.MqttTopic, request.DeviceType, request.Unit, request.PowerTopic, request.RoomId, request.Icon, request.X, request.Y, request.W, request.H, request.Active)
 	if err != nil {
 		if http.errorHandler != nil {
 			err = http.errorHandler(err)
@@ -118,7 +118,7 @@ func (http *httpDevices) serveCreateDevice(ctx *fiber.Ctx) (err error) {
 }
 func (http *httpDevices) updateDevice(ctx context.Context, request requestDevicesUpdateDevice) (response responseDevicesUpdateDevice, err error) {
 
-	response.Device, err = http.svc.UpdateDevice(ctx, request.Id, request.Name, request.MqttTopic, request.DeviceType, request.Unit, request.Active)
+	response.Device, err = http.svc.UpdateDevice(ctx, request.Id, request.Name, request.MqttTopic, request.DeviceType, request.Unit, request.PowerTopic, request.RoomId, request.Icon, request.X, request.Y, request.W, request.H, request.Active)
 	if err != nil {
 		if http.errorHandler != nil {
 			err = http.errorHandler(err)

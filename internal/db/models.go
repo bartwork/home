@@ -5,16 +5,23 @@
 package db
 
 type Device struct {
-	ID         int64  `json:"id"`
-	Name       string `json:"name"`
-	MqttTopic  string `json:"mqtt_topic"`
-	DeviceType string `json:"device_type"`
-	Unit       string `json:"unit"`
-	IsActive   bool   `json:"is_active"`
-	CreatedAt  string `json:"created_at"`
-	WbDevice   string `json:"wb_device"`
-	WbControl  string `json:"wb_control"`
-	Source     string `json:"source"`
+	ID         int64   `json:"id"`
+	Name       string  `json:"name"`
+	MqttTopic  string  `json:"mqtt_topic"`
+	DeviceType string  `json:"device_type"`
+	Unit       string  `json:"unit"`
+	PowerTopic string  `json:"power_topic"`
+	RoomID     *int64  `json:"room_id"`
+	Icon       string  `json:"icon"`
+	X          float64 `json:"x"`
+	Y          float64 `json:"y"`
+	W          float64 `json:"w"`
+	H          float64 `json:"h"`
+	IsActive   bool    `json:"is_active"`
+	CreatedAt  string  `json:"created_at"`
+	WbDevice   string  `json:"wb_device"`
+	WbControl  string  `json:"wb_control"`
+	Source     string  `json:"source"`
 }
 
 type DiscoveredDevice struct {
@@ -29,6 +36,16 @@ type DiscoveredDevice struct {
 	LastSeenAt    string `json:"last_seen_at"`
 	Status        string `json:"status"`
 	CreatedAt     string `json:"created_at"`
+}
+
+type Room struct {
+	ID        int64   `json:"id"`
+	Name      string  `json:"name"`
+	X         float64 `json:"x"`
+	Y         float64 `json:"y"`
+	W         float64 `json:"w"`
+	H         float64 `json:"h"`
+	SortOrder int64   `json:"sort_order"`
 }
 
 type User struct {

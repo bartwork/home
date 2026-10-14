@@ -26,13 +26,13 @@ type Devices interface {
 	// @tg http-method=POST
 	// @tg http-path=devices
 	// @tg http-success=201
-	CreateDevice(ctx context.Context, name string, mqttTopic string, deviceType string, unit string, active bool) (device dto.Device, err error)
+	CreateDevice(ctx context.Context, name string, mqttTopic string, deviceType string, unit string, powerTopic string, roomId int64, icon string, x float64, y float64, w float64, h float64, active bool) (device dto.Device, err error)
 
 	// @tg summary=`Обновить устройство`
 	// @tg http-method=PUT
 	// @tg http-path=devices/:id
 	// @tg http-success=200
-	UpdateDevice(ctx context.Context, id int64, name string, mqttTopic string, deviceType string, unit string, active bool) (device dto.Device, err error)
+	UpdateDevice(ctx context.Context, id int64, name string, mqttTopic string, deviceType string, unit string, powerTopic string, roomId int64, icon string, x float64, y float64, w float64, h float64, active bool) (device dto.Device, err error)
 
 	// @tg summary=`Удалить устройство`
 	// @tg http-method=DELETE

@@ -19,11 +19,18 @@ type responseDevicesGetDevice struct {
 }
 
 type requestDevicesCreateDevice struct {
-	Name       string `json:"name,omitempty"`
-	MqttTopic  string `json:"mqttTopic,omitempty"`
-	DeviceType string `json:"deviceType,omitempty"`
-	Unit       string `json:"unit,omitempty"`
-	Active     bool   `json:"active,omitempty"`
+	Name       string  `json:"name,omitempty"`
+	MqttTopic  string  `json:"mqttTopic,omitempty"`
+	DeviceType string  `json:"deviceType,omitempty"`
+	Unit       string  `json:"unit,omitempty"`
+	PowerTopic string  `json:"powerTopic,omitempty"`
+	RoomId     int64   `json:"roomId,omitempty"`
+	Icon       string  `json:"icon,omitempty"`
+	X          float64 `json:"x,omitempty"`
+	Y          float64 `json:"y,omitempty"`
+	W          float64 `json:"w,omitempty"`
+	H          float64 `json:"h,omitempty"`
+	Active     bool    `json:"active,omitempty"`
 }
 
 type responseDevicesCreateDevice struct {
@@ -31,12 +38,19 @@ type responseDevicesCreateDevice struct {
 }
 
 type requestDevicesUpdateDevice struct {
-	Id         int64  `json:"id,omitempty"`
-	Name       string `json:"name,omitempty"`
-	MqttTopic  string `json:"mqttTopic,omitempty"`
-	DeviceType string `json:"deviceType,omitempty"`
-	Unit       string `json:"unit,omitempty"`
-	Active     bool   `json:"active,omitempty"`
+	Id         int64   `json:"id,omitempty"`
+	Name       string  `json:"name,omitempty"`
+	MqttTopic  string  `json:"mqttTopic,omitempty"`
+	DeviceType string  `json:"deviceType,omitempty"`
+	Unit       string  `json:"unit,omitempty"`
+	PowerTopic string  `json:"powerTopic,omitempty"`
+	RoomId     int64   `json:"roomId,omitempty"`
+	Icon       string  `json:"icon,omitempty"`
+	X          float64 `json:"x,omitempty"`
+	Y          float64 `json:"y,omitempty"`
+	W          float64 `json:"w,omitempty"`
+	H          float64 `json:"h,omitempty"`
+	Active     bool    `json:"active,omitempty"`
 }
 
 type responseDevicesUpdateDevice struct {

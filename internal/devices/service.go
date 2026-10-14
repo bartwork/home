@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/bartwork/home/contracts/dto"
+	"github.com/bartwork/home/internal/layout"
 	"github.com/bartwork/home/internal/repository"
 	"github.com/bartwork/home/pkg/errors"
 )
@@ -24,7 +25,7 @@ func (s *Service) ListDevices(ctx context.Context) ([]dto.Device, error) {
 	}
 	out := make([]dto.Device, 0, len(rows))
 	for _, row := range rows {
-		out = append(out, toDTO(row))
+		out = append(out, row.ToDTO())
 	}
 	return out, nil
 }
@@ -37,10 +38,10 @@ func (s *Service) GetDevice(ctx context.Context, id int64) (dto.Device, error) {
 	if err != nil {
 		return dto.Device{}, err
 	}
-	return toDTO(row), nil
+	return row.ToDTO(), nil
 }
 
-func (s *Service) CreateDevice(ctx context.Context, name, mqttTopic, deviceType, unit string, active bool) (dto.Device, error) {
+func (s *Service) CreateDevice(ctx context.Context, name, mqttTopic, deviceType, unit, powerTopic string, roomID int64, icon string, x, y, w, h float64, active bool) (dto.Device, error) {
 	name = strings.TrimSpace(name)
 	mqttTopic = repository.NormalizeTopic(mqttTopic)
 	deviceType = strings.TrimSpace(deviceType)
@@ -48,15 +49,18 @@ func (s *Service) CreateDevice(ctx context.Context, name, mqttTopic, deviceType,
 		return dto.Device{}, errors.ErrBadRequest
 	}
 	row, err := s.repo.Create(ctx, repository.WriteDevice{
-		Name: name, MqttTopic: mqttTopic, DeviceType: deviceType, Unit: strings.TrimSpace(unit), Active: active,
+		Name: name, MqttTopic: mqttTopic, DeviceType: deviceType,
+		Unit: strings.TrimSpace(unit), PowerTopic: resolvePower(mqttTopic, powerTopic, deviceType, true),
+		RoomID: roomPtr(roomID), Icon: strings.TrimSpace(icon),
+		X: x, Y: y, W: w, H: h, Active: active,
 	})
 	if err != nil {
 		return dto.Device{}, err
 	}
-	return toDTO(row), nil
+	return row.ToDTO(), nil
 }
 
-func (s *Service) UpdateDevice(ctx context.Context, id int64, name, mqttTopic, deviceType, unit string, active bool) (dto.Device, error) {
+func (s *Service) UpdateDevice(ctx context.Context, id int64, name, mqttTopic, deviceType, unit, powerTopic string, roomID int64, icon string, x, y, w, h float64, active bool) (dto.Device, error) {
 	if id <= 0 {
 		return dto.Device{}, errors.ErrBadRequest
 	}
@@ -72,20 +76,18 @@ func (s *Service) UpdateDevice(ctx context.Context, id int64, name, mqttTopic, d
 		return dto.Device{}, err
 	}
 
+	// Update: пустой powerTopic сохраняем как есть (можно сбросить).
 	row, err := s.repo.Update(ctx, id, repository.WriteDevice{
-		Name:       name,
-		MqttTopic:  mqttTopic,
-		DeviceType: deviceType,
-		Unit:       strings.TrimSpace(unit),
-		Active:     active,
-		WbDevice:   cur.WbDevice,
-		WbControl:  cur.WbControl,
-		Source:     cur.Source,
+		Name: name, MqttTopic: mqttTopic, DeviceType: deviceType,
+		Unit: strings.TrimSpace(unit), PowerTopic: strings.TrimSpace(powerTopic),
+		RoomID: roomPtr(roomID), Icon: strings.TrimSpace(icon),
+		X: x, Y: y, W: w, H: h, Active: active,
+		WbDevice: cur.WbDevice, WbControl: cur.WbControl, Source: cur.Source,
 	})
 	if err != nil {
 		return dto.Device{}, err
 	}
-	return toDTO(row), nil
+	return row.ToDTO(), nil
 }
 
 func (s *Service) DeleteDevice(ctx context.Context, id int64) error {
@@ -95,10 +97,20 @@ func (s *Service) DeleteDevice(ctx context.Context, id int64) error {
 	return s.repo.Delete(ctx, id)
 }
 
-func toDTO(d repository.Device) dto.Device {
-	return dto.Device{
-		ID: d.ID, Name: d.Name, MqttTopic: d.MqttTopic, DeviceType: d.DeviceType,
-		Unit: d.Unit, Active: d.Active, CreatedAt: d.CreatedAt,
-		WbDevice: d.WbDevice, WbControl: d.WbControl, Source: d.Source,
+func resolvePower(mqttTopic, powerTopic, deviceType string, infer bool) string {
+	powerTopic = strings.TrimSpace(powerTopic)
+	if powerTopic != "" {
+		return powerTopic
 	}
+	if infer && deviceType == "range" {
+		return layout.InferPowerTopic(mqttTopic)
+	}
+	return ""
+}
+
+func roomPtr(id int64) *int64 {
+	if id <= 0 {
+		return nil
+	}
+	return &id
 }

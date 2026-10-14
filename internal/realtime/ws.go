@@ -34,12 +34,11 @@ func MountWS(app *fiber.App, hub *Hub, pub Publisher, log zerolog.Logger) {
 
 	app.Get("/api/v1/ws", websocket.New(func(conn *websocket.Conn) {
 		client := &wsClient{conn: conn}
-		hub.Register(client)
-		defer hub.Unregister(client)
-
 		if b, err := json.Marshal(Envelope{Type: "hello"}); err == nil {
 			_ = client.Send(b)
 		}
+		hub.Register(client)
+		defer hub.Unregister(client)
 
 		for {
 			_, data, err := conn.ReadMessage()
@@ -53,12 +52,29 @@ func MountWS(app *fiber.App, hub *Hub, pub Publisher, log zerolog.Logger) {
 			if env.Type != "cmd" || env.Topic == "" {
 				continue
 			}
-			if err := pub.Publish(env.Topic, env.Payload); err != nil {
-				log.Debug().Err(err).Str("topic", env.Topic).Msg("mqtt publish from ws")
-				if b, err := json.Marshal(Envelope{Type: "error", Topic: env.Topic, Payload: err.Error()}); err == nil {
-					_ = client.Send(b)
-				}
+			if !hub.MQTTConnected() {
+				_ = client.Send(mustJSON(Envelope{
+					Type: "error", Topic: env.Topic, Payload: "mqtt not connected",
+				}))
+				continue
 			}
+			cmdTopic := CommandTopic(env.Topic)
+			if err := pub.Publish(cmdTopic, env.Payload); err != nil {
+				log.Warn().Err(err).Str("topic", cmdTopic).Str("payload", env.Payload).Msg("mqtt publish from ws")
+				_ = client.Send(mustJSON(Envelope{
+					Type: "error", Topic: env.Topic, Payload: err.Error(),
+				}))
+				continue
+			}
+			log.Debug().Str("topic", cmdTopic).Str("payload", env.Payload).Msg("mqtt cmd")
 		}
 	}))
+}
+
+func mustJSON(env Envelope) []byte {
+	b, err := json.Marshal(env)
+	if err != nil {
+		return []byte(`{"type":"error","payload":"encode"}`)
+	}
+	return b
 }

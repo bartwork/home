@@ -13,12 +13,29 @@ CREATE TABLE users (
     created_at    TEXT    NOT NULL DEFAULT (datetime('now'))
 );
 
+CREATE TABLE rooms (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    name       TEXT    NOT NULL UNIQUE,
+    x          REAL    NOT NULL DEFAULT 0,
+    y          REAL    NOT NULL DEFAULT 0,
+    w          REAL    NOT NULL DEFAULT 48,
+    h          REAL    NOT NULL DEFAULT 40,
+    sort_order INTEGER NOT NULL DEFAULT 0
+);
+
 CREATE TABLE devices (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     name        TEXT    NOT NULL,
     mqtt_topic  TEXT    NOT NULL UNIQUE,
     device_type TEXT    NOT NULL,
     unit        TEXT    NOT NULL DEFAULT '',
+    power_topic TEXT    NOT NULL DEFAULT '',
+    room_id     INTEGER REFERENCES rooms(id) ON DELETE SET NULL,
+    icon        TEXT    NOT NULL DEFAULT '',
+    x           REAL    NOT NULL DEFAULT 4,
+    y           REAL    NOT NULL DEFAULT 4,
+    w           REAL    NOT NULL DEFAULT 44,
+    h           REAL    NOT NULL DEFAULT 22,
     is_active   INTEGER NOT NULL DEFAULT 1 CHECK (is_active IN (0, 1)),
     created_at  TEXT    NOT NULL DEFAULT (datetime('now')),
     wb_device   TEXT    NOT NULL DEFAULT '',
@@ -27,6 +44,7 @@ CREATE TABLE devices (
 );
 
 CREATE INDEX idx_devices_type ON devices (device_type);
+CREATE INDEX idx_devices_room ON devices (room_id);
 
 CREATE TABLE discovered_devices (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -50,6 +68,8 @@ CREATE INDEX idx_discovered_type ON discovered_devices (suggested_type);
 DROP INDEX IF EXISTS idx_discovered_type;
 DROP INDEX IF EXISTS idx_discovered_status;
 DROP TABLE IF EXISTS discovered_devices;
+DROP INDEX IF EXISTS idx_devices_room;
 DROP INDEX IF EXISTS idx_devices_type;
 DROP TABLE IF EXISTS devices;
+DROP TABLE IF EXISTS rooms;
 DROP TABLE IF EXISTS users;

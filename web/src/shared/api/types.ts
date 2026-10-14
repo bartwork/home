@@ -10,16 +10,47 @@ export type User = {
   active: boolean
 }
 
+export type DeviceType = 'switch' | 'range' | 'sensor' | 'raw'
+
+export type DeviceIcon =
+  | ''
+  | 'light'
+  | 'dimmer'
+  | 'switch'
+  | 'fan'
+  | 'sensor'
+  | 'socket'
+  | 'thermo'
+
 export type Device = {
   id: number
   name: string
   mqttTopic: string
-  deviceType: string
-  unit?: string
+  deviceType: DeviceType | string
+  unit: string
+  powerTopic: string
+  roomId?: number
+  roomName: string
+  icon: string
+  x: number
+  y: number
+  w: number
+  h: number
   active: boolean
-  wbDevice?: string
-  wbControl?: string
-  source?: string
+  createdAt: string
+  wbDevice: string
+  wbControl: string
+  source: string
+}
+
+export type Room = {
+  id: number
+  name: string
+  x: number
+  y: number
+  w: number
+  h: number
+  sortOrder: number
 }
 
 export type Discovered = {
@@ -29,9 +60,9 @@ export type Discovered = {
   wbControl: string
   title: string
   suggestedType: string
-  unit?: string
-  lastPayload?: string
-  lastSeenAt?: string
+  unit: string
+  lastPayload: string
+  lastSeenAt: string
   status: string
 }
 

@@ -19,3 +19,7 @@ sql:
               pointer: true
           - column: "devices.is_active"
             go_type: "bool"
+          - column: "devices.room_id"
+            go_type:
+              type: "int64"
+              pointer: true

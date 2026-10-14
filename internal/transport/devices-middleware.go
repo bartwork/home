@@ -10,8 +10,8 @@ import (
 
 type DevicesListDevices func(ctx context.Context) (devices []dto.Device, err error)
 type DevicesGetDevice func(ctx context.Context, id int64) (device dto.Device, err error)
-type DevicesCreateDevice func(ctx context.Context, name string, mqttTopic string, deviceType string, unit string, active bool) (device dto.Device, err error)
-type DevicesUpdateDevice func(ctx context.Context, id int64, name string, mqttTopic string, deviceType string, unit string, active bool) (device dto.Device, err error)
+type DevicesCreateDevice func(ctx context.Context, name string, mqttTopic string, deviceType string, unit string, powerTopic string, roomId int64, icon string, x float64, y float64, w float64, h float64, active bool) (device dto.Device, err error)
+type DevicesUpdateDevice func(ctx context.Context, id int64, name string, mqttTopic string, deviceType string, unit string, powerTopic string, roomId int64, icon string, x float64, y float64, w float64, h float64, active bool) (device dto.Device, err error)
 type DevicesDeleteDevice func(ctx context.Context, id int64) (err error)
 
 type MiddlewareDevices func(next contracts.Devices) contracts.Devices
