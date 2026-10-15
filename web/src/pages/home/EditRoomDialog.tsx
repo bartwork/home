@@ -96,7 +96,13 @@ export function EditRoomDialog({ room, open, onClose, onSave, onDelete }: Props)
             autoFocus
           />
           <Stack direction="row" spacing={1}>
-            <TextField label="X %" value={x} onChange={(e) => setX(e.target.value)} fullWidth />
+            <TextField
+              label="X %"
+              value={x}
+              onChange={(e) => setX(e.target.value)}
+              fullWidth
+              helperText="на плане можно тянуть заголовок"
+            />
             <TextField label="Y %" value={y} onChange={(e) => setY(e.target.value)} fullWidth />
           </Stack>
           <Stack direction="row" spacing={1}>

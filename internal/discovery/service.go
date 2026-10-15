@@ -20,8 +20,25 @@ func NewService(disco repository.DiscoveredStore, devs repository.DeviceStore, r
 	return &Service{disco: disco, devs: devs, rooms: rooms}
 }
 
+func usefulType(typ string) bool {
+	switch typ {
+	case "switch", "range", "sensor":
+		return true
+	default:
+		return false
+	}
+}
+
 func (s *Service) ListNew(ctx context.Context) ([]dto.Discovered, error) {
 	rows, err := s.disco.ListNew(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return mapList(rows), nil
+}
+
+func (s *Service) ListIgnored(ctx context.Context) ([]dto.Discovered, error) {
+	rows, err := s.disco.ListIgnored(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -143,7 +160,24 @@ func (s *Service) Ignore(ctx context.Context, id int64) error {
 	return s.disco.SetStatus(ctx, id, "ignored")
 }
 
-func (s *Service) AcceptAll(ctx context.Context, typ string) (accepted int, err error) {
+// Restore возвращает скрытый кандидат в статус new.
+func (s *Service) Restore(ctx context.Context, id int64) error {
+	if id <= 0 {
+		return errors.ErrBadRequest
+	}
+	row, err := s.disco.Get(ctx, id)
+	if err != nil {
+		return err
+	}
+	if row.Status != "ignored" {
+		return errors.ErrBadRequest
+	}
+	return s.disco.SetStatus(ctx, id, "new")
+}
+
+// AcceptAll принимает полезные типы (switch/range/sensor).
+// При ignoreRaw=true остальные new (raw/пусто) скрываются.
+func (s *Service) AcceptAll(ctx context.Context, typ string, ignoreRaw bool) (accepted, ignored, failed int, err error) {
 	typ = strings.TrimSpace(typ)
 	var rows []repository.Discovered
 	if typ == "" {
@@ -152,18 +186,26 @@ func (s *Service) AcceptAll(ctx context.Context, typ string) (accepted int, err 
 		rows, err = s.disco.ListNewByType(ctx, typ)
 	}
 	if err != nil {
-		return 0, err
+		return 0, 0, 0, err
 	}
 	for _, row := range rows {
-		if typ == "" && (row.SuggestedType == "" || row.SuggestedType == "raw") {
+		if typ == "" && !usefulType(row.SuggestedType) {
+			if ignoreRaw {
+				if ierr := s.Ignore(ctx, row.ID); ierr == nil {
+					ignored++
+				} else {
+					failed++
+				}
+			}
 			continue
 		}
-		if _, err := s.Accept(ctx, row.ID, AcceptOpts{}); err != nil {
+		if _, aerr := s.Accept(ctx, row.ID, AcceptOpts{}); aerr != nil {
+			failed++
 			continue
 		}
 		accepted++
 	}
-	return accepted, nil
+	return accepted, ignored, failed, nil
 }
 
 func mapList(rows []repository.Discovered) []dto.Discovered {

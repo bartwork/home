@@ -38,7 +38,7 @@ func main() {
 		log.Fatal().Err(err).Msg("mkdir db")
 	}
 
-	database, err := store.Open(cfg.DBPath)
+	database, err := store.Open(cfg.DBPath, cfg.SQLCipherKey)
 	if err != nil {
 		log.Fatal().Err(err).Str("path", cfg.DBPath).Msg("open db")
 	}
@@ -50,7 +50,7 @@ func main() {
 	roomsRepo := repository.NewRooms(database)
 	roomsSvc := rooms.New(roomsRepo)
 
-	if err := auth.SeedAdmin(ctx, usersRepo); err != nil {
+	if err := auth.SeedAdmin(ctx, usersRepo, cfg.AdminPassword, cfg.IsProd()); err != nil {
 		log.Fatal().Err(err).Msg("seed admin")
 	}
 	if err := seed.Run(ctx, log.Logger, roomsRepo, devicesRepo); err != nil {

@@ -7,10 +7,12 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
+  FormControlLabel,
   InputLabel,
   MenuItem,
   Select,
   Stack,
+  Switch,
   TextField,
 } from '@mui/material'
 import type { Device, Room } from '../../shared/api/types'
@@ -23,15 +25,17 @@ type Props = {
   open: boolean
   onClose: () => void
   onSave: (device: Device) => Promise<void>
+  onDelete?: (id: number) => Promise<void>
 }
 
-export function EditDeviceDialog({ device, rooms, open, onClose, onSave }: Props) {
+export function EditDeviceDialog({ device, rooms, open, onClose, onSave, onDelete }: Props) {
   const [name, setName] = useState('')
   const [powerTopic, setPowerTopic] = useState('')
   const [roomId, setRoomId] = useState(0)
   const [icon, setIcon] = useState('')
   const [x, setX] = useState('4')
   const [y, setY] = useState('4')
+  const [active, setActive] = useState(true)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -43,6 +47,7 @@ export function EditDeviceDialog({ device, rooms, open, onClose, onSave }: Props
     setIcon(device.icon || '')
     setX(String(device.x))
     setY(String(device.y))
+    setActive(device.active)
     setError(null)
   }, [device])
 
@@ -61,7 +66,23 @@ export function EditDeviceDialog({ device, rooms, open, onClose, onSave }: Props
         icon,
         x: parseNum(x, device.x),
         y: parseNum(y, device.y),
+        active,
       })
+      onClose()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Ошибка')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function remove() {
+    if (!device || !onDelete) return
+    if (!window.confirm(`Удалить «${device.name}»? Топик снова появится в «Обнаружено».`)) return
+    setBusy(true)
+    setError(null)
+    try {
+      await onDelete(device.id)
       onClose()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Ошибка')
@@ -126,6 +147,10 @@ export function EditDeviceDialog({ device, rooms, open, onClose, onSave }: Props
             />
             <TextField label="Порядок Y" value={y} onChange={(e) => setY(e.target.value)} fullWidth />
           </Stack>
+          <FormControlLabel
+            control={<Switch checked={active} onChange={(e) => setActive(e.target.checked)} />}
+            label="Показывать на плане"
+          />
           {error ? (
             <Alert severity="error" variant="outlined">
               {error}
@@ -133,13 +158,22 @@ export function EditDeviceDialog({ device, rooms, open, onClose, onSave }: Props
           ) : null}
         </Stack>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} disabled={busy}>
-          Отмена
-        </Button>
-        <Button variant="contained" onClick={save} disabled={busy}>
-          Сохранить
-        </Button>
+      <DialogActions sx={{ justifyContent: 'space-between' }}>
+        {onDelete ? (
+          <Button color="error" onClick={remove} disabled={busy}>
+            Удалить
+          </Button>
+        ) : (
+          <span />
+        )}
+        <Stack direction="row" spacing={1}>
+          <Button onClick={onClose} disabled={busy}>
+            Отмена
+          </Button>
+          <Button variant="contained" onClick={save} disabled={busy}>
+            Сохранить
+          </Button>
+        </Stack>
       </DialogActions>
     </Dialog>
   )

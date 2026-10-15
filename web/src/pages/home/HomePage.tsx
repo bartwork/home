@@ -4,6 +4,7 @@ import { Link as RouterLink, Navigate } from 'react-router-dom'
 import {
   createRoom,
   countDiscovered,
+  deleteDevice,
   deleteRoom,
   listDevices,
   listRooms,
@@ -82,8 +83,12 @@ export function HomePage() {
   const byRoom = useMemo(() => {
     const map = new Map<number, Device[]>()
     const unassigned: Device[] = []
+    const hidden: Device[] = []
     for (const d of devices) {
-      if (!d.active) continue
+      if (!d.active) {
+        hidden.push(d)
+        continue
+      }
       if (d.roomId) {
         const list = map.get(d.roomId) ?? []
         list.push(d)
@@ -92,7 +97,7 @@ export function HomePage() {
         unassigned.push(d)
       }
     }
-    return { map, unassigned }
+    return { map, unassigned, hidden }
   }, [devices])
 
   if (!token) {
@@ -156,7 +161,8 @@ export function HomePage() {
       ) : null}
       {editMode ? (
         <Alert severity="info" variant="outlined" sx={{ mb: 2 }}>
-          Раскладка: «+ Комната»; клик по комнате — позиция/размер (%); по устройству — имя, комната, порядок в сетке.
+          Раскладка: тяните комнату за заголовок, угол — размер; плитки — DnD для порядка. Клик без
+          движения — имя/настройки.
         </Alert>
       ) : null}
 
@@ -209,6 +215,27 @@ export function HomePage() {
                 sendCmd={sendCmd}
                 onEditRoom={(r) => setRoomDraft(r)}
                 onEditDevice={setEditDevice}
+                onRoomLayout={(next, commit) => {
+                  setRooms((prev) => prev.map((r) => (r.id === next.id ? next : r)))
+                  if (commit) {
+                    updateRoom(next).catch((err: Error) => setError(err.message))
+                  }
+                }}
+                onDevicesReorder={(ordered) => {
+                  const prevById = new Map(devices.map((d) => [d.id, d]))
+                  const changed = ordered.filter((d) => {
+                    const old = prevById.get(d.id)
+                    return !old || old.x !== d.x || old.y !== d.y
+                  })
+                  setDevices((prev) => {
+                    const byId = new Map(ordered.map((d) => [d.id, d]))
+                    return prev.map((d) => byId.get(d.id) ?? d)
+                  })
+                  if (changed.length === 0) return
+                  void Promise.all(changed.map((d) => updateDevice(d))).catch((err: Error) =>
+                    setError(err.message),
+                  )
+                }}
               />
             ))}
         </Box>
@@ -238,6 +265,28 @@ export function HomePage() {
                 editMode={editMode}
                 sendCmd={sendCmd}
                 onEdit={setEditDevice}
+              />
+            ))}
+          </Box>
+        </Paper>
+      ) : null}
+
+      {editMode && byRoom.hidden.length > 0 ? (
+        <Paper
+          elevation={0}
+          sx={{ mt: 2, p: 2, border: 1, borderColor: 'divider', bgcolor: 'rgba(18, 26, 36, 0.72)' }}
+        >
+          <Typography variant="overline" color="text.secondary" sx={{ letterSpacing: '0.1em' }}>
+            Скрытые с плана
+          </Typography>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
+            {byRoom.hidden.map((d) => (
+              <Chip
+                key={d.id}
+                label={d.name}
+                onClick={() => setEditDevice(d)}
+                variant="outlined"
+                sx={{ cursor: 'pointer' }}
               />
             ))}
           </Box>
@@ -280,6 +329,10 @@ export function HomePage() {
         onSave={async (device) => {
           const res = await updateDevice(device)
           setDevices((prev) => prev.map((d) => (d.id === res.device.id ? res.device : d)))
+        }}
+        onDelete={async (id) => {
+          await deleteDevice(id)
+          setDevices((prev) => prev.filter((d) => d.id !== id))
         }}
       />
     </AppShell>

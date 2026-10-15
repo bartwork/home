@@ -2,14 +2,28 @@ package discovery
 
 import (
 	"strconv"
+	"strings"
 
+	"github.com/bartwork/home/contracts/dto"
 	"github.com/bartwork/home/pkg/errors"
 	"github.com/gofiber/fiber/v2"
 )
 
 func Mount(app *fiber.App, svc *Service) {
 	app.Get("/api/v1/discovered", func(c *fiber.Ctx) error {
-		items, err := svc.ListNew(c.UserContext())
+		status := strings.ToLower(strings.TrimSpace(c.Query("status")))
+		var (
+			items []dto.Discovered
+			err   error
+		)
+		switch status {
+		case "", "new":
+			items, err = svc.ListNew(c.UserContext())
+		case "ignored":
+			items, err = svc.ListIgnored(c.UserContext())
+		default:
+			return writeErr(c, errors.ErrBadRequest)
+		}
 		if err != nil {
 			return writeErr(c, err)
 		}
@@ -26,11 +40,12 @@ func Mount(app *fiber.App, svc *Service) {
 
 	app.Post("/api/v1/discovered/accept-all", func(c *fiber.Ctx) error {
 		typ := c.Query("type")
-		n, err := svc.AcceptAll(c.UserContext(), typ)
+		ignoreRaw := c.Query("ignoreRaw") != "0"
+		accepted, ignored, failed, err := svc.AcceptAll(c.UserContext(), typ, ignoreRaw)
 		if err != nil {
 			return writeErr(c, err)
 		}
-		return c.JSON(fiber.Map{"accepted": n})
+		return c.JSON(fiber.Map{"accepted": accepted, "ignored": ignored, "failed": failed})
 	})
 
 	app.Post("/api/v1/discovered/:id/accept", func(c *fiber.Ctx) error {
@@ -59,6 +74,17 @@ func Mount(app *fiber.App, svc *Service) {
 			return writeErr(c, errors.ErrBadRequest)
 		}
 		if err := svc.Ignore(c.UserContext(), id); err != nil {
+			return writeErr(c, err)
+		}
+		return c.SendStatus(fiber.StatusNoContent)
+	})
+
+	app.Post("/api/v1/discovered/:id/restore", func(c *fiber.Ctx) error {
+		id, err := strconv.ParseInt(c.Params("id"), 10, 64)
+		if err != nil {
+			return writeErr(c, errors.ErrBadRequest)
+		}
+		if err := svc.Restore(c.UserContext(), id); err != nil {
 			return writeErr(c, err)
 		}
 		return c.SendStatus(fiber.StatusNoContent)

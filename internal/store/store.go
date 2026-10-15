@@ -8,19 +8,18 @@ import (
 	"strings"
 
 	"github.com/bartwork/home/db/migrations"
+	"github.com/bartwork/home/internal/config"
 	_ "github.com/mutecomm/go-sqlcipher/v4"
 	"github.com/pressly/goose/v3"
 )
 
-// SQLCipherKey encrypts the DB file; override with -ldflags "-X ...SQLCipherKey=...".
-var SQLCipherKey = "home-dev-sqlcipher-key"
-
-func Open(path string) (*sql.DB, error) {
-	if strings.TrimSpace(SQLCipherKey) == "" {
+// Open opens an encrypted SQLite DB at path using key (SQLCipher).
+func Open(path, key string) (*sql.DB, error) {
+	if strings.TrimSpace(key) == "" {
 		return nil, fmt.Errorf("empty SQLCipher key")
 	}
 
-	dsn := path + "?_pragma_key=" + url.QueryEscape(SQLCipherKey) + "&_pragma_cipher_page_size=4096"
+	dsn := path + "?_pragma_key=" + url.QueryEscape(key) + "&_pragma_cipher_page_size=4096"
 	db, err := sql.Open("sqlite3", dsn)
 	if err != nil {
 		return nil, fmt.Errorf("open: %w", err)
@@ -48,6 +47,11 @@ func Open(path string) (*sql.DB, error) {
 		return nil, err
 	}
 	return db, nil
+}
+
+// OpenDev opens DB with the built-in development key (tests / local helpers).
+func OpenDev(path string) (*sql.DB, error) {
+	return Open(path, config.DevSQLCipherKey)
 }
 
 func migrate(db *sql.DB) error {

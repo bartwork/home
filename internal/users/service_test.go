@@ -13,7 +13,7 @@ import (
 )
 
 func TestUsersCRUD(t *testing.T) {
-	db, err := store.Open(filepath.Join(t.TempDir(), "home.db"))
+	db, err := store.OpenDev(filepath.Join(t.TempDir(), "home.db"))
 	if err != nil {
 		t.Fatal(err)
 	}

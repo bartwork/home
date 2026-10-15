@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Box, Typography } from '@mui/material'
 import type { Device } from '../../shared/api/types'
 import { iconFor } from './icons'
+import { DimmerHero, HERO_SIZE } from './widgets/DimmerHero'
 import {
   DimmerWidget,
   isDimmerOn,
@@ -87,7 +88,8 @@ export function DeviceTile({ device, value, powerValue, editMode, sendCmd, onEdi
           minWidth: 0,
           display: 'grid',
           placeItems: 'center',
-          overflow: 'hidden',
+          overflow: 'visible',
+          py: '4px',
         }}
       >
         {editMode ? (
@@ -107,35 +109,21 @@ export function DeviceTile({ device, value, powerValue, editMode, sendCmd, onEdi
             sx={{
               all: 'unset',
               boxSizing: 'border-box',
-              width: 52,
-              height: 52,
+              width: HERO_SIZE,
+              height: HERO_SIZE,
               borderRadius: '50%',
               display: 'grid',
               placeItems: 'center',
               cursor: 'pointer',
               bgcolor: on ? 'primary.main' : 'rgba(232, 238, 246, 0.08)',
               color: on ? 'primary.contrastText' : 'text.secondary',
-              boxShadow: on ? '0 4px 14px rgba(94, 200, 216, 0.35)' : 'none',
-              transition: 'background 140ms ease, transform 120ms ease',
+              boxShadow: on ? '0 2px 10px rgba(94, 200, 216, 0.4)' : 'none',
+              transition: 'background 140ms ease, transform 120ms ease, box-shadow 140ms ease',
               '&:hover': { filter: 'brightness(1.06)' },
               '&:active': { transform: 'scale(0.96)' },
             }}
           >
-            {isDimmer ? (
-              <Typography
-                sx={{
-                  fontWeight: 700,
-                  fontSize: '1.1rem',
-                  lineHeight: 1,
-                  textAlign: 'center',
-                  fontVariantNumeric: 'tabular-nums',
-                }}
-              >
-                {shown === null ? '—' : shown}
-              </Typography>
-            ) : (
-              <Icon sx={{ fontSize: 26 }} />
-            )}
+            {isDimmer ? <DimmerHero level={shown} on={on} /> : <Icon sx={{ fontSize: 28 }} />}
           </Box>
         ) : device.deviceType === 'sensor' ? (
           <Box onClick={(e) => e.stopPropagation()} onPointerDown={(e) => e.stopPropagation()}>
@@ -148,7 +136,6 @@ export function DeviceTile({ device, value, powerValue, editMode, sendCmd, onEdi
         )}
       </Box>
 
-      {/* Фиксированная полоса: у диммера слайдер, у остальных пусто — сетка ровная */}
       <Box
         sx={{
           height: 26,

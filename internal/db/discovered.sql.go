@@ -47,6 +47,50 @@ func (q *Queries) GetDiscovered(ctx context.Context, id int64) (DiscoveredDevice
 	return i, err
 }
 
+const listDiscoveredIgnored = `-- name: ListDiscoveredIgnored :many
+SELECT
+    id, mqtt_topic, wb_device, wb_control, title, suggested_type, unit,
+    last_payload, last_seen_at, status, created_at
+FROM discovered_devices
+WHERE status = 'ignored'
+ORDER BY last_seen_at DESC, id DESC
+`
+
+func (q *Queries) ListDiscoveredIgnored(ctx context.Context) ([]DiscoveredDevice, error) {
+	rows, err := q.db.QueryContext(ctx, listDiscoveredIgnored)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []DiscoveredDevice{}
+	for rows.Next() {
+		var i DiscoveredDevice
+		if err := rows.Scan(
+			&i.ID,
+			&i.MqttTopic,
+			&i.WbDevice,
+			&i.WbControl,
+			&i.Title,
+			&i.SuggestedType,
+			&i.Unit,
+			&i.LastPayload,
+			&i.LastSeenAt,
+			&i.Status,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listDiscoveredNew = `-- name: ListDiscoveredNew :many
 SELECT
     id, mqtt_topic, wb_device, wb_control, title, suggested_type, unit,

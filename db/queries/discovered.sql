@@ -75,3 +75,11 @@ SELECT
 FROM discovered_devices
 WHERE status = 'new' AND suggested_type = ?
 ORDER BY id;
+
+-- name: ListDiscoveredIgnored :many
+SELECT
+    id, mqtt_topic, wb_device, wb_control, title, suggested_type, unit,
+    last_payload, last_seen_at, status, created_at
+FROM discovered_devices
+WHERE status = 'ignored'
+ORDER BY last_seen_at DESC, id DESC;

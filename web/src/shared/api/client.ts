@@ -107,6 +107,10 @@ export function updateDevice(device: Device) {
   })
 }
 
+export function deleteDevice(id: number) {
+  return api<void>(`/api/v1/devices/${id}`, { method: 'DELETE' })
+}
+
 export async function listRooms(): Promise<Room[]> {
   const res = await api<{ rooms?: Room[] }>('/api/v1/rooms')
   return res.rooms ?? []
@@ -130,8 +134,9 @@ export function deleteRoom(id: number) {
   return api<void>(`/api/v1/rooms/${id}`, { method: 'DELETE' })
 }
 
-export async function listDiscovered(): Promise<Discovered[]> {
-  const res = await api<{ discovered?: Discovered[] }>('/api/v1/discovered')
+export async function listDiscovered(status: 'new' | 'ignored' = 'new'): Promise<Discovered[]> {
+  const q = status === 'ignored' ? '?status=ignored' : ''
+  const res = await api<{ discovered?: Discovered[] }>(`/api/v1/discovered${q}`)
   return res.discovered ?? []
 }
 
@@ -154,7 +159,18 @@ export function ignoreDiscovered(id: number) {
   return api<void>(`/api/v1/discovered/${id}/ignore`, { method: 'POST' })
 }
 
-export function acceptAllDiscovered(type?: string) {
-  const q = type ? `?type=${encodeURIComponent(type)}` : ''
-  return api<{ accepted: number }>(`/api/v1/discovered/accept-all${q}`, { method: 'POST' })
+export function restoreDiscovered(id: number) {
+  return api<void>(`/api/v1/discovered/${id}/restore`, { method: 'POST' })
+}
+
+/** Принимает switch/range/sensor; raw и прочее скрывает (ignoreRaw по умолчанию). */
+export function acceptAllDiscovered(opts?: { type?: string; ignoreRaw?: boolean }) {
+  const params = new URLSearchParams()
+  if (opts?.type) params.set('type', opts.type)
+  if (opts?.ignoreRaw === false) params.set('ignoreRaw', '0')
+  const q = params.toString()
+  return api<{ accepted: number; ignored: number; failed: number }>(
+    `/api/v1/discovered/accept-all${q ? `?${q}` : ''}`,
+    { method: 'POST' },
+  )
 }

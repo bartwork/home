@@ -11,6 +11,7 @@ import (
 type DiscoveredStore interface {
 	ListNew(ctx context.Context) ([]Discovered, error)
 	ListNewByType(ctx context.Context, typ string) ([]Discovered, error)
+	ListIgnored(ctx context.Context) ([]Discovered, error)
 	Get(ctx context.Context, id int64) (Discovered, error)
 	UpsertState(ctx context.Context, in WriteDiscovered) error
 	UpsertMeta(ctx context.Context, in WriteDiscovered) error
@@ -66,6 +67,18 @@ func (r *DiscoveredRepo) ListNew(ctx context.Context) ([]Discovered, error) {
 
 func (r *DiscoveredRepo) ListNewByType(ctx context.Context, typ string) ([]Discovered, error) {
 	rows, err := r.q.ListDiscoveredNewByType(ctx, typ)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]Discovered, 0, len(rows))
+	for _, row := range rows {
+		out = append(out, mapDiscovered(row))
+	}
+	return out, nil
+}
+
+func (r *DiscoveredRepo) ListIgnored(ctx context.Context) ([]Discovered, error) {
+	rows, err := r.q.ListDiscoveredIgnored(ctx)
 	if err != nil {
 		return nil, err
 	}

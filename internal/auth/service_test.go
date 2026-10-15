@@ -12,7 +12,7 @@ import (
 )
 
 func TestLoginSeedAdmin(t *testing.T) {
-	db, err := store.Open(filepath.Join(t.TempDir(), "home.db"))
+	db, err := store.OpenDev(filepath.Join(t.TempDir(), "home.db"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -20,7 +20,7 @@ func TestLoginSeedAdmin(t *testing.T) {
 
 	repo := repository.NewUsers(db)
 	ctx := context.Background()
-	if err := auth.SeedAdmin(ctx, repo); err != nil {
+	if err := auth.SeedAdmin(ctx, repo, "", false); err != nil {
 		t.Fatal(err)
 	}
 

@@ -11,7 +11,7 @@ import (
 
 func TestOpenMigratesUsers(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "home.db")
-	db, err := store.Open(path)
+	db, err := store.OpenDev(path)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -103,7 +103,7 @@ func TestOpenMigratesUsers(t *testing.T) {
 
 func TestDatabaseFileIsEncrypted(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "home.db")
-	db, err := store.Open(path)
+	db, err := store.OpenDev(path)
 	if err != nil {
 		t.Fatal(err)
 	}
