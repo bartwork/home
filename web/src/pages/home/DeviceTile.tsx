@@ -1,16 +1,12 @@
-import { useState } from 'react'
 import { Box, Typography } from '@mui/material'
+import type { SvgIconComponent } from '@mui/icons-material'
 import type { Device } from '../../shared/api/types'
 import { iconFor } from './icons'
-import { DimmerHero, HERO_SIZE } from './widgets/DimmerHero'
-import {
-  DimmerWidget,
-  isDimmerOn,
-  parseDimmerLevel,
-  toggleDimmerPower,
-} from './widgets/DimmerWidget'
+import { DimmerWidget, isDimmerOn, parseDimmerLevel } from './widgets/DimmerWidget'
 import { SensorWidget } from './widgets/SensorWidget'
 import { RawWidget } from './widgets/RawWidget'
+
+const SWITCH_HERO = 56
 
 type Props = {
   device: Device
@@ -21,24 +17,55 @@ type Props = {
   onEdit: (device: Device) => void
 }
 
+function SwitchHero({
+  name,
+  on,
+  Icon,
+  onToggle,
+}: {
+  name: string
+  on: boolean
+  Icon: SvgIconComponent
+  onToggle: () => void
+}) {
+  return (
+    <Box
+      component="button"
+      type="button"
+      aria-label={on ? `${name}: выключить` : `${name}: включить`}
+      onClick={(e) => {
+        e.stopPropagation()
+        onToggle()
+      }}
+      onPointerDown={(e) => e.stopPropagation()}
+      sx={{
+        all: 'unset',
+        boxSizing: 'border-box',
+        width: SWITCH_HERO,
+        height: SWITCH_HERO,
+        borderRadius: '50%',
+        display: 'grid',
+        placeItems: 'center',
+        cursor: 'pointer',
+        bgcolor: on ? 'primary.main' : 'rgba(232, 238, 246, 0.08)',
+        color: on ? 'primary.contrastText' : 'text.secondary',
+        boxShadow: on ? '0 2px 10px rgba(94, 200, 216, 0.4)' : 'none',
+        transition: 'background 140ms ease, transform 120ms ease, box-shadow 140ms ease',
+        '&:hover': { filter: 'brightness(1.06)' },
+        '&:active': { transform: 'scale(0.96)' },
+      }}
+    >
+      <Icon sx={{ fontSize: 28 }} />
+    </Box>
+  )
+}
+
 export function DeviceTile({ device, value, powerValue, editMode, sendCmd, onEdit }: Props) {
   const Icon = iconFor(device)
   const isSwitch = device.deviceType === 'switch'
   const isDimmer = device.deviceType === 'range'
   const level = parseDimmerLevel(value)
-  const [preview, setPreview] = useState<number | null>(null)
-  const shown = preview ?? level
   const on = isSwitch ? value === '1' : isDimmer ? isDimmerOn(powerValue, level) : false
-
-  function onHeroClick() {
-    if (isSwitch) {
-      sendCmd(device.mqttTopic, on ? '0' : '1')
-      return
-    }
-    if (isDimmer) {
-      toggleDimmerPower(device, value, powerValue, sendCmd)
-    }
-  }
 
   return (
     <Box
@@ -50,14 +77,14 @@ export function DeviceTile({ device, value, powerValue, editMode, sendCmd, onEdi
         maxWidth: '100%',
         boxSizing: 'border-box',
         display: 'grid',
-        gridTemplateRows: '20px 1fr 26px',
+        gridTemplateRows: '20px 1fr',
         gap: 0.5,
         p: 1,
         borderRadius: 2.5,
         border: 1,
         borderColor: editMode ? 'secondary.main' : on ? 'rgba(94, 200, 216, 0.5)' : 'divider',
         background: on
-          ? 'linear-gradient(165deg, rgba(94, 200, 216, 0.2) 0%, rgba(16, 24, 34, 0.96) 60%)'
+          ? 'linear-gradient(165deg, rgba(94, 200, 216, 0.18) 0%, rgba(16, 24, 34, 0.96) 55%)'
           : 'linear-gradient(165deg, rgba(30, 40, 54, 0.96) 0%, rgba(12, 18, 28, 0.96) 100%)',
         boxShadow: on ? '0 0 20px rgba(94, 200, 216, 0.1)' : 'none',
         cursor: editMode ? 'pointer' : 'default',
@@ -88,43 +115,28 @@ export function DeviceTile({ device, value, powerValue, editMode, sendCmd, onEdi
           minWidth: 0,
           display: 'grid',
           placeItems: 'center',
-          overflow: 'visible',
-          py: '4px',
+          overflow: 'hidden',
         }}
       >
         {editMode ? (
           <Typography variant="caption" color="text.secondary">
             правка
           </Typography>
-        ) : isSwitch || isDimmer ? (
+        ) : isDimmer ? (
           <Box
-            component="button"
-            type="button"
-            aria-label={on ? `${device.name}: выключить` : `${device.name}: включить`}
-            onClick={(e) => {
-              e.stopPropagation()
-              onHeroClick()
-            }}
+            sx={{ width: '100%', height: '100%', minHeight: 0 }}
+            onClick={(e) => e.stopPropagation()}
             onPointerDown={(e) => e.stopPropagation()}
-            sx={{
-              all: 'unset',
-              boxSizing: 'border-box',
-              width: HERO_SIZE,
-              height: HERO_SIZE,
-              borderRadius: '50%',
-              display: 'grid',
-              placeItems: 'center',
-              cursor: 'pointer',
-              bgcolor: on ? 'primary.main' : 'rgba(232, 238, 246, 0.08)',
-              color: on ? 'primary.contrastText' : 'text.secondary',
-              boxShadow: on ? '0 2px 10px rgba(94, 200, 216, 0.4)' : 'none',
-              transition: 'background 140ms ease, transform 120ms ease, box-shadow 140ms ease',
-              '&:hover': { filter: 'brightness(1.06)' },
-              '&:active': { transform: 'scale(0.96)' },
-            }}
           >
-            {isDimmer ? <DimmerHero level={shown} on={on} /> : <Icon sx={{ fontSize: 28 }} />}
+            <DimmerWidget device={device} value={value} powerValue={powerValue} sendCmd={sendCmd} />
           </Box>
+        ) : isSwitch ? (
+          <SwitchHero
+            name={device.name}
+            on={on}
+            Icon={Icon}
+            onToggle={() => sendCmd(device.mqttTopic, on ? '0' : '1')}
+          />
         ) : device.deviceType === 'sensor' ? (
           <Box onClick={(e) => e.stopPropagation()} onPointerDown={(e) => e.stopPropagation()}>
             <SensorWidget device={device} value={value} sendCmd={sendCmd} />
@@ -134,31 +146,6 @@ export function DeviceTile({ device, value, powerValue, editMode, sendCmd, onEdi
             <RawWidget device={device} value={value} sendCmd={sendCmd} />
           </Box>
         )}
-      </Box>
-
-      <Box
-        sx={{
-          height: 26,
-          minHeight: 26,
-          maxHeight: 26,
-          display: 'flex',
-          alignItems: 'center',
-          minWidth: 0,
-          overflow: 'hidden',
-          px: 0.25,
-        }}
-        onClick={(e) => e.stopPropagation()}
-        onPointerDown={(e) => e.stopPropagation()}
-      >
-        {isDimmer && !editMode ? (
-          <DimmerWidget
-            device={device}
-            value={value}
-            powerValue={powerValue}
-            sendCmd={sendCmd}
-            onPreview={setPreview}
-          />
-        ) : null}
       </Box>
     </Box>
   )

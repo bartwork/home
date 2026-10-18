@@ -161,6 +161,7 @@ export function RoomPanel({
           letterSpacing: '0.08em',
           textTransform: 'uppercase',
           fontSize: '0.72rem',
+          textAlign: 'center',
           color: 'text.secondary',
           borderBottom: 1,
           borderColor: 'divider',

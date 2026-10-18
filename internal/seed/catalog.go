@@ -50,11 +50,14 @@ var Devices = []DeviceDef{
 	{Name: "тёплый пол", Room: "туалет", Type: "switch", Topic: "/devices/wb-mr6cv3_225/controls/K2", Icon: "thermo"},
 	{Name: "тёплый пол", Room: "ванна", Type: "switch", Topic: "/devices/wb-mr6cv3_225/controls/K4", Icon: "thermo"},
 	{Name: "тёплый пол", Room: "кухня", Type: "switch", Topic: "/devices/wb-mr6cv3_225/controls/K5", Icon: "thermo"},
-	{Name: "точки у люстры", Room: "комната", Type: "range", Topic: "/devices/wb-mdm3_75/controls/Channel 2", Icon: "dimmer"},
+	{Name: "дополнительный свет", Room: "комната", Type: "range", Topic: "/devices/wb-mdm3_75/controls/Channel 2", Icon: "dimmer"},
 	{Name: "лента карниза", Room: "комната", Type: "range", Topic: "/devices/wb-led_221/controls/RGB Strip Brightness", Icon: "light"},
-	{Name: "основной свет", Room: "кухня", Type: "range", Topic: "/devices/wb-mdm3_218/controls/Channel 1", Icon: "dimmer"},
-	{Name: "левый свет", Room: "кухня", Type: "range", Topic: "/devices/wb-mdm3_218/controls/Channel 2", Icon: "dimmer"},
-	{Name: "правый свет", Room: "кухня", Type: "range", Topic: "/devices/wb-mdm3_218/controls/Channel 3", Icon: "dimmer"},
+	{Name: "свет у окна", Room: "кухня", Type: "range", Topic: "/devices/wb-mdm3_218/controls/Channel 1", Icon: "dimmer"},
+	{Name: "лампа", Room: "кухня", Type: "range", Topic: "/devices/wb-mdm3_218/controls/Channel 2", Icon: "dimmer"},
+	{Name: "свет у двери", Room: "кухня", Type: "range", Topic: "/devices/wb-mdm3_218/controls/Channel 3", Icon: "dimmer"},
+	{Name: "бра", Room: "кухня", Type: "switch", Topic: "/devices/wb-mr6cv3_239/controls/K1", Icon: "light"},
+	{Name: "подсветка кухни", Room: "кухня", Type: "switch", Topic: "/devices/wb-mr6cv3_239/controls/K2", Icon: "light"},
+	{Name: "вытяжка", Room: "кухня", Type: "switch", Topic: "/devices/wb-mr6cv3_239/controls/K3", Icon: "fan"},
 }
 
 func powerFor(d DeviceDef) string {

@@ -1,0 +1,340 @@
+{
+  "commands": [
+    {
+      "name": "кухня · свет у окна · вкл",
+      "match": ["включи", "кухн", "окн"],
+      "topic": "/devices/wb-mdm3_218/controls/K1",
+      "payload": "1"
+    },
+    {
+      "name": "кухня · свет у окна · выкл",
+      "match": ["выключи", "кухн", "окн"],
+      "topic": "/devices/wb-mdm3_218/controls/K1",
+      "payload": "0"
+    },
+    {
+      "name": "кухня · лампа · вкл",
+      "match": ["включи", "кухн", "ламп"],
+      "topic": "/devices/wb-mdm3_218/controls/K2",
+      "payload": "1"
+    },
+    {
+      "name": "кухня · лампа · выкл",
+      "match": ["выключи", "кухн", "ламп"],
+      "topic": "/devices/wb-mdm3_218/controls/K2",
+      "payload": "0"
+    },
+    {
+      "name": "кухня · свет у двери · вкл",
+      "match": ["включи", "кухн", "двер"],
+      "topic": "/devices/wb-mdm3_218/controls/K3",
+      "payload": "1"
+    },
+    {
+      "name": "кухня · свет у двери · выкл",
+      "match": ["выключи", "кухн", "двер"],
+      "topic": "/devices/wb-mdm3_218/controls/K3",
+      "payload": "0"
+    },
+    {
+      "name": "кухня · бра · вкл",
+      "match": ["включи", "кухн", "бра"],
+      "topic": "/devices/wb-mr6cv3_239/controls/K1",
+      "payload": "1"
+    },
+    {
+      "name": "кухня · бра · выкл",
+      "match": ["выключи", "кухн", "бра"],
+      "topic": "/devices/wb-mr6cv3_239/controls/K1",
+      "payload": "0"
+    },
+    {
+      "name": "кухня · подсветка · вкл",
+      "match": ["включи", "кухн", "подсвет"],
+      "topic": "/devices/wb-mr6cv3_239/controls/K2",
+      "payload": "1"
+    },
+    {
+      "name": "кухня · подсветка · выкл",
+      "match": ["выключи", "кухн", "подсвет"],
+      "topic": "/devices/wb-mr6cv3_239/controls/K2",
+      "payload": "0"
+    },
+    {
+      "name": "кухня · вытяжка · вкл",
+      "match": ["включи", "кухн", "вытяж"],
+      "topic": "/devices/wb-mr6cv3_239/controls/K3",
+      "payload": "1"
+    },
+    {
+      "name": "кухня · вытяжка · выкл",
+      "match": ["выключи", "кухн", "вытяж"],
+      "topic": "/devices/wb-mr6cv3_239/controls/K3",
+      "payload": "0"
+    },
+    {
+      "name": "комната · бра около кладовки · вкл",
+      "match": ["включи", "бра", "кладов"],
+      "topic": "/devices/wb-mdm3_76/controls/K2",
+      "payload": "1"
+    },
+    {
+      "name": "комната · бра около кладовки · выкл",
+      "match": ["выключи", "бра", "кладов"],
+      "topic": "/devices/wb-mdm3_76/controls/K2",
+      "payload": "0"
+    },
+    {
+      "name": "комната · бра около лоджии · вкл",
+      "match": ["включи", "бра", "лоджи"],
+      "topic": "/devices/wb-mdm3_76/controls/K3",
+      "payload": "1"
+    },
+    {
+      "name": "комната · бра около лоджии · выкл",
+      "match": ["выключи", "бра", "лоджи"],
+      "topic": "/devices/wb-mdm3_76/controls/K3",
+      "payload": "0"
+    },
+    {
+      "name": "комната · дополнительный свет · вкл",
+      "match": ["включи", "комнат", "дополнительн"],
+      "topic": "/devices/wb-mdm3_75/controls/K2",
+      "payload": "1"
+    },
+    {
+      "name": "комната · дополнительный свет · выкл",
+      "match": ["выключи", "комнат", "дополнительн"],
+      "topic": "/devices/wb-mdm3_75/controls/K2",
+      "payload": "0"
+    },
+    {
+      "name": "комната · дополнительный свет · вкл (доп)",
+      "match": ["включи", "комнат", "доп"],
+      "topic": "/devices/wb-mdm3_75/controls/K2",
+      "payload": "1"
+    },
+    {
+      "name": "комната · дополнительный свет · выкл (доп)",
+      "match": ["выключи", "комнат", "доп"],
+      "topic": "/devices/wb-mdm3_75/controls/K2",
+      "payload": "0"
+    },
+    {
+      "name": "лоджия · свет · вкл",
+      "match": ["включи", "лоджи"],
+      "topic": "/devices/wb-mdm3_75/controls/K3",
+      "payload": "1"
+    },
+    {
+      "name": "лоджия · свет · выкл",
+      "match": ["выключи", "лоджи"],
+      "topic": "/devices/wb-mdm3_75/controls/K3",
+      "payload": "0"
+    },
+    {
+      "name": "кладовка · лента · вкл",
+      "match": ["включи", "лент", "кладов"],
+      "topic": "/devices/wb-mr6cv3_239/controls/K4",
+      "payload": "1"
+    },
+    {
+      "name": "кладовка · лента · выкл",
+      "match": ["выключи", "лент", "кладов"],
+      "topic": "/devices/wb-mr6cv3_239/controls/K4",
+      "payload": "0"
+    },
+    {
+      "name": "ванна · зеркало · вкл",
+      "match": ["включи", "ванн", "зеркал"],
+      "topic": "/devices/wb-mr6cv3_227/controls/K2",
+      "payload": "1"
+    },
+    {
+      "name": "ванна · зеркало · выкл",
+      "match": ["выключи", "ванн", "зеркал"],
+      "topic": "/devices/wb-mr6cv3_227/controls/K2",
+      "payload": "0"
+    },
+    {
+      "name": "ванна · вытяжка · вкл",
+      "match": ["включи", "ванн", "вытяж"],
+      "topic": "/devices/wb-mr6cv3_227/controls/K3",
+      "payload": "1"
+    },
+    {
+      "name": "ванна · вытяжка · выкл",
+      "match": ["выключи", "ванн", "вытяж"],
+      "topic": "/devices/wb-mr6cv3_227/controls/K3",
+      "payload": "0"
+    },
+    {
+      "name": "туалет · зеркало · вкл",
+      "match": ["включи", "туалет", "зеркал"],
+      "topic": "/devices/wb-mr6cv3_227/controls/K4",
+      "payload": "1"
+    },
+    {
+      "name": "туалет · зеркало · выкл",
+      "match": ["выключи", "туалет", "зеркал"],
+      "topic": "/devices/wb-mr6cv3_227/controls/K4",
+      "payload": "0"
+    },
+    {
+      "name": "туалет · вытяжка · вкл",
+      "match": ["включи", "туалет", "вытяж"],
+      "topic": "/devices/wb-mr6cv3_227/controls/K6",
+      "payload": "1"
+    },
+    {
+      "name": "туалет · вытяжка · выкл",
+      "match": ["выключи", "туалет", "вытяж"],
+      "topic": "/devices/wb-mr6cv3_227/controls/K6",
+      "payload": "0"
+    },
+    {
+      "name": "коридор · тёплый пол · вкл",
+      "match": ["включи", "тепл", "коридор"],
+      "topic": "/devices/wb-mr6cv3_225/controls/K1",
+      "payload": "1"
+    },
+    {
+      "name": "коридор · тёплый пол · выкл",
+      "match": ["выключи", "тепл", "коридор"],
+      "topic": "/devices/wb-mr6cv3_225/controls/K1",
+      "payload": "0"
+    },
+    {
+      "name": "кухня · тёплый пол · вкл",
+      "match": ["включи", "тепл", "кухн"],
+      "topic": "/devices/wb-mr6cv3_225/controls/K5",
+      "payload": "1"
+    },
+    {
+      "name": "кухня · тёплый пол · выкл",
+      "match": ["выключи", "тепл", "кухн"],
+      "topic": "/devices/wb-mr6cv3_225/controls/K5",
+      "payload": "0"
+    },
+    {
+      "name": "ванна · тёплый пол · вкл",
+      "match": ["включи", "тепл", "ванн"],
+      "topic": "/devices/wb-mr6cv3_225/controls/K4",
+      "payload": "1"
+    },
+    {
+      "name": "ванна · тёплый пол · выкл",
+      "match": ["выключи", "тепл", "ванн"],
+      "topic": "/devices/wb-mr6cv3_225/controls/K4",
+      "payload": "0"
+    },
+    {
+      "name": "туалет · тёплый пол · вкл",
+      "match": ["включи", "тепл", "туалет"],
+      "topic": "/devices/wb-mr6cv3_225/controls/K2",
+      "payload": "1"
+    },
+    {
+      "name": "туалет · тёплый пол · выкл",
+      "match": ["выключи", "тепл", "туалет"],
+      "topic": "/devices/wb-mr6cv3_225/controls/K2",
+      "payload": "0"
+    },
+    {
+      "name": "коридор · основной свет · вкл",
+      "match": ["включи", "коридор"],
+      "topic": "/devices/wb-mdm3_76/controls/K1",
+      "payload": "1"
+    },
+    {
+      "name": "коридор · основной свет · выкл",
+      "match": ["выключи", "коридор"],
+      "topic": "/devices/wb-mdm3_76/controls/K1",
+      "payload": "0"
+    },
+    {
+      "name": "комната · основной свет · вкл",
+      "match": ["включи", "комнат"],
+      "topic": "/devices/wb-mdm3_75/controls/K1",
+      "payload": "1"
+    },
+    {
+      "name": "комната · основной свет · выкл",
+      "match": ["выключи", "комнат"],
+      "topic": "/devices/wb-mdm3_75/controls/K1",
+      "payload": "0"
+    },
+    {
+      "name": "кухня · свет у окна · вкл (кратко)",
+      "match": ["включи", "кухн"],
+      "topic": "/devices/wb-mdm3_218/controls/K1",
+      "payload": "1"
+    },
+    {
+      "name": "кухня · свет у окна · выкл (кратко)",
+      "match": ["выключи", "кухн"],
+      "topic": "/devices/wb-mdm3_218/controls/K1",
+      "payload": "0"
+    },
+    {
+      "name": "кладовка · свет · вкл",
+      "match": ["включи", "кладов"],
+      "topic": "/devices/wb-mr6cv3_239/controls/K5",
+      "payload": "1"
+    },
+    {
+      "name": "кладовка · свет · выкл",
+      "match": ["выключи", "кладов"],
+      "topic": "/devices/wb-mr6cv3_239/controls/K5",
+      "payload": "0"
+    },
+    {
+      "name": "ванна · основной свет · вкл",
+      "match": ["включи", "ванн"],
+      "topic": "/devices/wb-mr6cv3_227/controls/K1",
+      "payload": "1"
+    },
+    {
+      "name": "ванна · основной свет · выкл",
+      "match": ["выключи", "ванн"],
+      "topic": "/devices/wb-mr6cv3_227/controls/K1",
+      "payload": "0"
+    },
+    {
+      "name": "туалет · свет · вкл",
+      "match": ["включи", "туалет"],
+      "topic": "/devices/wb-mr6cv3_227/controls/K5",
+      "payload": "1"
+    },
+    {
+      "name": "туалет · свет · выкл",
+      "match": ["выключи", "туалет"],
+      "topic": "/devices/wb-mr6cv3_227/controls/K5",
+      "payload": "0"
+    },
+    {
+      "name": "мастер · выкл всё",
+      "match": ["выключи", "всё"],
+      "topic": "/devices/wb-mr6cu_43/controls/K1",
+      "payload": "0"
+    },
+    {
+      "name": "мастер · выкл всё (все)",
+      "match": ["выключи", "все"],
+      "topic": "/devices/wb-mr6cu_43/controls/K1",
+      "payload": "0"
+    },
+    {
+      "name": "мастер · вкл",
+      "match": ["включи", "всё"],
+      "topic": "/devices/wb-mr6cu_43/controls/K1",
+      "payload": "1"
+    },
+    {
+      "name": "мастер · вкл (все)",
+      "match": ["включи", "все"],
+      "topic": "/devices/wb-mr6cu_43/controls/K1",
+      "payload": "1"
+    }
+  ]
+}
