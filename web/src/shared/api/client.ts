@@ -1,6 +1,6 @@
-import type { ColorFavorite, Device, Discovered, LoginResponse, Room, User } from './types'
+import type { ColorFavorite, Device, Discovered, LoginResponse, Room, Rule, RuleGraph, User } from './types'
 
-export type { ColorFavorite, Device, Discovered, LoginResponse, Room, User } from './types'
+export type { ColorFavorite, Device, Discovered, LoginResponse, Room, Rule, RuleGraph, User } from './types'
 
 const TOKEN_KEY = 'home.token'
 const USER_KEY = 'home.user'
@@ -200,4 +200,60 @@ export async function resetColorFavorites(): Promise<ColorFavorite[]> {
     method: 'POST',
   })
   return res.favorites ?? []
+}
+
+export async function listRules(): Promise<Rule[]> {
+  const res = await api<{ rules?: Rule[] }>('/api/v1/rules')
+  return res.rules ?? []
+}
+
+export function getRule(id: number) {
+  return api<{ rule: Rule }>(`/api/v1/rules/${id}`)
+}
+
+export function createRule(body: {
+  name: string
+  enabled?: boolean
+  mode?: string
+  cooldownMs?: number
+  graph: RuleGraph
+}) {
+  return api<{ rule: Rule }>('/api/v1/rules', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
+}
+
+export function updateRule(
+  id: number,
+  body: {
+    name: string
+    enabled?: boolean
+    mode?: string
+    cooldownMs?: number
+    graph: RuleGraph
+  },
+) {
+  return api<{ rule: Rule }>(`/api/v1/rules/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(body),
+  })
+}
+
+export function deleteRule(id: number) {
+  return api<void>(`/api/v1/rules/${id}`, { method: 'DELETE' })
+}
+
+export function setRuleEnabled(id: number, enabled: boolean) {
+  return api<{ rule: Rule }>(`/api/v1/rules/${id}/${enabled ? 'enable' : 'disable'}`, {
+    method: 'POST',
+  })
+}
+
+export function runRule(id: number) {
+  return api<void>(`/api/v1/rules/${id}/run`, { method: 'POST' })
+}
+
+export function ensureFloorRules() {
+  return api<{ created: number }>('/api/v1/rules/ensure-floors', { method: 'POST' })
 }

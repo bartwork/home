@@ -135,6 +135,9 @@ export function HomePage() {
               + Комната
             </Button>
           ) : null}
+          <Button component={RouterLink} to="/rules" size="small" color="inherit">
+            Правила
+          </Button>
           <Badge badgeContent={discoveredCount} color="primary" max={99}>
             <Button component={RouterLink} to="/discovered" size="small" color="inherit">
               Обнаружено

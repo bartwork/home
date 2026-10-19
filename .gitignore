@@ -6,5 +6,6 @@
 *.exe
 /data/
 *.db
+node_modules/
 web/node_modules/
 web/dist/

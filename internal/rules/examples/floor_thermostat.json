@@ -1,0 +1,50 @@
+{
+  "meta": { "floorDeviceId": 1 },
+  "nodes": [
+    {
+      "id": "t_temp",
+      "type": "trigger.mqtt",
+      "position": { "x": 0, "y": 0 },
+      "data": {
+        "topic": "/devices/wb-m1w2_83/controls/External Sensor 1",
+        "on": "change"
+      }
+    },
+    {
+      "id": "t_setpoint",
+      "type": "trigger.mqtt",
+      "position": { "x": 0, "y": 100 },
+      "data": {
+        "topic": "/devices/home/controls/floor_1_setpoint",
+        "on": "change"
+      }
+    },
+    {
+      "id": "t_mode",
+      "type": "trigger.mqtt",
+      "position": { "x": 0, "y": 200 },
+      "data": {
+        "topic": "/devices/home/controls/floor_1_mode",
+        "on": "change"
+      }
+    },
+    {
+      "id": "thermo",
+      "type": "logic.thermostat",
+      "position": { "x": 280, "y": 80 },
+      "data": {
+        "temp": { "topic": "/devices/wb-m1w2_83/controls/External Sensor 1" },
+        "setpoint": { "topic": "/devices/home/controls/floor_1_setpoint" },
+        "mode": { "topic": "/devices/home/controls/floor_1_mode" },
+        "hysteresis": 0.5,
+        "relay": "/devices/wb-mr6cv3_225/controls/K1",
+        "command": true
+      }
+    }
+  ],
+  "edges": [
+    { "id": "e_temp", "source": "t_temp", "target": "thermo" },
+    { "id": "e_sp", "source": "t_setpoint", "target": "thermo" },
+    { "id": "e_mode", "source": "t_mode", "target": "thermo" }
+  ]
+}

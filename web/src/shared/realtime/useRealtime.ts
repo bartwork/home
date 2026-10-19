@@ -133,7 +133,8 @@ export function useRealtime() {
         setLastError('Нет связи с сервером (WebSocket)')
         return
       }
-      if (!mqttRef.current) {
+      const homeVirtual = topic.startsWith('/devices/home/controls/')
+      if (!mqttRef.current && !homeVirtual) {
         setLastError('MQTT не подключён — команда не уйдёт на Wiren Board')
         return
       }
@@ -142,9 +143,11 @@ export function useRealtime() {
       const existing = pendingRef.current[topic]
       const restore = existing?.restore ?? valuesRef.current[topic] ?? '—'
       if (existing) window.clearTimeout(existing.timer)
+      // Home virtual topics echo locally — shorter timeout, no WB device wait.
+      const timeoutMs = homeVirtual ? 2_000 : CMD_TIMEOUT_MS
       const timer = window.setTimeout(() => {
-        rollback(topic, 'Нет ответа от устройства (MQTT state)')
-      }, CMD_TIMEOUT_MS)
+        rollback(topic, homeVirtual ? 'Нет ответа (home state)' : 'Нет ответа от устройства (MQTT state)')
+      }, timeoutMs)
       pendingRef.current[topic] = { expected: payload, restore, timer }
       setValues((prev) => ({ ...prev, [topic]: payload }))
       ws.send(JSON.stringify({ type: 'cmd', topic, payload } satisfies WsEnvelope))

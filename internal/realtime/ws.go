@@ -2,8 +2,10 @@ package realtime
 
 import (
 	"encoding/json"
+	"strings"
 	"sync"
 
+	"github.com/bartwork/home/internal/floor"
 	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"
 	"github.com/rs/zerolog"
@@ -52,13 +54,15 @@ func MountWS(app *fiber.App, hub *Hub, pub Publisher, log zerolog.Logger) {
 			if env.Type != "cmd" || env.Topic == "" {
 				continue
 			}
-			if !hub.MQTTConnected() {
+			cmdTopic := CommandTopic(env.Topic)
+			// Virtual /devices/home/* may work offline (local echo + shadow).
+			homeCmd := isHomeCommandTopic(cmdTopic)
+			if !hub.MQTTConnected() && !homeCmd {
 				_ = client.Send(mustJSON(Envelope{
 					Type: "error", Topic: env.Topic, Payload: "mqtt not connected",
 				}))
 				continue
 			}
-			cmdTopic := CommandTopic(env.Topic)
 			if err := pub.Publish(cmdTopic, env.Payload); err != nil {
 				log.Warn().Err(err).Str("topic", cmdTopic).Str("payload", env.Payload).Msg("mqtt publish from ws")
 				_ = client.Send(mustJSON(Envelope{
@@ -77,4 +81,9 @@ func mustJSON(env Envelope) []byte {
 		return []byte(`{"type":"error","payload":"encode"}`)
 	}
 	return b
+}
+
+func isHomeCommandTopic(cmdTopic string) bool {
+	_, ok := floor.StateFromCommand(strings.TrimSpace(cmdTopic))
+	return ok
 }

@@ -17,10 +17,12 @@ import (
 	"github.com/bartwork/home/internal/config"
 	"github.com/bartwork/home/internal/devices"
 	"github.com/bartwork/home/internal/discovery"
+	"github.com/bartwork/home/internal/floor"
 	"github.com/bartwork/home/internal/mqttbridge"
 	"github.com/bartwork/home/internal/realtime"
 	"github.com/bartwork/home/internal/repository"
 	"github.com/bartwork/home/internal/rooms"
+	"github.com/bartwork/home/internal/rules"
 	"github.com/bartwork/home/internal/seed"
 	"github.com/bartwork/home/internal/store"
 	"github.com/bartwork/home/internal/transport"
@@ -50,6 +52,8 @@ func main() {
 	discoveredRepo := repository.NewDiscovered(database)
 	roomsRepo := repository.NewRooms(database)
 	colorsRepo := repository.NewColorFavorites(database)
+	rulesRepo := repository.NewRules(database)
+	shadowRepo := repository.NewTopicShadows(database)
 	roomsSvc := rooms.New(roomsRepo)
 	colorsSvc := colors.New(colorsRepo)
 
@@ -62,13 +66,28 @@ func main() {
 
 	tokens := auth.NewTokens(cfg.JWTSecret)
 	hub := realtime.NewHub(log.Logger)
-	engine := discovery.NewEngine(log.Logger, discoveredRepo, devicesRepo)
+	discoEngine := discovery.NewEngine(log.Logger, discoveredRepo, devicesRepo)
 	discoSvc := discovery.NewService(discoveredRepo, devicesRepo, roomsRepo)
 
 	mqttID := cfg.MQTTClientIDUnique()
-	bridge := mqttbridge.New(log.Logger, hub, engine, cfg.MQTTBroker, mqttID)
+	bridge := mqttbridge.New(log.Logger, hub, nil, cfg.MQTTBroker, mqttID)
+	bridge.SetShadow(shadowRepo)
+	rulesEngine := rules.NewEngine(log.Logger, rulesRepo, bridge)
+	rulesSvc := rules.NewService(rulesRepo, rulesEngine)
+	bridge.SetObserver(mqttbridge.Fanout{discoEngine, rulesEngine})
+	if err := bridge.RestoreShadow(ctx); err != nil {
+		log.Warn().Err(err).Msg("restore topic shadow")
+	}
 	bridge.Start()
 	defer bridge.Close()
+	if err := rulesEngine.Start(ctx); err != nil {
+		log.Fatal().Err(err).Msg("start rules")
+	}
+	defer rulesEngine.Stop()
+	// Publish/Wait на MQTT — в фоне, не блокируем HTTP-listen.
+	go floor.Bootstrap(ctx, log.Logger, devicesRepo, shadowRepo, bridge, rulesEngine, func(c context.Context) (int, error) {
+		return floor.EnsureRules(c, devicesRepo, rulesRepo, rulesEngine)
+	})
 
 	liveness := utils.NewHealth("/liveness", "ok")
 	liveness.Start(ctx, cfg.LivenessBind)
@@ -90,6 +109,7 @@ func main() {
 	discovery.Mount(app, discoSvc)
 	rooms.Mount(app, roomsSvc)
 	colors.Mount(app, colorsSvc)
+	rules.Mount(app, rulesSvc, devicesRepo)
 	realtime.MountWS(app, hub, bridge, log.Logger)
 	if err := webui.Mount(app); err != nil {
 		log.Fatal().Err(err).Msg("mount webui")

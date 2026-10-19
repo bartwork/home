@@ -1,8 +1,16 @@
+import AddIcon from '@mui/icons-material/Add'
 import PowerSettingsNewOutlinedIcon from '@mui/icons-material/PowerSettingsNewOutlined'
+import RemoveIcon from '@mui/icons-material/Remove'
 import { Box, Typography } from '@mui/material'
 import type { Device } from '../../../shared/api/types'
-import { formatFloorTemp, readFloorState } from './floorTopics'
-import { RoundBtn, WIDGET_BTN } from './widgetChrome'
+import {
+  clampFloorSetpoint,
+  formatFloorTemp,
+  nextFloorMode,
+  readFloorState,
+  type FloorMode,
+} from './floorTopics'
+import { ChipBtn, RoundBtn, stopBubble, WIDGET_BTN } from './widgetChrome'
 
 type Props = {
   device: Device
@@ -10,9 +18,20 @@ type Props = {
   sendCmd: (topic: string, payload: string) => void
 }
 
+const MODE_LABEL: Record<FloorMode, string> = {
+  off: 'выкл',
+  heat: 'нагрев',
+  auto: 'авто',
+}
+
 export function FloorWidget({ device, values, sendCmd }: Props) {
-  const { relay, on, temp } = readFloorState(device.mqttTopic, values, device.powerTopic)
-  const label = formatFloorTemp(temp)
+  const s = readFloorState(device.id, device.mqttTopic, values, device.powerTopic)
+  const tempLabel = formatFloorTemp(s.temp)
+  const heating = s.mode !== 'off' && s.on
+
+  function setSetpoint(next: number) {
+    sendCmd(s.setpointTopic, String(clampFloorSetpoint(next)))
+  }
 
   return (
     <Box
@@ -24,36 +43,77 @@ export function FloorWidget({ device, values, sendCmd }: Props) {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 0.75,
+        gap: 0.5,
+        px: 0.5,
       }}
+      onPointerDown={stopBubble}
     >
       <Typography
         sx={{
           fontWeight: 700,
-          fontSize: '1.35rem',
+          fontSize: '1.25rem',
           lineHeight: 1,
           fontVariantNumeric: 'tabular-nums',
-          color: on ? 'primary.light' : 'text.primary',
+          color: heating ? 'primary.light' : 'text.primary',
         }}
       >
-        {label}
-        {temp !== null ? (
+        {tempLabel}
+        {s.temp !== null ? (
           <Typography
             component="span"
-            sx={{ ml: 0.25, fontSize: '0.7rem', fontWeight: 600, color: 'text.secondary' }}
+            sx={{ ml: 0.25, fontSize: '0.65rem', fontWeight: 600, color: 'text.secondary' }}
           >
             °C
           </Typography>
         ) : null}
       </Typography>
-      <RoundBtn
-        ariaLabel={on ? `${device.name}: выключить` : `${device.name}: включить`}
-        active={on}
-        onClick={() => sendCmd(relay, on ? '0' : '1')}
-        sx={{ width: WIDGET_BTN + 8, height: WIDGET_BTN + 8 }}
-      >
-        <PowerSettingsNewOutlinedIcon sx={{ fontSize: 20 }} />
-      </RoundBtn>
+
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.35 }}>
+        <RoundBtn
+          ariaLabel={`${device.name}: уставка −`}
+          onClick={() => setSetpoint(s.setpoint - 0.5)}
+          sx={{ width: WIDGET_BTN - 4, height: WIDGET_BTN - 4 }}
+        >
+          <RemoveIcon sx={{ fontSize: 16 }} />
+        </RoundBtn>
+        <Typography
+          sx={{
+            minWidth: 36,
+            textAlign: 'center',
+            fontWeight: 700,
+            fontSize: '0.95rem',
+            fontVariantNumeric: 'tabular-nums',
+            color: s.mode === 'auto' ? 'primary.light' : 'text.primary',
+          }}
+        >
+          {formatFloorTemp(s.setpoint)}°
+        </Typography>
+        <RoundBtn
+          ariaLabel={`${device.name}: уставка +`}
+          onClick={() => setSetpoint(s.setpoint + 0.5)}
+          sx={{ width: WIDGET_BTN - 4, height: WIDGET_BTN - 4 }}
+        >
+          <AddIcon sx={{ fontSize: 16 }} />
+        </RoundBtn>
+      </Box>
+
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.4 }}>
+        <ChipBtn
+          ariaLabel={`${device.name}: режим ${MODE_LABEL[s.mode]}, сменить`}
+          active={s.mode !== 'off'}
+          onClick={() => sendCmd(s.modeTopic, nextFloorMode(s.mode))}
+        >
+          {MODE_LABEL[s.mode]}
+        </ChipBtn>
+        <RoundBtn
+          ariaLabel={s.mode === 'off' ? `${device.name}: авто` : `${device.name}: выключить`}
+          active={heating}
+          onClick={() => sendCmd(s.modeTopic, s.mode === 'off' ? 'auto' : 'off')}
+          sx={{ width: WIDGET_BTN, height: WIDGET_BTN }}
+        >
+          <PowerSettingsNewOutlinedIcon sx={{ fontSize: 18 }} />
+        </RoundBtn>
+      </Box>
     </Box>
   )
 }

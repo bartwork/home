@@ -23,3 +23,7 @@ sql:
             go_type:
               type: "int64"
               pointer: true
+          - column: "rules.enabled"
+            go_type: "bool"
+          - column: "topic_shadow.payload"
+            go_type: "string"

@@ -80,3 +80,35 @@ export type ColorFavorite = {
   sortOrder: number
   createdAt: string
 }
+
+export type RuleGraph = {
+  nodes: RuleNode[]
+  edges: RuleEdge[]
+  viewport?: { x: number; y: number; zoom: number }
+}
+
+export type RuleNode = {
+  id: string
+  type: string
+  position: { x: number; y: number }
+  data: Record<string, unknown>
+}
+
+export type RuleEdge = {
+  id: string
+  source: string
+  target: string
+  sourceHandle?: string
+  targetHandle?: string
+}
+
+export type Rule = {
+  id: number
+  name: string
+  enabled: boolean
+  mode: 'single' | 'restart' | 'queued' | string
+  cooldownMs: number
+  graph: RuleGraph
+  createdAt: string
+  updatedAt: string
+}

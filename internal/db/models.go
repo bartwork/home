@@ -57,6 +57,23 @@ type Room struct {
 	SortOrder int64   `json:"sort_order"`
 }
 
+type Rule struct {
+	ID         int64  `json:"id"`
+	Name       string `json:"name"`
+	Enabled    bool   `json:"enabled"`
+	Mode       string `json:"mode"`
+	CooldownMs int64  `json:"cooldown_ms"`
+	GraphJson  string `json:"graph_json"`
+	CreatedAt  string `json:"created_at"`
+	UpdatedAt  string `json:"updated_at"`
+}
+
+type TopicShadow struct {
+	Topic     string `json:"topic"`
+	Payload   string `json:"payload"`
+	UpdatedAt string `json:"updated_at"`
+}
+
 type User struct {
 	ID           int64   `json:"id"`
 	Login        string  `json:"login"`

@@ -28,6 +28,10 @@ func (e *Engine) Observe(topic, payload string) {
 	if !ok {
 		return
 	}
+	// Виртуальные уставки/режимы UI (devices/home/…) — не в discovered.
+	if parsed.DeviceID == "home" {
+		return
+	}
 
 	ctx := context.Background()
 

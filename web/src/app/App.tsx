@@ -6,6 +6,8 @@ import { theme } from '../shared/theme/theme'
 import { DiscoveredPage } from '../pages/discovered/DiscoveredPage'
 import { HomePage } from '../pages/home/HomePage'
 import { LoginPage } from '../pages/login/LoginPage'
+import { RuleEditorPage } from '../pages/rules/RuleEditorPage'
+import { RulesPage } from '../pages/rules/RulesPage'
 
 export function App() {
   return (
@@ -17,6 +19,8 @@ export function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/" element={<HomePage />} />
             <Route path="/discovered" element={<DiscoveredPage />} />
+            <Route path="/rules" element={<RulesPage />} />
+            <Route path="/rules/:id" element={<RuleEditorPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </BrowserRouter>
