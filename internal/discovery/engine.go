@@ -41,12 +41,15 @@ func (e *Engine) Observe(topic, payload string) {
 
 	switch parsed.Kind {
 	case KindState:
+		// ONOKOM / WB-LED: тип известен по control даже без meta.
+		suggested := SuggestDeviceType(parsed.DeviceID, parsed.Control, "")
 		if err := e.disco.UpsertState(ctx, repository.WriteDiscovered{
-			MqttTopic:   parsed.StateTopic,
-			WbDevice:    parsed.DeviceID,
-			WbControl:   parsed.Control,
-			Title:       DefaultTitle(parsed.DeviceID, parsed.Control),
-			LastPayload: payload,
+			MqttTopic:     parsed.StateTopic,
+			WbDevice:      parsed.DeviceID,
+			WbControl:     parsed.Control,
+			Title:         DefaultTitle(parsed.DeviceID, parsed.Control),
+			SuggestedType: suggested,
+			LastPayload:   payload,
 		}); err != nil {
 			e.log.Debug().Err(err).Str("topic", parsed.StateTopic).Msg("discovery upsert state")
 		}
@@ -61,7 +64,7 @@ func (e *Engine) Observe(topic, payload string) {
 			WbDevice:      parsed.DeviceID,
 			WbControl:     parsed.Control,
 			Title:         title,
-			SuggestedType: ClassifyWBType(patch.Type),
+			SuggestedType: SuggestDeviceType(parsed.DeviceID, parsed.Control, patch.Type),
 			Unit:          patch.Units,
 		}); err != nil {
 			e.log.Debug().Err(err).Str("topic", parsed.StateTopic).Msg("discovery upsert meta")

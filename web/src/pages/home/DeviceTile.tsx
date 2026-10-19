@@ -2,7 +2,11 @@ import { Box, Typography } from '@mui/material'
 import type { SvgIconComponent } from '@mui/icons-material'
 import type { Device } from '../../shared/api/types'
 import { iconFor } from './icons'
+import { ClimateWidget } from './widgets/ClimateWidget'
+import { isClimateOn } from './widgets/climateTopics'
 import { DimmerWidget, isDimmerOn, parseDimmerLevel } from './widgets/DimmerWidget'
+import { LedWidget } from './widgets/LedWidget'
+import { isLedOn } from './widgets/ledTopics'
 import { SensorWidget } from './widgets/SensorWidget'
 import { RawWidget } from './widgets/RawWidget'
 
@@ -12,6 +16,7 @@ type Props = {
   device: Device
   value: string
   powerValue?: string
+  values?: Record<string, string>
   editMode: boolean
   sendCmd: (topic: string, payload: string) => void
   onEdit: (device: Device) => void
@@ -60,33 +65,57 @@ function SwitchHero({
   )
 }
 
-export function DeviceTile({ device, value, powerValue, editMode, sendCmd, onEdit }: Props) {
+export function DeviceTile({
+  device,
+  value,
+  powerValue,
+  values = {},
+  editMode,
+  sendCmd,
+  onEdit,
+}: Props) {
   const Icon = iconFor(device)
   const isSwitch = device.deviceType === 'switch'
   const isDimmer = device.deviceType === 'range'
+  const isClimate = device.deviceType === 'climate'
+  const isLed = device.deviceType === 'led'
+  const isWide = isClimate || isLed
   const level = parseDimmerLevel(value)
-  const on = isSwitch ? value === '1' : isDimmer ? isDimmerOn(powerValue, level) : false
+  const on = isClimate
+    ? isClimateOn(values, device.mqttTopic)
+    : isLed
+      ? isLedOn(values, device.mqttTopic)
+      : isSwitch
+        ? value === '1'
+        : isDimmer
+          ? isDimmerOn(powerValue, level)
+          : false
 
   return (
     <Box
       onClick={editMode ? () => onEdit(device) : undefined}
       sx={{
-        aspectRatio: '1 / 1',
+        // wide (climate/led): высота по контенту — без фиксированного aspect-ratio
+        aspectRatio: isWide ? 'auto' : '1 / 1',
         width: '100%',
         height: 'auto',
         maxWidth: '100%',
         boxSizing: 'border-box',
         display: 'grid',
-        gridTemplateRows: '20px 1fr',
+        gridTemplateRows: isWide ? '20px auto' : '20px 1fr',
         gap: 0.5,
-        p: 1,
+        // wide: больше воздуха по бокам и снизу — слайдеры не липнут к рамке
+        px: isWide ? 1.5 : 1,
+        pt: 1,
+        pb: isWide ? 1.5 : 1,
         borderRadius: 2.5,
         border: 1,
         borderColor: editMode ? 'secondary.main' : on ? 'rgba(94, 200, 216, 0.5)' : 'divider',
         background: on
           ? 'linear-gradient(165deg, rgba(94, 200, 216, 0.18) 0%, rgba(16, 24, 34, 0.96) 55%)'
           : 'linear-gradient(165deg, rgba(30, 40, 54, 0.96) 0%, rgba(12, 18, 28, 0.96) 100%)',
-        boxShadow: on ? '0 0 20px rgba(94, 200, 216, 0.1)' : 'none',
+        // у led внешнее свечение режется overflow и выглядит криво у кнопки/полоски
+        boxShadow: on && !isLed ? '0 0 20px rgba(94, 200, 216, 0.1)' : 'none',
         cursor: editMode ? 'pointer' : 'default',
         userSelect: 'none',
         overflow: 'hidden',
@@ -122,6 +151,22 @@ export function DeviceTile({ device, value, powerValue, editMode, sendCmd, onEdi
           <Typography variant="caption" color="text.secondary">
             правка
           </Typography>
+        ) : isClimate ? (
+          <Box
+            sx={{ width: '100%', height: '100%', minHeight: 0 }}
+            onClick={(e) => e.stopPropagation()}
+            onPointerDown={(e) => e.stopPropagation()}
+          >
+            <ClimateWidget device={device} values={values} sendCmd={sendCmd} />
+          </Box>
+        ) : isLed ? (
+          <Box
+            sx={{ width: '100%', height: '100%', minHeight: 0 }}
+            onClick={(e) => e.stopPropagation()}
+            onPointerDown={(e) => e.stopPropagation()}
+          >
+            <LedWidget device={device} values={values} sendCmd={sendCmd} />
+          </Box>
         ) : isDimmer ? (
           <Box
             sx={{ width: '100%', height: '100%', minHeight: 0 }}

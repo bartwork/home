@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material'
 import type { Device, Room } from '../../shared/api/types'
 import { clampRect } from './clampRect'
 import { DeviceTile } from './DeviceTile'
-import { deviceGridSx, sortDevicesByLayout, withLinearOrder } from './deviceGrid'
+import { deviceGridSx, sortDevicesByLayout, wideDeviceGridItemSx, withLinearOrder } from './deviceGrid'
 
 type Props = {
   room: Room
@@ -221,12 +221,14 @@ export function RoomPanel({
               borderRadius: 2,
               opacity: editMode ? 0.95 : 1,
               cursor: editMode ? 'grab' : 'default',
+              ...wideDeviceGridItemSx(d.deviceType),
             }}
           >
             <DeviceTile
               device={d}
               value={values[d.mqttTopic] ?? '—'}
               powerValue={d.powerTopic ? values[d.powerTopic] : undefined}
+              values={values}
               editMode={editMode}
               sendCmd={sendCmd}
               onEdit={(dev) => {

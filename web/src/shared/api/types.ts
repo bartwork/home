@@ -10,7 +10,7 @@ export type User = {
   active: boolean
 }
 
-export type DeviceType = 'switch' | 'range' | 'sensor' | 'raw'
+export type DeviceType = 'switch' | 'range' | 'sensor' | 'raw' | 'climate' | 'led'
 
 export type DeviceIcon =
   | ''
@@ -21,6 +21,7 @@ export type DeviceIcon =
   | 'sensor'
   | 'socket'
   | 'thermo'
+  | 'ac'
 
 export type Device = {
   id: number
@@ -69,4 +70,13 @@ export type Discovered = {
 export type LoginResponse = {
   token: string
   user: User
+}
+
+export type ColorFavorite = {
+  id: number
+  hue: number
+  saturation: number
+  brightness: number
+  sortOrder: number
+  createdAt: string
 }

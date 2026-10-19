@@ -1,4 +1,5 @@
 import type { SvgIconComponent } from '@mui/icons-material'
+import AcUnitOutlinedIcon from '@mui/icons-material/AcUnitOutlined'
 import AirOutlinedIcon from '@mui/icons-material/AirOutlined'
 import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined'
 import PowerSettingsNewOutlinedIcon from '@mui/icons-material/PowerSettingsNewOutlined'
@@ -15,6 +16,7 @@ const byIcon: Record<string, SvgIconComponent> = {
   sensor: SensorsOutlinedIcon,
   socket: PowerSettingsNewOutlinedIcon,
   thermo: ThermostatOutlinedIcon,
+  ac: AcUnitOutlinedIcon,
 }
 
 const byType: Record<string, SvgIconComponent> = {
@@ -22,6 +24,8 @@ const byType: Record<string, SvgIconComponent> = {
   range: LightbulbOutlinedIcon,
   sensor: SensorsOutlinedIcon,
   raw: SensorsOutlinedIcon,
+  climate: AcUnitOutlinedIcon,
+  led: LightbulbOutlinedIcon,
 }
 
 export function iconFor(device: Device): SvgIconComponent {
@@ -38,4 +42,5 @@ export const ICON_OPTIONS = [
   { value: 'socket', label: 'розетка' },
   { value: 'sensor', label: 'сенсор' },
   { value: 'thermo', label: 'тепло' },
+  { value: 'ac', label: 'кондиционер' },
 ]

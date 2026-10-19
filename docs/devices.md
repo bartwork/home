@@ -2,8 +2,9 @@
 
 Excel: [`devices.xlsx`](devices.xlsx) — рабочая копия (дополнять там).
 
-Типы: `switch` | `range` | `sensor` | `raw`.  
-Диммеры (`range`): яркость = `mqtt_topic`, вкл/выкл = `power_topic` (у MDM3: Channel N → K N; у LED: Brightness + RGB Strip).  
+Типы: `switch` | `range` | `sensor` | `climate` | `led` | `raw`.  
+Полный список топиков (вкл. siblings LED/climate): [`mqtt_topics.md`](mqtt_topics.md).  
+Диммеры (`range`): яркость = `mqtt_topic`, вкл/выкл = `power_topic` (MDM3: Channel N → KN).  
 Проверено: `да` (зелёный) · `да?` (жёлтый — пара могла быть перепутана) · пусто (не проверено).
 
 | Проверено | Кабель | Имя | Комната | Тип | MQTT topic | Примечание |
@@ -28,7 +29,7 @@ Excel: [`devices.xlsx`](devices.xlsx) — рабочая копия (допол�
 | | 5 | сушилка | | switch | `/devices/wb-mr6cu_43/controls/K?` | не K1 (мастер) |
 | | 15 | тёплый пол | кухня | switch | `/devices/wb-mr6cv3_225/controls/K5` | |
 | | 31 | точки у люстры | комната | range | `/devices/wb-mdm3_75/controls/Channel 2` | |
-| | 35 | лента карниза | комната | range | `/devices/wb-led_221/controls/RGB Strip Brightness` | power = `RGB Strip` |
+| | 35 | лента карниза | комната | led | `/devices/wb-led_221/controls/RGB Strip` | Brightness / Hue / Sat / Channel 4 |
 | | 50 | основной свет | кухня | range | `/devices/wb-mdm3_218/controls/Channel 1` | |
 | | 51 | левый свет | кухня | range | `/devices/wb-mdm3_218/controls/Channel 2` | |
 | | 52 | правый свет | кухня | range | `/devices/wb-mdm3_218/controls/Channel 3` | |

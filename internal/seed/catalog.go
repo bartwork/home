@@ -14,7 +14,7 @@ type RoomDef struct {
 type DeviceDef struct {
 	Name       string
 	Room       string // имя комнаты; пусто = без комнаты
-	Type       string // switch|range|sensor|raw
+	Type       string // switch|range|sensor|climate|led|raw
 	Topic      string
 	PowerTopic string // явно; пусто + range → InferPowerTopic
 	Icon       string
@@ -30,7 +30,7 @@ var Rooms = []RoomDef{
 	{Name: "туалет", X: 67, Y: 51, W: 32, H: 28, SortOrder: 6},
 }
 
-// Devices — топики квартиры. MDM3/LED power выводится InferPowerTopic.
+// Devices — топики квартиры. MDM3 power — InferPowerTopic; лента — тип led (якорь RGB Strip).
 var Devices = []DeviceDef{
 	{Name: "основной свет", Room: "коридор", Type: "range", Topic: "/devices/wb-mdm3_76/controls/Channel 1", Icon: "dimmer"},
 	{Name: "мастер-выключатель", Room: "", Type: "switch", Topic: "/devices/wb-mr6cu_43/controls/K1", Icon: "switch"},
@@ -51,13 +51,15 @@ var Devices = []DeviceDef{
 	{Name: "тёплый пол", Room: "ванна", Type: "switch", Topic: "/devices/wb-mr6cv3_225/controls/K4", Icon: "thermo"},
 	{Name: "тёплый пол", Room: "кухня", Type: "switch", Topic: "/devices/wb-mr6cv3_225/controls/K5", Icon: "thermo"},
 	{Name: "дополнительный свет", Room: "комната", Type: "range", Topic: "/devices/wb-mdm3_75/controls/Channel 2", Icon: "dimmer"},
-	{Name: "лента карниза", Room: "комната", Type: "range", Topic: "/devices/wb-led_221/controls/RGB Strip Brightness", Icon: "light"},
+	{Name: "лента карниза", Room: "комната", Type: "led", Topic: "/devices/wb-led_221/controls/RGB Strip", Icon: "light"},
 	{Name: "свет у окна", Room: "кухня", Type: "range", Topic: "/devices/wb-mdm3_218/controls/Channel 1", Icon: "dimmer"},
 	{Name: "лампа", Room: "кухня", Type: "range", Topic: "/devices/wb-mdm3_218/controls/Channel 2", Icon: "dimmer"},
 	{Name: "свет у двери", Room: "кухня", Type: "range", Topic: "/devices/wb-mdm3_218/controls/Channel 3", Icon: "dimmer"},
 	{Name: "бра", Room: "кухня", Type: "switch", Topic: "/devices/wb-mr6cv3_239/controls/K1", Icon: "light"},
 	{Name: "подсветка кухни", Room: "кухня", Type: "switch", Topic: "/devices/wb-mr6cv3_239/controls/K2", Icon: "light"},
 	{Name: "вытяжка", Room: "кухня", Type: "switch", Topic: "/devices/wb-mr6cv3_239/controls/K3", Icon: "fan"},
+	{Name: "кондиционер", Room: "кухня", Type: "climate", Topic: "/devices/ONOKOM-AIR-HR-1-MB-B_1/controls/Active", Icon: "ac"},
+	{Name: "кондиционер", Room: "комната", Type: "climate", Topic: "/devices/ONOKOM-AIR-HR-1-MB-B_2/controls/Active", Icon: "ac"},
 }
 
 func powerFor(d DeviceDef) string {

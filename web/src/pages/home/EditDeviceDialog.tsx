@@ -16,6 +16,7 @@ import {
   TextField,
 } from '@mui/material'
 import type { Device, Room } from '../../shared/api/types'
+import { DEVICE_TYPE_OPTIONS } from '../../shared/api/deviceTypes'
 import { ICON_OPTIONS } from './icons'
 import { parseNum } from './parseNum'
 
@@ -30,6 +31,7 @@ type Props = {
 
 export function EditDeviceDialog({ device, rooms, open, onClose, onSave, onDelete }: Props) {
   const [name, setName] = useState('')
+  const [deviceType, setDeviceType] = useState('switch')
   const [powerTopic, setPowerTopic] = useState('')
   const [roomId, setRoomId] = useState(0)
   const [icon, setIcon] = useState('')
@@ -42,6 +44,7 @@ export function EditDeviceDialog({ device, rooms, open, onClose, onSave, onDelet
   useEffect(() => {
     if (!device) return
     setName(device.name)
+    setDeviceType(device.deviceType || 'raw')
     setPowerTopic(device.powerTopic || '')
     setRoomId(device.roomId ?? 0)
     setIcon(device.icon || '')
@@ -60,6 +63,7 @@ export function EditDeviceDialog({ device, rooms, open, onClose, onSave, onDelet
       await onSave({
         ...device,
         name: name.trim() || device.name,
+        deviceType,
         powerTopic: powerTopic.trim(),
         roomId: roomId || undefined,
         roomName: room?.name ?? '',
@@ -97,14 +101,41 @@ export function EditDeviceDialog({ device, rooms, open, onClose, onSave, onDelet
       <DialogContent>
         <Stack spacing={2} sx={{ pt: 1 }}>
           <TextField label="Название" value={name} onChange={(e) => setName(e.target.value)} fullWidth />
-          {device?.deviceType === 'range' ? (
+          <FormControl fullWidth>
+            <InputLabel id="dev-type">Тип</InputLabel>
+            <Select
+              labelId="dev-type"
+              label="Тип"
+              value={deviceType}
+              onChange={(e) => setDeviceType(String(e.target.value))}
+            >
+              {DEVICE_TYPE_OPTIONS.map((o) => (
+                <MenuItem key={o.value} value={o.value}>
+                  {o.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          {deviceType === 'range' ? (
             <TextField
               label="Топик вкл/выкл"
               value={powerTopic}
               onChange={(e) => setPowerTopic(e.target.value)}
               fullWidth
-              helperText="Пусто = без кнопки питания. MDM3: Channel N → KN; LED: … Brightness → без суффикса"
+              helperText="Пусто = без кнопки питания. MDM3: Channel N → KN"
             />
+          ) : null}
+          {deviceType === 'climate' ? (
+            <Alert severity="info" variant="outlined">
+              Якорь — топик Active. Режим, температура и вентилятор берутся из соседних controls того же
+              ONOKOM-устройства.
+            </Alert>
+          ) : null}
+          {deviceType === 'led' ? (
+            <Alert severity="info" variant="outlined">
+              Якорь — топик RGB Strip. Яркость, Hue, Saturation и Channel 4 (белый) — соседние controls
+              WB-LED.
+            </Alert>
           ) : null}
           <FormControl fullWidth>
             <InputLabel id="dev-room">Комната</InputLabel>

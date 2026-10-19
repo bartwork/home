@@ -54,13 +54,14 @@ func Mount(app *fiber.App, svc *Service) {
 			return writeErr(c, errors.ErrBadRequest)
 		}
 		var body struct {
-			Name   string `json:"name"`
-			RoomID int64  `json:"roomId"`
-			Icon   string `json:"icon"`
+			Name       string `json:"name"`
+			RoomID     int64  `json:"roomId"`
+			Icon       string `json:"icon"`
+			DeviceType string `json:"deviceType"`
 		}
 		_ = c.BodyParser(&body)
 		dev, err := svc.Accept(c.UserContext(), id, AcceptOpts{
-			Name: body.Name, RoomID: body.RoomID, Icon: body.Icon,
+			Name: body.Name, RoomID: body.RoomID, Icon: body.Icon, DeviceType: body.DeviceType,
 		})
 		if err != nil {
 			return writeErr(c, err)

@@ -51,6 +51,33 @@ func TestClassifyWBType(t *testing.T) {
 	}
 }
 
+func TestSuggestDeviceTypeOnokom(t *testing.T) {
+	if got := discovery.SuggestDeviceType("ONOKOM-AIR-HR-1-MB-B_1", "Active", "switch"); got != "climate" {
+		t.Fatalf("Active: %q", got)
+	}
+	if got := discovery.SuggestDeviceType("ONOKOM-AIR-HR-1-MB-B_2", "Mode", "range"); got != "raw" {
+		t.Fatalf("Mode sibling: %q", got)
+	}
+	if got := discovery.SuggestDeviceType("wb-mr6c_225", "K1", "switch"); got != "switch" {
+		t.Fatalf("relay: %q", got)
+	}
+}
+
+func TestSuggestDeviceTypeLed(t *testing.T) {
+	if got := discovery.SuggestDeviceType("wb-led_221", "RGB Strip", "switch"); got != "led" {
+		t.Fatalf("RGB Strip: %q", got)
+	}
+	if got := discovery.SuggestDeviceType("wb-led_221", "RGB Strip Brightness", "range"); got != "raw" {
+		t.Fatalf("Brightness sibling: %q", got)
+	}
+	if got := discovery.SuggestDeviceType("wb-led_221", "RGB Strip Hue", "range"); got != "raw" {
+		t.Fatalf("Hue sibling: %q", got)
+	}
+	if got := discovery.SuggestDeviceType("wb-led_221", "Channel 4", "switch"); got != "raw" {
+		t.Fatalf("Channel 4 sibling: %q", got)
+	}
+}
+
 func TestParseMetaPayloadJSON(t *testing.T) {
 	m := discovery.ParseMetaPayload(discovery.KindControlMetaJSON, "", `{"type":"switch","title":"Реле","units":""}`)
 	if m.Type != "switch" || m.Title != "Реле" {

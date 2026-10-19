@@ -11,10 +11,16 @@ func IconFor(explicit, name, deviceType string) string {
 	switch {
 	case strings.Contains(n, "вытяж"):
 		return "fan"
+	case strings.Contains(n, "кондиц") || strings.Contains(n, "кондей"):
+		return "ac"
 	case strings.Contains(n, "тёпл") || strings.Contains(n, "тепл"):
 		return "thermo"
 	case strings.Contains(n, "розет"):
 		return "socket"
+	case deviceType == "climate":
+		return "ac"
+	case deviceType == "led":
+		return "light"
 	case deviceType == "range":
 		return "dimmer"
 	case deviceType == "sensor":

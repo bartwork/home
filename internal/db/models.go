@@ -4,6 +4,15 @@
 
 package db
 
+type ColorFavorite struct {
+	ID         int64  `json:"id"`
+	Hue        int64  `json:"hue"`
+	Saturation int64  `json:"saturation"`
+	Brightness int64  `json:"brightness"`
+	SortOrder  int64  `json:"sort_order"`
+	CreatedAt  string `json:"created_at"`
+}
+
 type Device struct {
 	ID         int64   `json:"id"`
 	Name       string  `json:"name"`

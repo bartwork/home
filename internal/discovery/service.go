@@ -22,7 +22,7 @@ func NewService(disco repository.DiscoveredStore, devs repository.DeviceStore, r
 
 func usefulType(typ string) bool {
 	switch typ {
-	case "switch", "range", "sensor":
+	case "switch", "range", "sensor", "climate", "led":
 		return true
 	default:
 		return false
@@ -50,9 +50,10 @@ func (s *Service) CountNew(ctx context.Context) (int64, error) {
 }
 
 type AcceptOpts struct {
-	Name   string
-	RoomID int64
-	Icon   string
+	Name       string
+	RoomID     int64
+	Icon       string
+	DeviceType string // опционально: переопределить suggestedType (например climate)
 }
 
 func (s *Service) Accept(ctx context.Context, id int64, opts AcceptOpts) (dto.Device, error) {
@@ -74,7 +75,10 @@ func (s *Service) Accept(ctx context.Context, id int64, opts AcceptOpts) (dto.De
 		return dto.Device{}, errors.ErrBadRequest
 	}
 
-	typ := row.SuggestedType
+	typ := strings.TrimSpace(opts.DeviceType)
+	if typ == "" {
+		typ = row.SuggestedType
+	}
 	if typ == "" {
 		typ = "raw"
 	}
@@ -175,7 +179,7 @@ func (s *Service) Restore(ctx context.Context, id int64) error {
 	return s.disco.SetStatus(ctx, id, "new")
 }
 
-// AcceptAll принимает полезные типы (switch/range/sensor).
+// AcceptAll принимает полезные типы (switch/range/sensor/climate/led).
 // При ignoreRaw=true остальные new (raw/пусто) скрываются.
 func (s *Service) AcceptAll(ctx context.Context, typ string, ignoreRaw bool) (accepted, ignored, failed int, err error) {
 	typ = strings.TrimSpace(typ)
@@ -189,6 +193,27 @@ func (s *Service) AcceptAll(ctx context.Context, typ string, ignoreRaw bool) (ac
 		return 0, 0, 0, err
 	}
 	for _, row := range rows {
+		// Sibling-каналы ONOKOM / WB-LED RGB не принимаем массово — только якорь.
+		if isOnokomAC(row.WbDevice) && !strings.EqualFold(row.WbControl, "Active") {
+			if ignoreRaw {
+				if ierr := s.Ignore(ctx, row.ID); ierr == nil {
+					ignored++
+				} else {
+					failed++
+				}
+			}
+			continue
+		}
+		if isWBLed(row.WbDevice) && isWBLedRGBStripSibling(row.WbControl) {
+			if ignoreRaw {
+				if ierr := s.Ignore(ctx, row.ID); ierr == nil {
+					ignored++
+				} else {
+					failed++
+				}
+			}
+			continue
+		}
 		if typ == "" && !usefulType(row.SuggestedType) {
 			if ignoreRaw {
 				if ierr := s.Ignore(ctx, row.ID); ierr == nil {
@@ -199,7 +224,14 @@ func (s *Service) AcceptAll(ctx context.Context, typ string, ignoreRaw bool) (ac
 			}
 			continue
 		}
-		if _, aerr := s.Accept(ctx, row.ID, AcceptOpts{}); aerr != nil {
+		opts := AcceptOpts{}
+		if isOnokomAC(row.WbDevice) && strings.EqualFold(row.WbControl, "Active") {
+			opts.DeviceType = "climate"
+		}
+		if isWBLed(row.WbDevice) && strings.EqualFold(row.WbControl, "RGB Strip") {
+			opts.DeviceType = "led"
+		}
+		if _, aerr := s.Accept(ctx, row.ID, opts); aerr != nil {
 			failed++
 			continue
 		}

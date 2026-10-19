@@ -77,6 +77,54 @@ func ClassifyWBType(wbType string) string {
 	}
 }
 
+// SuggestDeviceType учитывает устройство WB (например ONOKOM AC / WB-LED) поверх meta-типа.
+// ONOKOM Active → climate; WB-LED RGB Strip → led; sibling-каналы → raw (не принимать массово).
+func SuggestDeviceType(deviceID, control, wbType string) string {
+	if isOnokomAC(deviceID) {
+		if strings.EqualFold(strings.TrimSpace(control), "Active") {
+			return "climate"
+		}
+		return "raw"
+	}
+	if isWBLed(deviceID) {
+		c := strings.TrimSpace(control)
+		if strings.EqualFold(c, "RGB Strip") {
+			return "led"
+		}
+		if isWBLedRGBStripSibling(c) {
+			return "raw"
+		}
+	}
+	return ClassifyWBType(wbType)
+}
+
+func isOnokomAC(deviceID string) bool {
+	id := strings.ToUpper(strings.TrimSpace(deviceID))
+	return strings.HasPrefix(id, "ONOKOM-AIR-")
+}
+
+func isWBLed(deviceID string) bool {
+	id := strings.ToLower(strings.TrimSpace(deviceID))
+	return strings.HasPrefix(id, "wb-led")
+}
+
+// Sibling-контролы RGB-режима WB-LED (яркость/HSV/палитра/белый канал).
+func isWBLedRGBStripSibling(control string) bool {
+	c := strings.TrimSpace(control)
+	switch {
+	case strings.HasPrefix(c, "RGB Strip "):
+		return true
+	case strings.EqualFold(c, "RGB Palette"):
+		return true
+	case strings.HasPrefix(c, "Hue Changing"):
+		return true
+	case strings.EqualFold(c, "Channel 4"), strings.EqualFold(c, "Channel 4 Brightness"):
+		return true
+	default:
+		return false
+	}
+}
+
 type MetaPatch struct {
 	Type  string
 	Title string

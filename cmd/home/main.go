@@ -13,6 +13,7 @@ import (
 	_ "go.uber.org/automaxprocs"
 
 	"github.com/bartwork/home/internal/auth"
+	"github.com/bartwork/home/internal/colors"
 	"github.com/bartwork/home/internal/config"
 	"github.com/bartwork/home/internal/devices"
 	"github.com/bartwork/home/internal/discovery"
@@ -48,7 +49,9 @@ func main() {
 	devicesRepo := repository.NewDevices(database)
 	discoveredRepo := repository.NewDiscovered(database)
 	roomsRepo := repository.NewRooms(database)
+	colorsRepo := repository.NewColorFavorites(database)
 	roomsSvc := rooms.New(roomsRepo)
+	colorsSvc := colors.New(colorsRepo)
 
 	if err := auth.SeedAdmin(ctx, usersRepo, cfg.AdminPassword, cfg.IsProd()); err != nil {
 		log.Fatal().Err(err).Msg("seed admin")
@@ -86,6 +89,7 @@ func main() {
 	app := srv.Fiber()
 	discovery.Mount(app, discoSvc)
 	rooms.Mount(app, roomsSvc)
+	colors.Mount(app, colorsSvc)
 	realtime.MountWS(app, hub, bridge, log.Logger)
 	if err := webui.Mount(app); err != nil {
 		log.Fatal().Err(err).Msg("mount webui")

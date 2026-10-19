@@ -19,7 +19,7 @@ import { AppShell, ShellLogoutButton } from '../../shared/layout/AppShell'
 import { useRealtime } from '../../shared/realtime/useRealtime'
 import { useDocumentTitle } from '../../shared/useDocumentTitle'
 import { DeviceTile } from './DeviceTile'
-import { deviceGridSx } from './deviceGrid'
+import { deviceGridSx, wideDeviceGridItemSx } from './deviceGrid'
 import { EditDeviceDialog } from './EditDeviceDialog'
 import { EditRoomDialog, type RoomDraft } from './EditRoomDialog'
 import { RoomPanel } from './RoomPanel'
@@ -257,15 +257,17 @@ export function HomePage() {
             }}
           >
             {byRoom.unassigned.map((d) => (
-              <DeviceTile
-                key={d.id}
-                device={d}
-                value={values[d.mqttTopic] ?? '—'}
-                powerValue={d.powerTopic ? values[d.powerTopic] : undefined}
-                editMode={editMode}
-                sendCmd={sendCmd}
-                onEdit={setEditDevice}
-              />
+              <Box key={d.id} sx={wideDeviceGridItemSx(d.deviceType)}>
+                <DeviceTile
+                  device={d}
+                  value={values[d.mqttTopic] ?? '—'}
+                  powerValue={d.powerTopic ? values[d.powerTopic] : undefined}
+                  values={values}
+                  editMode={editMode}
+                  sendCmd={sendCmd}
+                  onEdit={setEditDevice}
+                />
+              </Box>
             ))}
           </Box>
         </Paper>

@@ -1,6 +1,6 @@
-import type { Device, Discovered, LoginResponse, Room, User } from './types'
+import type { ColorFavorite, Device, Discovered, LoginResponse, Room, User } from './types'
 
-export type { Device, Discovered, LoginResponse, Room, User } from './types'
+export type { ColorFavorite, Device, Discovered, LoginResponse, Room, User } from './types'
 
 const TOKEN_KEY = 'home.token'
 const USER_KEY = 'home.user'
@@ -147,7 +147,7 @@ export async function countDiscovered(): Promise<number> {
 
 export function acceptDiscovered(
   id: number,
-  opts?: { name?: string; roomId?: number; icon?: string },
+  opts?: { name?: string; roomId?: number; icon?: string; deviceType?: string },
 ) {
   return api<{ device: Device }>(`/api/v1/discovered/${id}/accept`, {
     method: 'POST',
@@ -163,7 +163,7 @@ export function restoreDiscovered(id: number) {
   return api<void>(`/api/v1/discovered/${id}/restore`, { method: 'POST' })
 }
 
-/** Принимает switch/range/sensor; raw и прочее скрывает (ignoreRaw по умолчанию). */
+/** Принимает switch/range/sensor/climate/led; raw и прочее скрывает (ignoreRaw по умолчанию). */
 export function acceptAllDiscovered(opts?: { type?: string; ignoreRaw?: boolean }) {
   const params = new URLSearchParams()
   if (opts?.type) params.set('type', opts.type)
@@ -173,4 +173,31 @@ export function acceptAllDiscovered(opts?: { type?: string; ignoreRaw?: boolean 
     `/api/v1/discovered/accept-all${q ? `?${q}` : ''}`,
     { method: 'POST' },
   )
+}
+
+export async function listColorFavorites(): Promise<ColorFavorite[]> {
+  const res = await api<{ favorites?: ColorFavorite[] }>('/api/v1/color-favorites')
+  return res.favorites ?? []
+}
+
+export function createColorFavorite(color: {
+  hue: number
+  saturation: number
+  brightness: number
+}) {
+  return api<{ favorite: ColorFavorite }>('/api/v1/color-favorites', {
+    method: 'POST',
+    body: JSON.stringify(color),
+  })
+}
+
+export function deleteColorFavorite(id: number) {
+  return api<void>(`/api/v1/color-favorites/${id}`, { method: 'DELETE' })
+}
+
+export async function resetColorFavorites(): Promise<ColorFavorite[]> {
+  const res = await api<{ favorites?: ColorFavorite[] }>('/api/v1/color-favorites/reset', {
+    method: 'POST',
+  })
+  return res.favorites ?? []
 }
