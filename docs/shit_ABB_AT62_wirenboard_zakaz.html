@@ -69,38 +69,45 @@ code { font-size:.84em; background:#f0f3f6; padding:.05rem .25rem; border-radius
 <section>
   <h2>ISEO · чем открывать и снимать статус <span class="pill">из купленного</span></h2>
   <div class="box">
-    <b>Одного модуля достаточно для команды «открыть»:</b>
-    <b>WBIO-DO-SSR-8</b> (лучше) или свободный канал <b>WB-MR6CU</b>.
-    Статус двери — <b>DI на любом WB-MR6C v.3</b> (или W1 контроллера).
+    <b>На DIN уже стоит:</b> WB7 6M → <b>WBIO-DO-SSR-8</b> (шина WBIO, MQTT <code>EXT1_K*</code>).
+    Открытие — канал SSR · статус — <b>W1</b> (или DI MR6C).
+    Подробная схема: <a href="shit_ABB_AT62_iseo_dver.html">ISEO дверь</a>.
   </div>
 
   <h3>1. Команда «открыть» — коричневый + синий</h3>
-  <p><span class="pill">рекомендую</span> <b>WBIO-DO-SSR-8</b> — сухой оптовыход до 30 В / 400 мА, как раз под оптовход замка 8–30 В.</p>
+  <p>По ISEO это оптовход <b>8–30 В</b> (не сухой контакт сам по себе). SSR замыкает цепь питания команды.</p>
+  <p><span class="pill">рекомендую</span> питание команды с <b>БП замка</b> (как в мануале ISEO) + канал <b>WBIO-DO-SSR-8</b>:</p>
   <div class="flow">
-    <span class="chip">24В+ (UPS / LI60)</span><span class="arr">→</span>
+    <span class="chip">БП замка +</span><span class="arr">→</span>
     <span class="chip">коричневый ISEO</span>
   </div>
   <div class="flow">
     <span class="chip">синий ISEO</span><span class="arr">→</span>
-    <span class="chip">SSR chN (одна клемма)</span><span class="arr">→</span>
-    <span class="chip">0В / GND 24В</span>
+    <span class="chip">SSR K1</span><span class="arr">→</span>
+    <span class="chip">БП замка −</span>
   </div>
-  <p class="note">В вебке: импульс 1–2 с на <code>EXTx_Ky</code>, потом off. Не держать постоянно. Не использовать 5Vout.</p>
+  <p class="note">Альтернативы: +24В UPS→коричн. / SSR→0В · или Vout WB7→коричн. / SSR→GND (резерв WBMZ4). Не 5Vout. Импульс 1–2 с на <code>EXT1_K1</code>.</p>
 
   <p>Альтернатива: свободный сухой NO канала <b>WB-MR6CU</b> (тот же принцип: 24В → коричн. · синий → NO → 0В). В щите CU уже заняты: №5 сушилка + катушка ESB — бери свободный канал того же модуля или SSR.</p>
 
-  <h3>2. Статус двери — зелёный + оранжевый</h3>
+  <h3>2. Статус двери — реле NO + NC</h3>
   <div class="flow">
     <span class="chip">зелёный COM</span><span class="arr">→</span>
-    <span class="chip">GND / общий DI</span>
+    <span class="chip">GND</span>
   </div>
   <div class="flow">
     <span class="chip">оранжевый NO</span><span class="arr">→</span>
-    <span class="chip">DI MR6C</span>
-    <span class="arr">или</span>
-    <span class="chip">W1 WB7</span>
+    <span class="chip">W1 / DI</span>
+    <span class="arr">=</span>
+    <span class="chip">открыто</span>
   </div>
-  <p class="note">Логика: замкнуто = дверь открыта. Жёлтый (NC) не нужен. Питание замка 8–30 В обязательно, иначе реле статуса молчит.</p>
+  <div class="flow">
+    <span class="chip">жёлтый NC</span><span class="arr">→</span>
+    <span class="chip">второй DI</span>
+    <span class="arr">=</span>
+    <span class="chip">закрыто и сейф</span>
+  </div>
+  <p class="note">Минимум: зелёный+оранжевый. Жёлтый — явно «закрыто-сейф». БП замка 8–30 В обязателен, иначе реле статуса молчит.</p>
 
   <h3>Что не брать под ISEO</h3>
   <ul>

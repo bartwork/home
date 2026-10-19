@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>ABB AT62 — ISEO дверь · питание UPS→WBMZ4 · открытие · статус</title>
+<title>ABB AT62 — ISEO дверь · WB7 → WBIO-DO-SSR-8</title>
 <style>
 :root {
   --ink:#15202b; --muted:#5a6570; --line:#c5ced6;
-  --ok:#1e7a45; --pwr:#c0392b; --sig:#2980b9; --bat:#8e44ad;
+  --ok:#1e7a45; --pwr:#c0392b; --sig:#2980b9; --bat:#8e44ad; --ssr:#0e6655;
   --bg:#e8ecf0; --card:#fff;
 }
 * { box-sizing:border-box; }
@@ -20,7 +20,7 @@ header p { margin:0; font-size:.9rem; opacity:.93; max-width:980px; }
   color:#fff; text-decoration:none; border:1px solid rgba(255,255,255,.35);
   padding:.2rem .55rem; border-radius:4px; font-size:.8rem;
 }
-main { max-width:1000px; margin:0 auto; padding:1rem 1.1rem 2.5rem; }
+main { max-width:1040px; margin:0 auto; padding:1rem 1.1rem 2.5rem; }
 section {
   background:var(--card); border:1px solid var(--line); border-radius:8px;
   padding:.9rem 1rem; margin:0 0 .85rem;
@@ -40,11 +40,12 @@ th { background:#f0f3f6; }
   margin:.5rem 0; border-radius:0 6px 6px 0; font-size:.88rem;
 }
 .box.warn { border-left-color:#b9770e; background:#fef9e7; }
+.box.ssr { border-left-color:var(--ssr); background:#e8f8f5; }
 .diagram {
   width:100%; background:#f7f9fb; border:1px solid var(--line);
   border-radius:8px; overflow:auto;
 }
-.diagram svg { display:block; min-width:720px; width:100%; height:auto; }
+.diagram svg { display:block; min-width:780px; width:100%; height:auto; }
 code { font-size:.84em; background:#f0f3f6; padding:.05rem .25rem; border-radius:3px; }
 .wire { font-weight:700; }
 .w-red { color:#c0392b; }
@@ -54,12 +55,21 @@ code { font-size:.84em; background:#f0f3f6; padding:.05rem .25rem; border-radius
 .w-grn { color:#1e8449; }
 .w-org { color:#d35400; }
 .w-ylw { color:#b7950b; }
+.pill {
+  display:inline-block; font-size:.72rem; font-weight:700;
+  padding:.08rem .35rem; border-radius:3px; background:#d5f5e3; color:#0e6655;
+}
 </style>
 </head>
 <body>
 <header>
-  <h1>ISEO x1R Smart · кабели двери на WB7</h1>
-  <p>Питание автоматики: сеть → LI60 → <b>WB-UPS</b> → WB7; при отказе UPS — <b>WBMZ4-BATTERY</b> внутри контроллера. Открытие A1 · статус W1 · мотор замка на своём БП.</p>
+  <h1>ISEO x1R Smart · дверь через WBIO-DO-SSR-8</h1>
+  <p>
+    На DIN справа от контроллера: <b>WB7 6M</b> (Modbus master / RS-485) →
+    <b><a href="https://wirenboard.com/ru/contents/product/WBIO-DO-SSR-8" style="color:#aed6f1">WBIO-DO-SSR-8</a></b>
+    (шина WBIO, в MQTT = <code style="color:#fff;background:rgba(255,255,255,.15)">EXT1_K1…K8</code>).
+    Открытие — сухой SSR · статус реле NO/NC (открыто / закрыто-сейф) · мотор — свой БП.
+  </p>
   <div class="nav">
     <a href="shit_ABB_AT62_wirenboard_zakaz.html">заказ WB</a>
     <a href="shit_ABB_AT62_shema.html">схема щита</a>
@@ -69,151 +79,231 @@ code { font-size:.84em; background:#f0f3f6; padding:.05rem .25rem; border-radius
 <main>
 
 <section>
-  <h2>Порядок резерва (автоматика / команда «открыть»)</h2>
-  <ol>
-    <li><b>Сеть</b> → LI60-20B24 → Vin <b>WB-UPS</b> → Vout 24В → Vin <b>WB7</b> (+ шина модулей)</li>
-    <li>Пропала сеть → <b>UPS на своей АКБ</b> (~22 В на v.2) → WB7 и A1 ещё работают → импульс «открыть» жив</li>
-    <li>Сел / отвалился UPS → <b>WBMZ4</b> держит только WB7 (~11 В на Vout) → команда ещё возможна, если «+» команды брать с <b>Vout WB7</b></li>
-  </ol>
+  <h2>Важно: коричневый ≠ «просто Vout»</h2>
   <div class="box warn">
-    <b>Мотор замка</b> (красный/чёрный) — <b>не</b> с UPS/WBMZ4. Свой БП 8–30 В + батареи в двери.
-    Без питания замка WB только «щёлкнет» оптовход, ригели не поедут.
+    По мануалу ISEO x1R Smart: коричневый (pin&nbsp;4) и синий (pin&nbsp;8) —
+    <b>оптоизолированный вход команды</b>, на который нужно подать
+    <b>8–30 В dc/ac</b> (кнопка / сухой контакт <em>в цепи</em> с этим питанием).
+    Коричневый — не клемма Vout «сама по себе»; это одна нога оптовхода.
   </div>
+  <p>Цепь как у ISEO (кнопка = наш SSR):</p>
+  <p><code>+ 8…30 В → коричневый → оптовход ISEO → синий → SSR K1 → − того же источника</code></p>
+  <p>Откуда брать «+ / −» команды — три рабочих варианта:</p>
+  <table>
+    <thead>
+      <tr><th>Вариант</th><th>коричневый</th><th>синий через SSR на</th><th>Когда выбирать</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="pill">рекомендую</span> <b>C · БП замка</b></td>
+        <td><b>+</b> того же БП, что красный</td>
+        <td><b>−</b> того же БП (чёрный)</td>
+        <td>как пишет ISEO («можно один БП на замок и команду»); SSR реально сухой, развязка чистая</td>
+      </tr>
+      <tr>
+        <td><b>B · шина 24 В</b></td>
+        <td><b>+24 В</b> UPS / LI60</td>
+        <td><b>0 В</b> той же шины</td>
+        <td>как в <a href="shit_ABB_AT62_wirenboard_zakaz.html">заказе WB</a></td>
+      </tr>
+      <tr>
+        <td><b>A · Vout WB7</b></td>
+        <td><b>Vout</b> WB7</td>
+        <td><b>GND</b> WB7</td>
+        <td>только если нужен резерв команды от WBMZ4 (~11 В, ещё в норме 8–30). Не путать с 5Vout!</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="note">Раньше в схеме стоял вариант A как единственный — это было упрощение. Электрически верно, но не единственно верно.</p>
 </section>
 
 <section>
-  <h2>Схема подключений</h2>
+  <h2>Что приходит с двери в щит</h2>
+  <p>Кабель ISEO 8-пин. Ниже — раскладка для <b>варианта C</b> (БП замка + SSR):</p>
+  <table>
+    <thead>
+      <tr><th>Цвет</th><th>Роль</th><th>Куда в щите</th><th>На SSR?</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="wire w-brn">коричневый</span></td>
+        <td>open (нога оптовхода)</td>
+        <td><b>+</b> БП замка (вместе с красным)</td>
+        <td>нет</td>
+      </tr>
+      <tr>
+        <td><span class="wire w-blu">синий</span></td>
+        <td>open (вторая нога)</td>
+        <td><b>SSR K1a</b> → K1b → <b>−</b> БП замка</td>
+        <td><span class="pill">да · K1</span></td>
+      </tr>
+      <tr>
+        <td><span class="wire w-grn">зелёный</span></td>
+        <td>статус COM</td>
+        <td><b>GND</b> WB7 (общий для NO и NC)</td>
+        <td>нет</td>
+      </tr>
+      <tr>
+        <td><span class="wire w-org">оранжевый</span></td>
+        <td>статус <b>NO</b> · «открыто»</td>
+        <td><b>W1</b> WB7 (DI)</td>
+        <td>нет</td>
+      </tr>
+      <tr>
+        <td><span class="wire w-ylw">жёлтый</span></td>
+        <td>статус <b>NC</b> · «закрыто и сейф»</td>
+        <td>второй DI: свободный на <b>MR6C</b> (или другой DI)</td>
+        <td>нет</td>
+      </tr>
+      <tr>
+        <td><span class="wire w-red">красный</span></td>
+        <td>+ питание мотора (+ реле статуса)</td>
+        <td>БП замка 8–30 В <b>+</b> — без него реле статуса молчит</td>
+        <td>нет</td>
+      </tr>
+      <tr>
+        <td><span class="wire w-blk">чёрный</span></td>
+        <td>− питание мотора</td>
+        <td>БП замка <b>−</b> (+ сюда же K1b SSR)</td>
+        <td>нет</td>
+      </tr>
+      <tr>
+        <td>белый</td>
+        <td>не исп.</td>
+        <td>не подключать</td>
+        <td>—</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="box">
+    <b>Реле статуса ISEO</b> (сухие контакты, ≤30 В / 1 А):
+    дверь <b>закрыта и сейф</b> (ригели выдвинуты) → реле неактивно →
+    <b>NC замкнут</b> (жёлтый↔зелёный), <b>NO разомкнут</b>.
+    Дверь <b>открывается / открыта</b> → реле активно →
+    <b>NO замкнут</b> (оранжевый↔зелёный), <b>NC разомкнут</b>.
+  </div>
+  <div class="box ssr">
+    На <b>SSR-8</b> с двери — только <b>синий</b> (команда).
+    Статус (зелёный / оранжевый / жёлтый) — на DI контроллера, не на SSR.
+  </div>
+  <p class="note">
+    Минимум хватает одной пары: зелёный+оранжевый на W1
+    («1 = открыто», «0 = закрыто»). Жёлтый — если нужно явно видеть «закрыто и сейф»
+    отдельным входом (или контроль обрыва линии статуса).
+  </p>
+</section>
+
+<section>
+  <h2>DIN: WB7 → SSR-8</h2>
   <div class="leg">
-    <span><i style="background:#c0392b"></i>питание 24В / замок</span>
+    <span><i style="background:#1a3d5c"></i>контроллер</span>
+    <span><i style="background:#0e6655"></i>SSR-8</span>
+    <span><i style="background:#c0392b"></i>питание / мотор</span>
     <span><i style="background:#2980b9"></i>команда открыть</span>
     <span><i style="background:#1e7a45"></i>статус двери</span>
-    <span><i style="background:#8e44ad"></i>резерв АКБ</span>
   </div>
   <div class="diagram">
-    <svg viewBox="0 0 920 640" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,system-ui,sans-serif">
-      <!-- mains -->
-      <rect x="20" y="30" width="100" height="50" rx="6" fill="#34495e"/>
-      <text x="70" y="52" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Сеть 230В</text>
-      <text x="70" y="68" text-anchor="middle" fill="#d5d8dc" font-size="10">УЗО7 → D10</text>
-
-      <path d="M120 55 H160" stroke="#c0392b" stroke-width="2.5" fill="none" marker-end="url(#arr)"/>
-
-      <rect x="160" y="30" width="110" height="50" rx="6" fill="#c0392b"/>
-      <text x="215" y="52" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">LI60 24В</text>
-      <text x="215" y="68" text-anchor="middle" fill="#fadbd8" font-size="10">DIN БП</text>
-
-      <path d="M270 55 H310" stroke="#c0392b" stroke-width="2.5" fill="none"/>
-
-      <rect x="310" y="20" width="130" height="70" rx="6" fill="#8e44ad"/>
-      <text x="375" y="42" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">WB-UPS v.2</text>
-      <text x="375" y="58" text-anchor="middle" fill="#e8daef" font-size="10">Vin ← 24В</text>
-      <text x="375" y="74" text-anchor="middle" fill="#e8daef" font-size="10">АКБ внутри · ①</text>
-
-      <path d="M440 55 H490" stroke="#c0392b" stroke-width="2.5" fill="none"/>
-      <text x="465" y="48" text-anchor="middle" fill="#c0392b" font-size="9">24В bus</text>
+    <svg viewBox="0 0 980 720" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,system-ui,sans-serif">
+      <!-- DIN rail strip -->
+      <rect x="20" y="20" width="940" height="130" rx="8" fill="#dfe6e9" stroke="#95a5a6"/>
+      <text x="40" y="42" fill="#5a6570" font-size="11" font-weight="700">DIN-рейка · справа от WB7</text>
 
       <!-- WB7 -->
-      <rect x="490" y="15" width="200" height="120" rx="8" fill="#1a3d5c"/>
-      <text x="590" y="38" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">Wiren Board 7</text>
-      <text x="590" y="56" text-anchor="middle" fill="#aed6f1" font-size="10">Vin ← UPS Vout</text>
-      <rect x="510" y="68" width="160" height="52" rx="5" fill="#6c3483"/>
-      <text x="590" y="88" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">WBMZ4-BATTERY</text>
-      <text x="590" y="105" text-anchor="middle" fill="#e8daef" font-size="9">резерв контроллера · ②</text>
+      <rect x="40" y="52" width="220" height="80" rx="8" fill="#1a3d5c"/>
+      <text x="150" y="78" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">Wiren Board 7</text>
+      <text x="150" y="96" text-anchor="middle" fill="#aed6f1" font-size="11">контроллер 6M</text>
+      <text x="150" y="114" text-anchor="middle" fill="#aed6f1" font-size="10">Modbus master · RS-485</text>
 
-      <!-- labels cascade -->
-      <text x="375" y="110" text-anchor="middle" fill="#8e44ad" font-size="10">① сначала UPS</text>
-      <text x="590" y="148" text-anchor="middle" fill="#8e44ad" font-size="10">② потом WBMZ4 (только WB7)</text>
+      <!-- WBIO bus arrow -->
+      <path d="M260 92 H300" stroke="#0e6655" stroke-width="3" fill="none"/>
+      <text x="280" y="82" text-anchor="middle" fill="#0e6655" font-size="9">WBIO</text>
 
-      <!-- WB terminals -->
-      <rect x="490" y="170" width="200" height="150" rx="8" fill="#2c3e50"/>
-      <text x="590" y="192" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Клеммы WB7</text>
-      <text x="510" y="215" fill="#f5b7b1" font-size="11">Vout ≈24В (с UPS) / ~11В (с WBMZ4)</text>
-      <text x="510" y="235" fill="#aed6f1" font-size="11">GND</text>
-      <text x="510" y="255" fill="#5dade2" font-size="11">A1  — выход OC (открыть)</text>
-      <text x="510" y="275" fill="#58d68d" font-size="11">W1  — DI (статус)</text>
-      <text x="510" y="300" fill="#abb2b9" font-size="10">A1_OUT = вкл · W1 = режим DI</text>
+      <!-- SSR-8 -->
+      <rect x="300" y="52" width="200" height="80" rx="8" fill="#0e6655"/>
+      <text x="400" y="76" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">WBIO-DO-SSR-8</text>
+      <text x="400" y="94" text-anchor="middle" fill="#d5f5e3" font-size="10">8× сухой контакт ≤30 В</text>
+      <text x="400" y="112" text-anchor="middle" fill="#d5f5e3" font-size="10">MQTT: EXT1_K1…K8</text>
 
-      <!-- open path -->
-      <path d="M590 185 V160" stroke="none"/>
-      <path d="M690 210 H760" stroke="#c0392b" stroke-width="2" stroke-dasharray="4 3" fill="none"/>
-      <text x="725" y="202" fill="#c0392b" font-size="9">+ команды</text>
+      <!-- note remaining channels -->
+      <rect x="520" y="60" width="420" height="64" rx="6" fill="#fff" stroke="#0e6655"/>
+      <text x="540" y="82" fill="#0e6655" font-size="12" font-weight="700">Канал двери: K1 (EXT1_K1)</text>
+      <text x="540" y="102" fill="#2c3e50" font-size="11">K2…K8 свободны · не RS-485, не Modbus-модуль</text>
+      <text x="540" y="118" fill="#5a6570" font-size="10">питание модуля — через боковой разъём WBIO от WB7</text>
 
-      <path d="M690 255 H760" stroke="#2980b9" stroke-width="2.5" fill="none"/>
-      <text x="720" y="248" fill="#2980b9" font-size="9">A1</text>
+      <!-- Power cascade compact -->
+      <rect x="20" y="170" width="300" height="100" rx="8" fill="#8e44ad"/>
+      <text x="170" y="195" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Питание автоматики</text>
+      <text x="40" y="218" fill="#e8daef" font-size="11">Сеть → LI60 24В → WB-UPS ①</text>
+      <text x="40" y="238" fill="#e8daef" font-size="11">→ Vin WB7 (+ шина WBIO)</text>
+      <text x="40" y="258" fill="#e8daef" font-size="11">② WBMZ4 внутри WB7 (~11 В)</text>
 
-      <path d="M690 235 H730 V400 H200" stroke="#7f8c8d" stroke-width="1.5" fill="none"/>
-      <text x="400" y="392" fill="#7f8c8d" font-size="9">GND общий</text>
+      <!-- WB7 terminals -->
+      <rect x="340" y="170" width="240" height="160" rx="8" fill="#2c3e50"/>
+      <text x="460" y="192" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Клеммы WB7 · статус</text>
+      <text x="360" y="218" fill="#58d68d" font-size="12">GND  ← зелёный (COM)</text>
+      <text x="360" y="242" fill="#f5b041" font-size="12">W1   ← оранжевый (NO)</text>
+      <text x="360" y="266" fill="#f7dc6f" font-size="12">DI2  ← жёлтый (NC) · MR6C</text>
+      <text x="360" y="290" fill="#abb2b9" font-size="10">W1=1 открыто · DI2=1 закрыто-сейф</text>
+      <text x="360" y="310" fill="#abb2b9" font-size="10">A1 / 5Vout под дверь — нет</text>
 
-      <path d="M690 275 H760" stroke="#1e7a45" stroke-width="2.5" fill="none"/>
-      <text x="720" y="268" fill="#1e7a45" font-size="9">W1</text>
+      <!-- SSR terminals detail -->
+      <rect x="600" y="170" width="360" height="160" rx="8" fill="#0e6655"/>
+      <text x="780" y="192" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Клеммы SSR · канал K1</text>
+      <text x="620" y="220" fill="#d5f5e3" font-size="12">K1a  ← синий ISEO</text>
+      <text x="620" y="244" fill="#d5f5e3" font-size="12">K1b  → − источника команды</text>
+      <text x="620" y="268" fill="#fff" font-size="11">вар. C: K1b → чёрный / − БП замка</text>
+      <text x="620" y="290" fill="#a9dfbf" font-size="10">сухой контакт · гальв. развязка</text>
+      <text x="620" y="312" fill="#a9dfbf" font-size="10">до 30 В / 400 мА</text>
 
-      <!-- ISEO cable block -->
-      <rect x="760" y="180" width="140" height="200" rx="8" fill="#f8f9f9" stroke="#566573" stroke-width="1.5"/>
-      <text x="830" y="202" text-anchor="middle" font-size="12" font-weight="700">Кабель ISEO</text>
-      <text x="830" y="218" text-anchor="middle" font-size="9" fill="#5a6570">8-пин</text>
+      <!-- Circuit of open command -->
+      <rect x="20" y="350" width="580" height="130" rx="8" fill="#eaf2f8" stroke="#2980b9"/>
+      <text x="40" y="375" fill="#1a3d5c" font-size="13" font-weight="700">Цепь команды «открыть» · вариант C</text>
+      <text x="40" y="400" fill="#2c3e50" font-size="12">+БП замка → коричн. → оптовход ISEO → синий → SSR K1 → −БП замка</text>
+      <text x="40" y="424" fill="#2c3e50" font-size="12">MQTT: импульс 1–2 с на <tspan font-family="ui-monospace,Menlo,monospace">/devices/wb-gpio/controls/EXT1_K1</tspan></text>
+      <text x="40" y="448" fill="#5a6570" font-size="11">1. EXT1_K1 = 1   2. ждать 1–2 с   3. EXT1_K1 = 0  · не держать</text>
+      <text x="40" y="468" fill="#5a6570" font-size="11">Вариант A (Vout→коричн., SSR→GND) — запасной, ради WBMZ4</text>
 
-      <text x="775" y="245" font-size="11"><tspan fill="#c0392b" font-weight="700">красный</tspan> +пит</text>
-      <text x="775" y="265" font-size="11"><tspan font-weight="700">чёрный</tspan> −пит</text>
-      <text x="775" y="290" font-size="11"><tspan fill="#8b4513" font-weight="700">коричн.</tspan> open+</text>
-      <text x="775" y="310" font-size="11"><tspan fill="#2471a3" font-weight="700">синий</tspan> open−</text>
-      <text x="775" y="335" font-size="11"><tspan fill="#1e8449" font-weight="700">зелёный</tspan> COM</text>
-      <text x="775" y="355" font-size="11"><tspan fill="#d35400" font-weight="700">оранж.</tspan> NO</text>
-      <text x="775" y="375" font-size="11"><tspan fill="#b7950b" font-weight="700">жёлтый</tspan> NC — не исп.</text>
+      <!-- Status -->
+      <rect x="620" y="350" width="340" height="130" rx="8" fill="#eafaf1" stroke="#1e7a45"/>
+      <text x="640" y="375" fill="#1e7a45" font-size="13" font-weight="700">Статус двери (реле)</text>
+      <text x="640" y="398" fill="#2c3e50" font-size="11">зелёный COM → GND</text>
+      <text x="640" y="418" fill="#2c3e50" font-size="11">оранж. NO → W1 = открыто</text>
+      <text x="640" y="438" fill="#2c3e50" font-size="11">жёлтый NC → DI2 = закрыто-сейф</text>
+      <text x="640" y="462" fill="#5a6570" font-size="10">Нужен внешний БП замка (красный/чёрный)</text>
 
-      <!-- lines into ISEO colors from left -->
-      <path d="M760 285 H720" stroke="#8b4513" stroke-width="2.5" fill="none"/>
-      <!-- brown from Vout -->
-      <path d="M590 210 H720 V285" stroke="#c0392b" stroke-width="2" fill="none" stroke-dasharray="5 3"/>
-      <path d="M720 285 H760" stroke="#8b4513" stroke-width="2.5" fill="none"/>
+      <!-- Lock PSU -->
+      <rect x="20" y="500" width="280" height="100" rx="8" fill="#922b21"/>
+      <text x="160" y="528" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">БП замка 8–30 В</text>
+      <text x="40" y="552" fill="#f5b7b1" font-size="12">+ ← красный + коричневый</text>
+      <text x="40" y="574" fill="#f5b7b1" font-size="12">− ← чёрный + K1b SSR</text>
+      <text x="40" y="592" fill="#fadbd8" font-size="10">мотор + команда с одного БП</text>
 
-      <path d="M760 305 H720" stroke="#2471a3" stroke-width="2.5" fill="none"/>
-      <!-- already A1 to 760 area - connect -->
-      <path d="M760 350 H720 V275" stroke="#d35400" stroke-width="2.5" fill="none"/>
-      <path d="M760 330 H700 V400" stroke="#1e8449" stroke-width="2" fill="none"/>
+      <!-- Door cable summary -->
+      <rect x="320" y="500" width="640" height="100" rx="8" fill="#f8f9f9" stroke="#566573"/>
+      <text x="340" y="528" fill="#1a3d5c" font-size="13" font-weight="700">Кабель с двери → куда (вариант C)</text>
+      <text x="340" y="552" fill="#2c3e50" font-size="12">
+        <tspan fill="#8b4513" font-weight="700">коричн.</tspan> +БП ·
+        <tspan fill="#2471a3" font-weight="700">синий</tspan> SSR ·
+        <tspan fill="#1e8449" font-weight="700">зелён.</tspan> GND ·
+        <tspan fill="#d35400" font-weight="700">оранж.</tspan> W1 ·
+        <tspan fill="#b7950b" font-weight="700">жёлт.</tspan> DI2
+      </text>
+      <text x="340" y="576" fill="#2c3e50" font-size="12">
+        <tspan fill="#c0392b" font-weight="700">красный</tspan>/<tspan font-weight="700">чёрный</tspan> → БП замка · белый — не трогать
+      </text>
+      <text x="340" y="596" fill="#5a6570" font-size="10">SSR = только команда · статус = отдельное реле NO/NC</text>
 
-      <!-- lock PSU separate -->
-      <rect x="20" y="200" width="160" height="90" rx="8" fill="#922b21"/>
-      <text x="100" y="228" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">БП замка</text>
-      <text x="100" y="246" text-anchor="middle" fill="#f5b7b1" font-size="10">8–30 В / до 30 Вт</text>
-      <text x="100" y="264" text-anchor="middle" fill="#f5b7b1" font-size="10">+ батареи в двери</text>
-      <text x="100" y="280" text-anchor="middle" fill="#fadbd8" font-size="9">не от UPS</text>
-
-      <path d="M180 230 H760" stroke="#c0392b" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
-      <text x="470" y="222" text-anchor="middle" fill="#c0392b" font-size="10">красный +</text>
-      <path d="M180 255 H760" stroke="#1a1a1a" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
-      <text x="470" y="272" text-anchor="middle" fill="#1a1a1a" font-size="10">чёрный −</text>
-
-      <!-- lock -->
-      <rect x="760" y="420" width="140" height="70" rx="8" fill="#1a3d5c"/>
-      <text x="830" y="450" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">ISEO x1R</text>
-      <text x="830" y="470" text-anchor="middle" fill="#aed6f1" font-size="10">Smart · дверь</text>
-
-      <path d="M830 380 V420" stroke="#566573" stroke-width="2" fill="none"/>
-
-      <!-- scenario note -->
-      <rect x="20" y="420" width="420" height="100" rx="8" fill="#eaf2f8" stroke="#2980b9"/>
-      <text x="40" y="445" fill="#1a3d5c" font-size="12" font-weight="700">Сценарий WB (открыть)</text>
-      <text x="40" y="468" fill="#2c3e50" font-size="11">1. A1 = ON</text>
-      <text x="40" y="488" fill="#2c3e50" font-size="11">2. ждать 1–2 с</text>
-      <text x="40" y="508" fill="#2c3e50" font-size="11">3. A1 = OFF  ·  не держать постоянно</text>
-
-      <rect x="460" y="420" width="280" height="100" rx="8" fill="#eafaf1" stroke="#1e7a45"/>
-      <text x="480" y="445" fill="#1e7a45" font-size="12" font-weight="700">Статус в вебке</text>
-      <text x="480" y="468" fill="#2c3e50" font-size="11">W1 = 1 → дверь открыта (NO)</text>
-      <text x="480" y="488" fill="#2c3e50" font-size="11">W1 = 0 → закрыта и безопасна</text>
-      <text x="480" y="508" fill="#5a6570" font-size="10">Настройки: W1 = дискретный вход</text>
-
-      <!-- bottom cascade bar -->
-      <rect x="20" y="545" width="880" height="70" rx="8" fill="#f5eef8" stroke="#8e44ad"/>
-      <text x="40" y="570" fill="#6c3483" font-size="12" font-weight="700">Каскад питания команды / WB</text>
-      <text x="40" y="592" fill="#2c3e50" font-size="11">Сеть+LI60 → UPS (①) → Vin WB7 → Vout(+коричневый) · A1→синий · GND общий</text>
-      <text x="40" y="610" fill="#2c3e50" font-size="11">Нет UPS → WBMZ4 (②): WB жив, Vout~11В, оптовход ISEO ещё срабатывает (8–30В)</text>
+      <!-- bottom note -->
+      <rect x="20" y="620" width="940" height="80" rx="8" fill="#f5eef8" stroke="#8e44ad"/>
+      <text x="40" y="645" fill="#6c3483" font-size="12" font-weight="700">Питание WB / SSR отдельно от команды замка</text>
+      <text x="40" y="668" fill="#2c3e50" font-size="11">Сеть+LI60 → UPS ① → Vin WB7 → шина WBIO → SSR · статус зелёный/оранжевый на GND/W1</text>
+      <text x="40" y="688" fill="#2c3e50" font-size="11">Команда: питание с БП замка через коричн./синий · SSR только замыкает цепь</text>
     </svg>
   </div>
 </section>
 
 <section>
-  <h2>Таблица «цвет → клемма»</h2>
+  <h2>Таблица «цвет → клемма» · вариант C + SSR-8</h2>
   <table>
     <thead>
       <tr><th>Цвет ISEO</th><th>Роль</th><th>Куда</th></tr>
@@ -221,23 +311,23 @@ code { font-size:.84em; background:#f0f3f6; padding:.05rem .25rem; border-radius
     <tbody>
       <tr>
         <td><span class="wire w-red">красный</span></td>
-        <td>+ питание замка</td>
-        <td><b>свой БП 8–30 В +</b> (не UPS)</td>
+        <td>+ питание мотора</td>
+        <td><b>БП замка +</b></td>
       </tr>
       <tr>
         <td><span class="wire w-blk">чёрный</span></td>
-        <td>− питание замка</td>
-        <td><b>свой БП −</b></td>
+        <td>− питание мотора</td>
+        <td><b>БП замка −</b> (сюда же K1b)</td>
       </tr>
       <tr>
         <td><span class="wire w-brn">коричневый</span></td>
-        <td>команда open +</td>
-        <td><b>Vout WB7</b> (после UPS; при WBMZ4 ~11 В)</td>
+        <td>команда open</td>
+        <td><b>БП замка +</b> (не Vout, не 5Vout)</td>
       </tr>
       <tr>
         <td><span class="wire w-blu">синий</span></td>
-        <td>команда open −</td>
-        <td><b>A1</b> (выход OC)</td>
+        <td>команда open</td>
+        <td><b>SSR K1a</b> → K1b → <b>БП замка −</b></td>
       </tr>
       <tr>
         <td><span class="wire w-grn">зелёный</span></td>
@@ -246,13 +336,13 @@ code { font-size:.84em; background:#f0f3f6; padding:.05rem .25rem; border-radius
       </tr>
       <tr>
         <td><span class="wire w-org">оранжевый</span></td>
-        <td>реле статуса NO</td>
-        <td><b>W1</b> (режим DI)</td>
+        <td>реле NO · открыто</td>
+        <td><b>W1</b> (DI) → 1 = открыто / не сейф</td>
       </tr>
       <tr>
         <td><span class="wire w-ylw">жёлтый</span></td>
-        <td>NC статуса</td>
-        <td>не подключать</td>
+        <td>реле NC · закрыто-сейф</td>
+        <td>второй DI (MR6C…) → 1 = закрыто и сейф</td>
       </tr>
       <tr>
         <td>белый</td>
@@ -261,19 +351,28 @@ code { font-size:.84em; background:#f0f3f6; padding:.05rem .25rem; border-radius
       </tr>
     </tbody>
   </table>
-  <p class="note">Коричневый с <b>Vout</b> (не напрямую с клеммы UPS): тогда при отказе UPS команда ещё питается от WBMZ4 (~11 В). Общий <b>GND</b> обязателен между Vout/GND и синим через A1.</p>
+  <p class="note">
+    Открытие через <b>WBIO-DO-SSR-8 / EXT1_K1</b>, не через A1.
+    Статус — отдельное реле: можно снять и «открыто» (NO), и «закрыто-сейф» (NC).
+  </p>
 </section>
 
 <section>
   <h2>Настройки в веб-интерфейсе</h2>
   <ul>
     <li><b>WBMZ4:</b> Настройки → модули расширения → источник резервного питания = WBMZ4-BATTERY → Записать</li>
-    <li><b>W1:</b> режим дискретного входа (не 1-Wire), если термометры идут через M1W2</li>
-    <li><b>A1:</b> выход OC включён только на время импульса</li>
-    <li>UPS v.2: переключатель выхода с АКБ лучше в положение <b>~22 В</b> (под 24В шину)</li>
+    <li><b>SSR-8:</b> должен появиться как <code>EXT1_K1…K8</code> в <code>/devices/wb-gpio/</code> (уже есть в снимке MQTT)</li>
+    <li><b>W1:</b> DI ← оранжевый (открыто)</li>
+    <li><b>Второй DI</b> (MR6C и т.п.): ← жёлтый (закрыто и сейф), опционально</li>
+    <li><b>Сценарий «открыть»:</b> импульс 1–2 с на <code>EXT1_K1</code>, потом off</li>
+    <li>В Argo реле можно оставить режимом <b>Door status</b> (не Single pulse)</li>
+    <li>UPS v.2: выход с АКБ лучше <b>~22 В</b></li>
   </ul>
   <div class="box">
-    SSR-8 для двери не нужен. 5Vout не использовать. Белый/жёлтый свободны.
+    5Vout не использовать. Белый свободен. SSR K2…K8 — запас.
+  </div>
+  <div class="box warn">
+    Без питания мотора (красный/чёрный) WB только замкнёт оптовход — ригели не поедут.
   </div>
 </section>
 
