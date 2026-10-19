@@ -3,6 +3,8 @@ package discovery
 import (
 	"encoding/json"
 	"strings"
+
+	"github.com/bartwork/home/internal/layout"
 )
 
 // ParsedTopic — разобранный Wirenboard-топик.
@@ -77,8 +79,8 @@ func ClassifyWBType(wbType string) string {
 	}
 }
 
-// SuggestDeviceType учитывает устройство WB (например ONOKOM AC / WB-LED) поверх meta-типа.
-// ONOKOM Active → climate; WB-LED RGB Strip → led; sibling-каналы → raw (не принимать массово).
+// SuggestDeviceType учитывает устройство WB (ONOKOM / WB-LED / тёплый пол) поверх meta-типа.
+// ONOKOM Active → climate; WB-LED RGB Strip → led; реле ТП → floor; sibling-каналы → raw.
 func SuggestDeviceType(deviceID, control, wbType string) string {
 	if isOnokomAC(deviceID) {
 		if strings.EqualFold(strings.TrimSpace(control), "Active") {
@@ -94,6 +96,12 @@ func SuggestDeviceType(deviceID, control, wbType string) string {
 		if isWBLedRGBStripSibling(c) {
 			return "raw"
 		}
+	}
+	if layout.IsFloorRelay(deviceID, control) {
+		return "floor"
+	}
+	if layout.IsFloorTempSensor(deviceID, control) {
+		return "raw"
 	}
 	return ClassifyWBType(wbType)
 }

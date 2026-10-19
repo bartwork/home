@@ -1,5 +1,5 @@
 /** Типы, которые «Принять полезные» принимает массово. */
-export const USEFUL_DEVICE_TYPES = ['switch', 'range', 'sensor', 'climate', 'led'] as const
+export const USEFUL_DEVICE_TYPES = ['switch', 'range', 'sensor', 'climate', 'led', 'floor'] as const
 
 export const DEVICE_TYPE_OPTIONS = [
   { value: 'switch', label: 'выключатель' },
@@ -7,6 +7,7 @@ export const DEVICE_TYPE_OPTIONS = [
   { value: 'sensor', label: 'сенсор' },
   { value: 'climate', label: 'кондиционер' },
   { value: 'led', label: 'LED RGB' },
+  { value: 'floor', label: 'тёплый пол' },
   { value: 'raw', label: 'raw' },
 ] as const
 

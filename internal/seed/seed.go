@@ -18,7 +18,10 @@ func Run(ctx context.Context, log zerolog.Logger, rooms repository.RoomStore, de
 	if err := seedDevices(ctx, log, rooms, devices); err != nil {
 		return err
 	}
-	return backfillPower(ctx, log, devices)
+	if err := backfillPower(ctx, log, devices); err != nil {
+		return err
+	}
+	return backfillFloor(ctx, log, devices)
 }
 
 func seedRooms(ctx context.Context, log zerolog.Logger, rooms repository.RoomStore) error {
@@ -176,6 +179,48 @@ func backfillPower(ctx context.Context, log zerolog.Logger, devices repository.D
 	}
 	if n > 0 {
 		log.Info().Int("devices", n).Msg("seed backfill power_topic")
+	}
+	return nil
+}
+
+// backfillFloor переводит каталожные тёплые полы switch→floor и проставляет датчик.
+func backfillFloor(ctx context.Context, log zerolog.Logger, devices repository.DeviceStore) error {
+	byTopic := map[string]DeviceDef{}
+	for _, d := range Devices {
+		if d.Type == "floor" {
+			byTopic[d.Topic] = d
+		}
+	}
+	existing, err := devices.List(ctx)
+	if err != nil {
+		return err
+	}
+	n := 0
+	for _, d := range existing {
+		def, ok := byTopic[d.MqttTopic]
+		if !ok {
+			continue
+		}
+		sensor := powerFor(def)
+		if d.DeviceType == "floor" && strings.TrimSpace(d.PowerTopic) == sensor {
+			continue
+		}
+		icon := d.Icon
+		if icon == "" {
+			icon = layout.IconFor(def.Icon, def.Name, "floor")
+		}
+		if _, err := devices.Update(ctx, d.ID, repository.WriteDevice{
+			Name: d.Name, MqttTopic: d.MqttTopic, DeviceType: "floor", Unit: d.Unit,
+			PowerTopic: sensor, RoomID: d.RoomID, Icon: icon,
+			X: d.X, Y: d.Y, W: d.W, H: d.H, Active: d.Active,
+			WbDevice: d.WbDevice, WbControl: d.WbControl, Source: d.Source,
+		}); err != nil {
+			return err
+		}
+		n++
+	}
+	if n > 0 {
+		log.Info().Int("devices", n).Msg("seed backfill floor")
 	}
 	return nil
 }

@@ -3,7 +3,7 @@
 Источник правды для seed и экрана «Дом».  
 Команды пишутся в тот же топик (Wiren Board: publish в `/devices/.../controls/...`, обычно с `/on` — bridge сам ходит в broker).
 
-Типы UI: `switch` · `range` · `sensor` · `climate` · `led` · `raw`.
+Типы UI: `switch` · `range` · `sensor` · `climate` · `led` · `floor` · `raw`.
 
 ---
 
@@ -27,18 +27,18 @@
 | кухня | подсветка кухни | switch | `/devices/wb-mr6cv3_239/controls/K2` | |
 | кухня | вытяжка | switch | `/devices/wb-mr6cv3_239/controls/K3` | |
 | кухня | кондиционер | climate | `/devices/ONOKOM-AIR-HR-1-MB-B_1/controls/Active` | см. climate ниже |
-| кухня | тёплый пол | switch | `/devices/wb-mr6cv3_225/controls/K5` | |
+| кухня | тёплый пол | **floor** | `/devices/wb-mr6cv3_225/controls/K5` | temp → `wb-m1w2_82` Ext.2 |
 | кладовка | лента | switch | `/devices/wb-mr6cv3_239/controls/K4` | |
 | кладовка | свет | switch | `/devices/wb-mr6cv3_239/controls/K5` | |
 | ванна | основной свет | switch | `/devices/wb-mr6cv3_227/controls/K1` | |
 | ванна | зеркало | switch | `/devices/wb-mr6cv3_227/controls/K2` | |
 | ванна | вытяжка | switch | `/devices/wb-mr6cv3_227/controls/K3` | |
-| ванна | тёплый пол | switch | `/devices/wb-mr6cv3_225/controls/K4` | |
+| ванна | тёплый пол | **floor** | `/devices/wb-mr6cv3_225/controls/K4` | temp → `wb-m1w2_82` Ext.1 |
 | туалет | зеркало | switch | `/devices/wb-mr6cv3_227/controls/K4` | |
 | туалет | свет | switch | `/devices/wb-mr6cv3_227/controls/K5` | |
 | туалет | вытяжка | switch | `/devices/wb-mr6cv3_227/controls/K6` | |
-| туалет | тёплый пол | switch | `/devices/wb-mr6cv3_225/controls/K2` | |
-| коридор | тёплый пол | switch | `/devices/wb-mr6cv3_225/controls/K1` | |
+| туалет | тёплый пол | **floor** | `/devices/wb-mr6cv3_225/controls/K2` | temp → `wb-m1w2_83` Ext.2 |
+| коридор | тёплый пол | **floor** | `/devices/wb-mr6cv3_225/controls/K1` | temp → `wb-m1w2_83` Ext.1 |
 
 Правило MDM3: `…/Channel N` → power `…/KN`.
 
@@ -94,6 +94,21 @@ Sibling-controls (подставить тот же `device_id`):
 
 ---
 
+## Floor — тёплый пол (`wb-mr6cv3_225` + `wb-m1w2_*`)
+
+Якорь в UI: **реле** (`mqtt_topic`). Температура: **`power_topic`** → датчик `External Sensor N`.
+
+| Комната | Реле | Датчик |
+|---|---|---|
+| коридор | `/devices/wb-mr6cv3_225/controls/K1` | `/devices/wb-m1w2_83/controls/External Sensor 1` |
+| туалет | `/devices/wb-mr6cv3_225/controls/K2` | `/devices/wb-m1w2_83/controls/External Sensor 2` |
+| ванна | `/devices/wb-mr6cv3_225/controls/K4` | `/devices/wb-m1w2_82/controls/External Sensor 1` |
+| кухня | `/devices/wb-mr6cv3_225/controls/K5` | `/devices/wb-m1w2_82/controls/External Sensor 2` |
+
+Датчики в discovery → `raw` (не принимать отдельно).
+
+---
+
 ## Модули Wiren Board (кратко)
 
 | ID | Модуль | Назначение |
@@ -105,6 +120,8 @@ Sibling-controls (подставить тот же `device_id`):
 | `wb-mr6cv3_227` | реле | ванна / туалет |
 | `wb-mr6cv3_239` | реле | кухня / кладовка |
 | `wb-mr6cu_43` | реле | мастер |
+| `wb-m1w2_82` | 1-Wire | датчики пола ванна / кухня |
+| `wb-m1w2_83` | 1-Wire | датчики пола коридор / туалет |
 | `wb-led_221` | WB-LED | лента карниза RGB |
 | `ONOKOM-AIR-HR-1-MB-B_1` | шлюз AC | кондиционер кухня |
 | `ONOKOM-AIR-HR-1-MB-B_2` | шлюз AC | кондиционер комната |

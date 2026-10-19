@@ -14,9 +14,9 @@ type RoomDef struct {
 type DeviceDef struct {
 	Name       string
 	Room       string // имя комнаты; пусто = без комнаты
-	Type       string // switch|range|sensor|climate|led|raw
+	Type       string // switch|range|sensor|climate|led|floor|raw
 	Topic      string
-	PowerTopic string // явно; пусто + range → InferPowerTopic
+	PowerTopic string // явно; пусто: range → InferPowerTopic, floor → FloorSensorTopic
 	Icon       string
 	Unit       string
 }
@@ -46,10 +46,10 @@ var Devices = []DeviceDef{
 	{Name: "зеркало", Room: "туалет", Type: "switch", Topic: "/devices/wb-mr6cv3_227/controls/K4", Icon: "light"},
 	{Name: "свет", Room: "туалет", Type: "switch", Topic: "/devices/wb-mr6cv3_227/controls/K5", Icon: "light"},
 	{Name: "вытяжка", Room: "туалет", Type: "switch", Topic: "/devices/wb-mr6cv3_227/controls/K6", Icon: "fan"},
-	{Name: "тёплый пол", Room: "коридор", Type: "switch", Topic: "/devices/wb-mr6cv3_225/controls/K1", Icon: "thermo"},
-	{Name: "тёплый пол", Room: "туалет", Type: "switch", Topic: "/devices/wb-mr6cv3_225/controls/K2", Icon: "thermo"},
-	{Name: "тёплый пол", Room: "ванна", Type: "switch", Topic: "/devices/wb-mr6cv3_225/controls/K4", Icon: "thermo"},
-	{Name: "тёплый пол", Room: "кухня", Type: "switch", Topic: "/devices/wb-mr6cv3_225/controls/K5", Icon: "thermo"},
+	{Name: "тёплый пол", Room: "коридор", Type: "floor", Topic: "/devices/wb-mr6cv3_225/controls/K1", Icon: "thermo"},
+	{Name: "тёплый пол", Room: "туалет", Type: "floor", Topic: "/devices/wb-mr6cv3_225/controls/K2", Icon: "thermo"},
+	{Name: "тёплый пол", Room: "ванна", Type: "floor", Topic: "/devices/wb-mr6cv3_225/controls/K4", Icon: "thermo"},
+	{Name: "тёплый пол", Room: "кухня", Type: "floor", Topic: "/devices/wb-mr6cv3_225/controls/K5", Icon: "thermo"},
 	{Name: "дополнительный свет", Room: "комната", Type: "range", Topic: "/devices/wb-mdm3_75/controls/Channel 2", Icon: "dimmer"},
 	{Name: "лента карниза", Room: "комната", Type: "led", Topic: "/devices/wb-led_221/controls/RGB Strip", Icon: "light"},
 	{Name: "свет у окна", Room: "кухня", Type: "range", Topic: "/devices/wb-mdm3_218/controls/Channel 1", Icon: "dimmer"},
@@ -68,6 +68,9 @@ func powerFor(d DeviceDef) string {
 	}
 	if d.Type == "range" {
 		return layout.InferPowerTopic(d.Topic)
+	}
+	if d.Type == "floor" {
+		return layout.FloorSensorTopic(d.Topic)
 	}
 	return ""
 }

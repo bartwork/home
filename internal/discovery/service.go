@@ -22,7 +22,7 @@ func NewService(disco repository.DiscoveredStore, devs repository.DeviceStore, r
 
 func usefulType(typ string) bool {
 	switch typ {
-	case "switch", "range", "sensor", "climate", "led":
+	case "switch", "range", "sensor", "climate", "led", "floor":
 		return true
 	default:
 		return false
@@ -113,8 +113,11 @@ func (s *Service) Accept(ctx context.Context, id int64, opts AcceptOpts) (dto.De
 	x, y, w, h := layout.Tile(idx, 3)
 
 	power := ""
-	if typ == "range" {
+	switch typ {
+	case "range":
 		power = layout.InferPowerTopic(row.MqttTopic)
+	case "floor":
+		power = layout.FloorSensorTopic(row.MqttTopic)
 	}
 	dev, err := s.devs.Create(ctx, repository.WriteDevice{
 		Name:       name,
@@ -179,7 +182,7 @@ func (s *Service) Restore(ctx context.Context, id int64) error {
 	return s.disco.SetStatus(ctx, id, "new")
 }
 
-// AcceptAll принимает полезные типы (switch/range/sensor/climate/led).
+// AcceptAll принимает полезные типы (switch/range/sensor/climate/led/floor).
 // При ignoreRaw=true остальные new (raw/пусто) скрываются.
 func (s *Service) AcceptAll(ctx context.Context, typ string, ignoreRaw bool) (accepted, ignored, failed int, err error) {
 	typ = strings.TrimSpace(typ)
@@ -193,7 +196,7 @@ func (s *Service) AcceptAll(ctx context.Context, typ string, ignoreRaw bool) (ac
 		return 0, 0, 0, err
 	}
 	for _, row := range rows {
-		// Sibling-каналы ONOKOM / WB-LED RGB не принимаем массово — только якорь.
+		// Sibling-каналы ONOKOM / WB-LED RGB / датчики ТП не принимаем массово — только якорь.
 		if isOnokomAC(row.WbDevice) && !strings.EqualFold(row.WbControl, "Active") {
 			if ignoreRaw {
 				if ierr := s.Ignore(ctx, row.ID); ierr == nil {
@@ -205,6 +208,16 @@ func (s *Service) AcceptAll(ctx context.Context, typ string, ignoreRaw bool) (ac
 			continue
 		}
 		if isWBLed(row.WbDevice) && isWBLedRGBStripSibling(row.WbControl) {
+			if ignoreRaw {
+				if ierr := s.Ignore(ctx, row.ID); ierr == nil {
+					ignored++
+				} else {
+					failed++
+				}
+			}
+			continue
+		}
+		if layout.IsFloorTempSensor(row.WbDevice, row.WbControl) {
 			if ignoreRaw {
 				if ierr := s.Ignore(ctx, row.ID); ierr == nil {
 					ignored++
@@ -230,6 +243,9 @@ func (s *Service) AcceptAll(ctx context.Context, typ string, ignoreRaw bool) (ac
 		}
 		if isWBLed(row.WbDevice) && strings.EqualFold(row.WbControl, "RGB Strip") {
 			opts.DeviceType = "led"
+		}
+		if layout.IsFloorRelay(row.WbDevice, row.WbControl) {
+			opts.DeviceType = "floor"
 		}
 		if _, aerr := s.Accept(ctx, row.ID, opts); aerr != nil {
 			failed++

@@ -125,6 +125,15 @@ export function EditDeviceDialog({ device, rooms, open, onClose, onSave, onDelet
               helperText="Пусто = без кнопки питания. MDM3: Channel N → KN"
             />
           ) : null}
+          {deviceType === 'floor' ? (
+            <TextField
+              label="Топик температуры"
+              value={powerTopic}
+              onChange={(e) => setPowerTopic(e.target.value)}
+              fullWidth
+              helperText="Датчик пола (wb-m1w2 …/External Sensor N). Якорь устройства — реле."
+            />
+          ) : null}
           {deviceType === 'climate' ? (
             <Alert severity="info" variant="outlined">
               Якорь — топик Active. Режим, температура и вентилятор берутся из соседних controls того же

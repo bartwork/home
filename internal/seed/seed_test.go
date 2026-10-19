@@ -28,7 +28,8 @@ func TestIconFor(t *testing.T) {
 	}{
 		{"fan", "x", "switch", "fan"},
 		{"", "вытяжка", "switch", "fan"},
-		{"", "тёплый пол", "switch", "thermo"},
+		{"", "тёплый пол", "floor", "thermo"},
+		{"", "x", "floor", "thermo"},
 		{"", "свет", "switch", "light"},
 		{"", "люстра", "range", "dimmer"},
 		{"", "темп", "sensor", "sensor"},

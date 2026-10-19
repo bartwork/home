@@ -19,6 +19,8 @@ func IconFor(explicit, name, deviceType string) string {
 		return "socket"
 	case deviceType == "climate":
 		return "ac"
+	case deviceType == "floor":
+		return "thermo"
 	case deviceType == "led":
 		return "light"
 	case deviceType == "range":

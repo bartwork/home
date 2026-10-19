@@ -10,7 +10,7 @@ export type User = {
   active: boolean
 }
 
-export type DeviceType = 'switch' | 'range' | 'sensor' | 'raw' | 'climate' | 'led'
+export type DeviceType = 'switch' | 'range' | 'sensor' | 'raw' | 'climate' | 'led' | 'floor'
 
 export type DeviceIcon =
   | ''

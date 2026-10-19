@@ -63,6 +63,21 @@ func TestSuggestDeviceTypeOnokom(t *testing.T) {
 	}
 }
 
+func TestSuggestDeviceTypeFloor(t *testing.T) {
+	if got := discovery.SuggestDeviceType("wb-mr6cv3_225", "K1", "switch"); got != "floor" {
+		t.Fatalf("floor relay: %q", got)
+	}
+	if got := discovery.SuggestDeviceType("wb-mr6cv3_225", "K5", "switch"); got != "floor" {
+		t.Fatalf("floor kitchen: %q", got)
+	}
+	if got := discovery.SuggestDeviceType("wb-m1w2_83", "External Sensor 1", "temperature"); got != "raw" {
+		t.Fatalf("floor sensor sibling: %q", got)
+	}
+	if got := discovery.SuggestDeviceType("wb-mr6cv3_227", "K1", "switch"); got != "switch" {
+		t.Fatalf("other relay: %q", got)
+	}
+}
+
 func TestSuggestDeviceTypeLed(t *testing.T) {
 	if got := discovery.SuggestDeviceType("wb-led_221", "RGB Strip", "switch"); got != "led" {
 		t.Fatalf("RGB Strip: %q", got)
