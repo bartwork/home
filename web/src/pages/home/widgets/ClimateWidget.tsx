@@ -11,7 +11,7 @@ import SyncOutlinedIcon from '@mui/icons-material/SyncOutlined'
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined'
 import WhatshotOutlinedIcon from '@mui/icons-material/WhatshotOutlined'
 import { Box, Typography } from '@mui/material'
-import type { ReactNode } from 'react'
+import { useRef, type ReactNode } from 'react'
 import type { Device } from '../../../shared/api/types'
 import {
   CLIMATE_FANS,
@@ -31,7 +31,15 @@ import {
   TARGET_TEMP_MIN,
   toggleFanPreset,
 } from './climateTopics'
-import { ChipBtn, RoundBtn, stopBubble, WIDGET_BTN } from './widgetChrome'
+import {
+  ChipBtn,
+  HoldRound,
+  RoundBtn,
+  stopBubble,
+  TEMP_CIRCLE,
+  TempCircle,
+  WIDGET_BTN,
+} from './widgetChrome'
 
 type Props = {
   device: Device
@@ -48,7 +56,7 @@ const MODE_ICONS: Record<number, SvgIconComponent> = {
 }
 
 function ChipRow({ children }: { children: ReactNode }) {
-  return <Box sx={{ display: 'flex', gap: 0.35 }}>{children}</Box>
+  return <Box sx={{ display: 'flex', gap: 0.5 }}>{children}</Box>
 }
 
 /** Чип, крутящий enum по sibling-топику. */
@@ -87,8 +95,9 @@ export function ClimateWidget({ device, values, sendCmd }: Props) {
   const s = readClimateState(device.mqttTopic, values)
   const { topics } = s
   const activeTopic = topics.active || device.mqttTopic
-  const modeLabel = labelByValue(CLIMATE_MODES, s.mode)
   const indoorDigits = s.indoor !== null && !Number.isInteger(s.indoor) ? 1 : 0
+  const targetRef = useRef(s.target)
+  targetRef.current = s.target
 
   function pub(topic: string, payload: string) {
     if (!topic) return
@@ -99,38 +108,44 @@ export function ClimateWidget({ device, values, sendCmd }: Props) {
     pub(topics.target, String(clampTarget(next)))
   }
 
+  const indoorLabel = formatTemp(s.indoor, indoorDigits)
+  const targetLabel = formatTemp(s.target)
+
   return (
     <Box
       sx={{
         width: '100%',
         minHeight: 0,
         display: 'grid',
-        gap: 0.5,
+        gap: 1,
         alignContent: 'start',
         opacity: s.on ? 1 : 0.78,
+        touchAction: 'manipulation',
       }}
+      onPointerDown={stopBubble}
     >
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 0.5 }}>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: `${WIDGET_BTN}px 1fr ${WIDGET_BTN}px`,
+          alignItems: 'center',
+          gap: 0.75,
+        }}
+      >
         <RoundBtn
           ariaLabel={s.on ? `${device.name}: выключить` : `${device.name}: включить`}
           active={s.on}
           onClick={() => pub(activeTopic, s.on ? '0' : '1')}
         >
-          <PowerSettingsNewOutlinedIcon sx={{ fontSize: 16 }} />
+          <PowerSettingsNewOutlinedIcon sx={{ fontSize: 22 }} />
         </RoundBtn>
-        <Typography
-          sx={{
-            fontSize: '0.65rem',
-            color: 'text.secondary',
-            fontVariantNumeric: 'tabular-nums',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 0.25,
-          }}
-        >
-          <AcUnitOutlinedIcon sx={{ fontSize: 12, opacity: 0.7 }} />
-          {formatTemp(s.indoor, indoorDigits)}°
-        </Typography>
+        <Box />
+        <TempCircle
+          value={indoorLabel}
+          size={TEMP_CIRCLE}
+          accent={s.on}
+          ariaLabel={`${device.name}: в комнате ${indoorLabel}°`}
+        />
       </Box>
 
       <Box
@@ -138,47 +153,46 @@ export function ClimateWidget({ device, values, sendCmd }: Props) {
           display: 'grid',
           gridTemplateColumns: `${WIDGET_BTN}px 1fr ${WIDGET_BTN}px`,
           alignItems: 'center',
-          gap: 0.35,
+          gap: 0.75,
         }}
       >
-        <RoundBtn
-          ariaLabel="Температура −"
+        <HoldRound
+          ariaLabel={`${device.name}: температура −`}
           disabled={s.target === null || s.target <= TARGET_TEMP_MIN}
-          onClick={() => {
-            if (s.target !== null) setTarget(s.target - 1)
+          onStep={() => {
+            const cur = targetRef.current
+            if (cur !== null) setTarget(cur - 1)
           }}
         >
-          <RemoveIcon sx={{ fontSize: 16 }} />
-        </RoundBtn>
-        <Box sx={{ textAlign: 'center', minWidth: 0 }}>
-          <Typography
-            sx={{
-              fontWeight: 700,
-              fontSize: '1.35rem',
-              lineHeight: 1,
-              fontVariantNumeric: 'tabular-nums',
-              letterSpacing: '-0.03em',
-            }}
-          >
-            {formatTemp(s.target)}
-            <Typography component="span" sx={{ fontSize: '0.7rem', fontWeight: 600, ml: 0.15 }}>
-              °
-            </Typography>
-          </Typography>
-          <Typography sx={{ fontSize: '0.55rem', color: 'text.secondary', mt: 0.2 }}>
-            {modeLabel ?? 'режим'}
-          </Typography>
-        </Box>
-        <RoundBtn
-          ariaLabel="Температура +"
-          disabled={s.target !== null && s.target >= TARGET_TEMP_MAX}
-          onClick={() => setTarget(s.target !== null ? s.target + 1 : 24)}
+          <RemoveIcon sx={{ fontSize: 22 }} />
+        </HoldRound>
+        <Typography
+          aria-label={`${device.name}: уставка ${targetLabel}°`}
+          sx={{
+            textAlign: 'center',
+            fontWeight: 700,
+            fontSize: '1.85rem',
+            lineHeight: 1,
+            fontVariantNumeric: 'tabular-nums',
+            letterSpacing: '-0.03em',
+            color: s.on ? 'primary.light' : 'text.primary',
+          }}
         >
-          <AddIcon sx={{ fontSize: 16 }} />
-        </RoundBtn>
+          {targetLabel}
+          <Typography component="span" sx={{ fontSize: '0.95rem', fontWeight: 600, ml: 0.2 }}>
+            °
+          </Typography>
+        </Typography>
+        <HoldRound
+          ariaLabel={`${device.name}: температура +`}
+          disabled={s.target !== null && s.target >= TARGET_TEMP_MAX}
+          onStep={() => setTarget(targetRef.current !== null ? targetRef.current + 1 : 24)}
+        >
+          <AddIcon sx={{ fontSize: 22 }} />
+        </HoldRound>
       </Box>
 
-      <Box sx={{ display: 'flex', gap: 0.3 }}>
+      <Box sx={{ display: 'flex', gap: 0.5 }}>
         {CLIMATE_MODES.map((m) => {
           const Icon = MODE_ICONS[m.value] ?? SyncOutlinedIcon
           const selected = s.mode === m.value
@@ -201,19 +215,21 @@ export function ClimateWidget({ device, values, sendCmd }: Props) {
                 boxSizing: 'border-box',
                 flex: 1,
                 minWidth: 0,
-                height: 30,
-                borderRadius: 1,
+                minHeight: WIDGET_BTN,
+                borderRadius: 1.5,
                 display: 'grid',
                 placeItems: 'center',
                 cursor: 'pointer',
-                bgcolor: selected ? 'rgba(94, 200, 216, 0.3)' : 'rgba(232, 238, 246, 0.06)',
+                bgcolor: selected ? 'rgba(94, 200, 216, 0.32)' : 'rgba(232, 238, 246, 0.08)',
                 color: selected ? 'primary.light' : 'text.secondary',
                 border: 1,
-                borderColor: selected ? 'rgba(94, 200, 216, 0.5)' : 'transparent',
-                '&:active': { transform: 'scale(0.96)' },
+                borderColor: selected ? 'rgba(94, 200, 216, 0.55)' : 'transparent',
+                WebkitTapHighlightColor: 'transparent',
+                opacity: topics.mode ? 1 : 0.45,
+                '&:active': { transform: 'scale(0.97)' },
               }}
             >
-              <Icon sx={{ fontSize: 15 }} />
+              <Icon sx={{ fontSize: 22 }} />
             </Box>
           )
         })}
@@ -235,7 +251,7 @@ export function ClimateWidget({ device, values, sendCmd }: Props) {
           disabled={!topics.fan}
           onClick={() => pub(topics.fan, String(toggleFanPreset(s.fan, FAN_QUIET)))}
         >
-          <AirOutlinedIcon sx={{ fontSize: 12 }} />
+          <AirOutlinedIcon sx={{ fontSize: 14 }} />
           Тихий
         </ChipBtn>
         <ChipBtn
@@ -244,7 +260,7 @@ export function ClimateWidget({ device, values, sendCmd }: Props) {
           disabled={!topics.fan}
           onClick={() => pub(topics.fan, String(toggleFanPreset(s.fan, FAN_TURBO)))}
         >
-          <SpeedOutlinedIcon sx={{ fontSize: 12 }} />
+          <SpeedOutlinedIcon sx={{ fontSize: 14 }} />
           Турбо
         </ChipBtn>
       </ChipRow>
@@ -280,7 +296,7 @@ export function ClimateWidget({ device, values, sendCmd }: Props) {
           disabled={!topics.eco}
           onClick={() => pub(topics.eco, s.ecoOn ? '0' : '1')}
         >
-          <EnergySavingsLeafOutlinedIcon sx={{ fontSize: 12 }} />
+          <EnergySavingsLeafOutlinedIcon sx={{ fontSize: 14 }} />
           Эко
         </ChipBtn>
         <ChipBtn
@@ -289,7 +305,7 @@ export function ClimateWidget({ device, values, sendCmd }: Props) {
           disabled={!topics.sleep}
           onClick={() => pub(topics.sleep, s.sleepOn ? '0' : '1')}
         >
-          <BedtimeOutlinedIcon sx={{ fontSize: 12 }} />
+          <BedtimeOutlinedIcon sx={{ fontSize: 14 }} />
           Сон
         </ChipBtn>
       </ChipRow>

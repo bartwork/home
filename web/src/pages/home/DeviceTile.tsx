@@ -81,7 +81,7 @@ export function DeviceTile({
   const isClimate = device.deviceType === 'climate'
   const isLed = device.deviceType === 'led'
   const isFloor = device.deviceType === 'floor'
-  const isWide = isClimate || isLed
+  const isWide = isClimate || isLed || isFloor
   const level = parseDimmerLevel(value)
   const on = isClimate
     ? isClimateOn(values, device.mqttTopic)
@@ -97,7 +97,7 @@ export function DeviceTile({
     <Box
       onClick={editMode ? () => onEdit(device) : undefined}
       sx={{
-        // wide (climate/led): высота по контенту — без фиксированного aspect-ratio
+        // wide (climate/led/floor): высота по контенту — без фиксированного aspect-ratio
         aspectRatio: isWide ? 'auto' : '1 / 1',
         width: '100%',
         height: 'auto',
@@ -106,7 +106,7 @@ export function DeviceTile({
         display: 'grid',
         gridTemplateRows: isWide ? '20px auto' : '20px 1fr',
         gap: 0.5,
-        // wide: больше воздуха по бокам и снизу — слайдеры не липнут к рамке
+        // wide: больше воздуха по бокам и снизу — удобнее пальцем
         px: isWide ? 1.5 : 1,
         pt: 1,
         pb: isWide ? 1.5 : 1,

@@ -2,15 +2,24 @@ import AddIcon from '@mui/icons-material/Add'
 import PowerSettingsNewOutlinedIcon from '@mui/icons-material/PowerSettingsNewOutlined'
 import RemoveIcon from '@mui/icons-material/Remove'
 import { Box, Typography } from '@mui/material'
+import { useRef } from 'react'
 import type { Device } from '../../../shared/api/types'
 import {
+  FLOOR_SETPOINT_MAX,
+  FLOOR_SETPOINT_MIN,
   clampFloorSetpoint,
   formatFloorTemp,
-  nextFloorMode,
   readFloorState,
   type FloorMode,
 } from './floorTopics'
-import { ChipBtn, RoundBtn, stopBubble, WIDGET_BTN } from './widgetChrome'
+import {
+  HoldRound,
+  RoundBtn,
+  stopBubble,
+  TEMP_CIRCLE,
+  TempCircle,
+  WIDGET_BTN,
+} from './widgetChrome'
 
 type Props = {
   device: Device
@@ -18,101 +27,145 @@ type Props = {
   sendCmd: (topic: string, payload: string) => void
 }
 
-const MODE_LABEL: Record<FloorMode, string> = {
-  off: 'выкл',
-  heat: 'нагрев',
-  auto: 'авто',
-}
+const MODES: { value: FloorMode; label: string }[] = [
+  { value: 'off', label: 'выкл' },
+  { value: 'heat', label: 'нагрев' },
+  { value: 'auto', label: 'авто' },
+]
 
 export function FloorWidget({ device, values, sendCmd }: Props) {
   const s = readFloorState(device.id, device.mqttTopic, values, device.powerTopic)
-  const tempLabel = formatFloorTemp(s.temp)
   const heating = s.mode !== 'off' && s.on
+  const setpointRef = useRef(s.setpoint)
+  setpointRef.current = s.setpoint
 
   function setSetpoint(next: number) {
     sendCmd(s.setpointTopic, String(clampFloorSetpoint(next)))
+  }
+
+  function setMode(mode: FloorMode) {
+    sendCmd(s.modeTopic, mode)
   }
 
   return (
     <Box
       sx={{
         width: '100%',
-        height: '100%',
         minHeight: 0,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 0.5,
-        px: 0.5,
+        display: 'grid',
+        gap: 1,
+        alignContent: 'start',
+        opacity: s.mode === 'off' ? 0.78 : 1,
+        touchAction: 'manipulation',
       }}
       onPointerDown={stopBubble}
     >
-      <Typography
+      <Box
         sx={{
-          fontWeight: 700,
-          fontSize: '1.25rem',
-          lineHeight: 1,
-          fontVariantNumeric: 'tabular-nums',
-          color: heating ? 'primary.light' : 'text.primary',
+          display: 'grid',
+          gridTemplateColumns: `${WIDGET_BTN}px 1fr ${WIDGET_BTN}px`,
+          alignItems: 'center',
+          gap: 0.75,
         }}
       >
-        {tempLabel}
-        {s.temp !== null ? (
-          <Typography
-            component="span"
-            sx={{ ml: 0.25, fontSize: '0.65rem', fontWeight: 600, color: 'text.secondary' }}
-          >
-            °C
-          </Typography>
-        ) : null}
-      </Typography>
-
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.35 }}>
-        <RoundBtn
-          ariaLabel={`${device.name}: уставка −`}
-          onClick={() => setSetpoint(s.setpoint - 0.5)}
-          sx={{ width: WIDGET_BTN - 4, height: WIDGET_BTN - 4 }}
-        >
-          <RemoveIcon sx={{ fontSize: 16 }} />
-        </RoundBtn>
-        <Typography
-          sx={{
-            minWidth: 36,
-            textAlign: 'center',
-            fontWeight: 700,
-            fontSize: '0.95rem',
-            fontVariantNumeric: 'tabular-nums',
-            color: s.mode === 'auto' ? 'primary.light' : 'text.primary',
-          }}
-        >
-          {formatFloorTemp(s.setpoint)}°
-        </Typography>
-        <RoundBtn
-          ariaLabel={`${device.name}: уставка +`}
-          onClick={() => setSetpoint(s.setpoint + 0.5)}
-          sx={{ width: WIDGET_BTN - 4, height: WIDGET_BTN - 4 }}
-        >
-          <AddIcon sx={{ fontSize: 16 }} />
-        </RoundBtn>
-      </Box>
-
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.4 }}>
-        <ChipBtn
-          ariaLabel={`${device.name}: режим ${MODE_LABEL[s.mode]}, сменить`}
-          active={s.mode !== 'off'}
-          onClick={() => sendCmd(s.modeTopic, nextFloorMode(s.mode))}
-        >
-          {MODE_LABEL[s.mode]}
-        </ChipBtn>
         <RoundBtn
           ariaLabel={s.mode === 'off' ? `${device.name}: авто` : `${device.name}: выключить`}
           active={heating}
-          onClick={() => sendCmd(s.modeTopic, s.mode === 'off' ? 'auto' : 'off')}
-          sx={{ width: WIDGET_BTN, height: WIDGET_BTN }}
+          onClick={() => setMode(s.mode === 'off' ? 'auto' : 'off')}
         >
-          <PowerSettingsNewOutlinedIcon sx={{ fontSize: 18 }} />
+          <PowerSettingsNewOutlinedIcon sx={{ fontSize: 22 }} />
         </RoundBtn>
+        <Box />
+        <TempCircle
+          value={formatFloorTemp(s.temp)}
+          size={TEMP_CIRCLE}
+          accent={heating}
+          ariaLabel={`${device.name}: сейчас ${formatFloorTemp(s.temp)}°`}
+        />
+      </Box>
+
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: `${WIDGET_BTN}px 1fr ${WIDGET_BTN}px`,
+          alignItems: 'center',
+          gap: 0.75,
+        }}
+      >
+        <HoldRound
+          ariaLabel={`${device.name}: уставка −`}
+          disabled={s.setpoint <= FLOOR_SETPOINT_MIN}
+          onStep={() => setSetpoint(setpointRef.current - 0.5)}
+        >
+          <RemoveIcon sx={{ fontSize: 22 }} />
+        </HoldRound>
+        <Typography
+          aria-label={`${device.name}: уставка ${formatFloorTemp(s.setpoint)}°`}
+          sx={{
+            textAlign: 'center',
+            fontWeight: 700,
+            fontSize: '1.85rem',
+            lineHeight: 1,
+            fontVariantNumeric: 'tabular-nums',
+            letterSpacing: '-0.03em',
+            color: s.mode === 'auto' || heating ? 'primary.light' : 'text.primary',
+          }}
+        >
+          {formatFloorTemp(s.setpoint)}
+          <Typography component="span" sx={{ fontSize: '0.95rem', fontWeight: 600, ml: 0.2 }}>
+            °
+          </Typography>
+        </Typography>
+        <HoldRound
+          ariaLabel={`${device.name}: уставка +`}
+          disabled={s.setpoint >= FLOOR_SETPOINT_MAX}
+          onStep={() => setSetpoint(setpointRef.current + 0.5)}
+        >
+          <AddIcon sx={{ fontSize: 22 }} />
+        </HoldRound>
+      </Box>
+
+      <Box sx={{ display: 'flex', gap: 0.6 }}>
+        {MODES.map((m) => {
+          const selected = s.mode === m.value
+          return (
+            <Box
+              key={m.value}
+              component="button"
+              type="button"
+              aria-label={m.label}
+              aria-pressed={selected}
+              title={m.label}
+              onClick={(e) => {
+                stopBubble(e)
+                setMode(m.value)
+              }}
+              onPointerDown={stopBubble}
+              sx={{
+                all: 'unset',
+                boxSizing: 'border-box',
+                flex: 1,
+                minWidth: 0,
+                minHeight: WIDGET_BTN,
+                borderRadius: 1.5,
+                display: 'grid',
+                placeItems: 'center',
+                cursor: 'pointer',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                letterSpacing: '0.02em',
+                bgcolor: selected ? 'rgba(94, 200, 216, 0.32)' : 'rgba(232, 238, 246, 0.08)',
+                color: selected ? 'primary.light' : 'text.secondary',
+                border: 1,
+                borderColor: selected ? 'rgba(94, 200, 216, 0.55)' : 'transparent',
+                WebkitTapHighlightColor: 'transparent',
+                '&:active': { transform: 'scale(0.97)' },
+              }}
+            >
+              {m.label}
+            </Box>
+          )
+        })}
       </Box>
     </Box>
   )
