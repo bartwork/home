@@ -1,0 +1,15 @@
+---
+description: Яндекс Алиса на Wiren Board — настройка устройств через API. Use when the user mentions Алиса, Alice, alice.wirenboard.com, wb-mqtt-alice, или голосовое управление светом на контроллере.
+alwaysApply: false
+---
+
+# Алиса ↔ Wiren Board
+
+При задачах про Алису, alice.wirenboard.com, Интеграции → Алиса, голосовое управление светом на WB:
+
+1. Сначала читай **`docs/alice_setup.md`** (API, шаблоны capabilities, RGBW, полы, кондеи).
+2. Актуальный список устройств — **`docs/alice_devices.md`** (после изменений на контроллере — обнови этот файл).
+3. Топики MQTT квартиры — **`docs/mqtt_topics.md`**.
+
+Контроллер: `http://192.168.1.1/#/integrations/alice`.  
+Массовые правки — через REST `/api/integrations/alice/*` (с LAN обычно без cookie; иначе browser MCP + `fetch` + `credentials: 'include'`), не через клики по каждому устройству.

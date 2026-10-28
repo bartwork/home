@@ -8,6 +8,8 @@ import { DimmerWidget, isDimmerOn, parseDimmerLevel } from './widgets/DimmerWidg
 import { FloorWidget } from './widgets/FloorWidget'
 import { LedWidget } from './widgets/LedWidget'
 import { isLedOn } from './widgets/ledTopics'
+import { AirWidget } from './widgets/AirWidget'
+import { isAirAttention } from './widgets/airTopics'
 import { SensorWidget } from './widgets/SensorWidget'
 import { RawWidget } from './widgets/RawWidget'
 
@@ -81,17 +83,20 @@ export function DeviceTile({
   const isClimate = device.deviceType === 'climate'
   const isLed = device.deviceType === 'led'
   const isFloor = device.deviceType === 'floor'
-  const isWide = isClimate || isLed || isFloor
+  const isAir = device.deviceType === 'air'
+  const isWide = isClimate || isLed || isFloor || isAir
   const level = parseDimmerLevel(value)
   const on = isClimate
     ? isClimateOn(values, device.mqttTopic)
     : isLed
       ? isLedOn(values, device.mqttTopic)
-      : isFloor || isSwitch
-        ? value === '1'
-        : isDimmer
-          ? isDimmerOn(powerValue, level)
-          : false
+      : isAir
+        ? isAirAttention(values, device.mqttTopic)
+        : isFloor || isSwitch
+          ? value === '1'
+          : isDimmer
+            ? isDimmerOn(powerValue, level)
+            : false
 
   return (
     <Box
@@ -176,6 +181,14 @@ export function DeviceTile({
             onPointerDown={(e) => e.stopPropagation()}
           >
             <FloorWidget device={device} values={values} sendCmd={sendCmd} />
+          </Box>
+        ) : isAir ? (
+          <Box
+            sx={{ width: '100%', height: '100%', minHeight: 0 }}
+            onClick={(e) => e.stopPropagation()}
+            onPointerDown={(e) => e.stopPropagation()}
+          >
+            <AirWidget device={device} values={values} />
           </Box>
         ) : isDimmer ? (
           <Box

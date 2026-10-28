@@ -33,8 +33,8 @@ export const FAN_TURBO = 5
 export const CLIMATE_SWINGS: LabeledValue[] = [
   { value: 0, label: 'Качание стоп' },
   { value: 1, label: 'Качание оба' },
-  { value: 2, label: 'Качание верт.' },
-  { value: 3, label: 'Качание гориз.' },
+  { value: 2, label: 'Качание вертикальное' },
+  { value: 3, label: 'Качание горизонтальное' },
 ]
 
 /** Horizontal vanes (верх/низ). */

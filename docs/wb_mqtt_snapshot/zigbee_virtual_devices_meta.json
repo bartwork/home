@@ -1,0 +1,129 @@
+{
+  "host": "192.168.1.1",
+  "broker": "tcp://192.168.1.1:1883",
+  "capturedAt": "2026-10-21T15:46:52.562Z",
+  "note": "Виртуальные устройства driver=wb-rules: русские title в MQTT .../controls/<канал>/meta. Не файлы — retained-сообщения брокера.",
+  "devices": {
+    "Беспроводной датчик протечки кухни": {
+      "deviceMeta": {
+        "driver": "wb-rules",
+        "title": {
+          "en": "Беспроводной датчик протечки кухни"
+        }
+      },
+      "controls": {
+        "battery": {
+          "order": 1,
+          "readonly": true,
+          "type": "value",
+          "title": { "en": "Battery", "ru": "Батарея" }
+        },
+        "battery_low": {
+          "order": 2,
+          "readonly": true,
+          "type": "switch",
+          "title": { "en": "Battery low", "ru": "Низкий заряд" }
+        },
+        "device_temperature": {
+          "order": 3,
+          "readonly": true,
+          "type": "text",
+          "title": { "en": "Device temperature", "ru": "Температура устройства" }
+        },
+        "last_seen": {
+          "order": 4,
+          "readonly": true,
+          "type": "text",
+          "title": { "en": "Last seen", "ru": "Последний раз на связи" }
+        },
+        "linkquality": {
+          "order": 5,
+          "readonly": true,
+          "type": "value",
+          "title": { "en": "Link quality", "ru": "Качество связи" }
+        },
+        "power_outage_count": {
+          "order": 6,
+          "readonly": true,
+          "type": "text",
+          "title": { "en": "Power outage count", "ru": "Счётчик отключений питания" }
+        },
+        "state": {
+          "order": 7,
+          "readonly": true,
+          "type": "text",
+          "title": { "en": "State", "ru": "Состояние" }
+        },
+        "tamper": {
+          "order": 8,
+          "readonly": true,
+          "type": "switch",
+          "title": { "en": "Tamper", "ru": "Вскрытие корпуса" }
+        },
+        "voltage": {
+          "order": 9,
+          "readonly": true,
+          "type": "voltage",
+          "title": { "en": "Voltage", "ru": "Напряжение" }
+        },
+        "water_leak": {
+          "order": 10,
+          "readonly": true,
+          "type": "switch",
+          "title": { "en": "Water leak", "ru": "Протечка" }
+        }
+      }
+    },
+    "Уличный датчик температуры": {
+      "deviceMeta": {
+        "driver": "wb-rules",
+        "title": {
+          "en": "Уличный датчик температуры"
+        }
+      },
+      "controls": {
+        "battery": {
+          "order": 1,
+          "readonly": true,
+          "type": "value",
+          "title": { "en": "Battery", "ru": "Батарея" }
+        },
+        "humidity": {
+          "order": 2,
+          "readonly": true,
+          "type": "rel_humidity",
+          "title": { "en": "Humidity", "ru": "Влажность" }
+        },
+        "last_seen": {
+          "order": 3,
+          "readonly": true,
+          "type": "text",
+          "title": { "en": "Last seen", "ru": "Последний раз на связи" }
+        },
+        "linkquality": {
+          "order": 4,
+          "readonly": true,
+          "type": "value",
+          "title": { "en": "Link quality", "ru": "Качество связи" }
+        },
+        "temperature": {
+          "order": 5,
+          "readonly": true,
+          "type": "temperature",
+          "title": { "en": "Temperature", "ru": "Температура" }
+        },
+        "voltage": {
+          "order": 6,
+          "readonly": true,
+          "type": "voltage",
+          "title": { "en": "Voltage", "ru": "Напряжение" }
+        },
+        "update": {
+          "order": 7,
+          "readonly": true,
+          "type": "text"
+        }
+      }
+    }
+  }
+}

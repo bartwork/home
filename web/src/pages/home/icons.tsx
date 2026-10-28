@@ -27,6 +27,7 @@ const byType: Record<string, SvgIconComponent> = {
   climate: AcUnitOutlinedIcon,
   led: LightbulbOutlinedIcon,
   floor: ThermostatOutlinedIcon,
+  air: SensorsOutlinedIcon,
 }
 
 export function iconFor(device: Device): SvgIconComponent {

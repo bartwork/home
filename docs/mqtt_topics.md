@@ -3,7 +3,10 @@
 Источник правды для seed и экрана «Дом».  
 Команды пишутся в тот же топик (Wiren Board: publish в `/devices/.../controls/...`, обычно с `/on` — bridge сам ходит в broker).
 
-Типы UI: `switch` · `range` · `sensor` · `climate` · `led` · `floor` · `raw`.
+Брокер: `tcp://192.168.1.1:1883`.  
+Шина: все прежние Modbus-устройства на `/dev/ttyRS485-1`; `ttyRS485-2` — под AKKO.
+
+Типы UI: `switch` · `range` · `sensor` · `climate` · `led` · `floor` · `air` · `raw`.
 
 ---
 
@@ -20,6 +23,7 @@
 | комната | бра около лоджии | range | `/devices/wb-mdm3_76/controls/Channel 3` | power → `…/K3` |
 | комната | лента карниза | **led** | `/devices/wb-led_221/controls/RGB Strip` | см. LED ниже |
 | комната | кондиционер | climate | `/devices/ONOKOM-AIR-HR-1-MB-B_2/controls/Active` | см. climate ниже |
+| комната | воздух | **air** | `/devices/wb-msw-v3_108/controls/Temperature` | см. Air / MSW ниже |
 | кухня | свет у окна | range | `/devices/wb-mdm3_218/controls/Channel 1` | power → `…/K1` |
 | кухня | лампа | range | `/devices/wb-mdm3_218/controls/Channel 2` | power → `…/K2` |
 | кухня | свет у двери | range | `/devices/wb-mdm3_218/controls/Channel 3` | power → `…/K3` |
@@ -72,7 +76,7 @@ UI: ручная смена H/S/V / избранное гасит `Hue Changing`
 
 Шлюзы:
 - кухня: `/devices/ONOKOM-AIR-HR-1-MB-B_1/controls/Active`
-- комната: `/devices/ONOKOM-AIR-HR-1-MB-B_2/controls/Active`
+- комната (в Алисе — комната «Зал»): `/devices/ONOKOM-AIR-HR-1-MB-B_2/controls/Active`
 
 Sibling-controls (подставить тот же `device_id`):
 
@@ -109,6 +113,26 @@ Sibling-controls (подставить тот же `device_id`):
 
 ---
 
+## Air — WB-MSW v.3 (`air`)
+
+Якорь в UI: **`/devices/wb-msw-v3_108/controls/Temperature`**.
+
+| Control | Топик | UI |
+|---|---|---|
+| Temperature | `…/Temperature` | °C (кружок) |
+| Humidity | `…/Humidity` | % (кружок) |
+| CO2 | `…/CO2` | ppm + подсказка качества |
+| Air Quality (VOC) | `…/Air Quality (VOC)` | ppb |
+| Illuminance | `…/Illuminance` | лк |
+| Sound Level | `…/Sound Level` | дБ |
+| Current Motion / Max Motion | `…/Current Motion`, `…/Max Motion` | индикатор движения |
+
+Остальные controls (LED, Buzzer, IR Learn/Play) → `raw`, в виджет не входят.
+
+Автоматика (`internal/air`, bootstrap + Observe): `Green LED` при «норма», `Red LED` при «проветри», иначе оба выкл. Пороги 800 / 1200, гистерезис 900 / 1100 (UI тот же).
+
+---
+
 ## Модули Wiren Board (кратко)
 
 | ID | Модуль | Назначение |
@@ -123,6 +147,9 @@ Sibling-controls (подставить тот же `device_id`):
 | `wb-m1w2_82` | 1-Wire | датчики пола ванна / кухня |
 | `wb-m1w2_83` | 1-Wire | датчики пола коридор / туалет |
 | `wb-led_221` | WB-LED | лента карниза RGB |
+| `wb-msw-v3_108` | MSW v.3 | климат-датчик (комната) |
+| `wb-mwac_115` | MWAC | протечка |
+| `wb_ups_v3_116` | UPS v.3 | ИБП |
 | `ONOKOM-AIR-HR-1-MB-B_1` | шлюз AC | кондиционер кухня |
 | `ONOKOM-AIR-HR-1-MB-B_2` | шлюз AC | кондиционер комната |
 

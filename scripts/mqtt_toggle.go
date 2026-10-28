@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	broker := env("MQTT_BROKER", "tcp://192.168.1.9:1883")
+	broker := env("MQTT_BROKER", "tcp://192.168.1.2:1883")
 	topic := env("TOPIC", "/devices/wb-mr6cv3_225/controls/K6/on")
 	payload := env("PAYLOAD", "0")
 

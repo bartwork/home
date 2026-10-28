@@ -9,3 +9,29 @@
 node_modules/
 web/node_modules/
 web/dist/
+
+# Cursor — оставляем только rules
+.cursor/*
+!.cursor/rules/
+!.cursor/rules/**
+
+# Прошивки/утилиты планшетов (~2GB) — не в git
+планшеты/
+*.rar
+
+# Android
+android/**/local.properties
+android/**/.gradle/
+android/**/build/
+android/**/captures/
+android/**/*.iml
+*.apk
+*.ap_
+*.aab
+*.dex
+*.jks
+*.keystore
+
+# Локальные скрины/артефакты
+**/.last-screen.png
+**/captures/

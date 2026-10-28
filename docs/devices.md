@@ -2,7 +2,7 @@
 
 Excel: [`devices.xlsx`](devices.xlsx) — рабочая копия (дополнять там).
 
-Типы: `switch` | `range` | `sensor` | `climate` | `led` | `floor` | `raw`.  
+Типы: `switch` | `range` | `sensor` | `climate` | `led` | `floor` | `air` | `raw`.  
 Полный список топиков (вкл. siblings LED/climate/floor): [`mqtt_topics.md`](mqtt_topics.md).  
 Диммеры (`range`): яркость = `mqtt_topic`, вкл/выкл = `power_topic` (MDM3: Channel N → KN).  
 Тёплый пол (`floor`): реле = `mqtt_topic`, датчик температуры = `power_topic` (wb-m1w2 External Sensor).  
@@ -31,6 +31,7 @@ Excel: [`devices.xlsx`](devices.xlsx) — рабочая копия (допол�
 | | 15 | тёплый пол | кухня | floor | `/devices/wb-mr6cv3_225/controls/K5` | temp → `wb-m1w2_82` Ext.2 |
 | | 31 | точки у люстры | комната | range | `/devices/wb-mdm3_75/controls/Channel 2` | |
 | | 35 | лента карниза | комната | led | `/devices/wb-led_221/controls/RGB Strip` | Brightness / Hue / Sat / Channel 4 |
+| | | воздух | комната | air | `/devices/wb-msw-v3_108/controls/Temperature` | CO₂ → Red/Green LED |
 | | 50 | основной свет | кухня | range | `/devices/wb-mdm3_218/controls/Channel 1` | |
 | | 51 | левый свет | кухня | range | `/devices/wb-mdm3_218/controls/Channel 2` | |
 | | 52 | правый свет | кухня | range | `/devices/wb-mdm3_218/controls/Channel 3` | |
@@ -39,3 +40,5 @@ Excel: [`devices.xlsx`](devices.xlsx) — рабочая копия (допол�
 
 - Актуальная проверка: ваша таблица → модули **кладовка = `239`**, **ванна/туалет = `227`**.
 - Жёлтые: №27↔№28 (лента↔свет кладовки), №71↔№72 (свет↔вытяжка туалета).
+- Контроллер: `192.168.1.1`. Все прежние Modbus на **RS485-1**; RS485-2 свободен под AKKO.
+- Алиса: [`alice_setup.md`](alice_setup.md) (как править), [`alice_devices.md`](alice_devices.md) (список).

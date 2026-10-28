@@ -22,7 +22,7 @@ func NewService(disco repository.DiscoveredStore, devs repository.DeviceStore, r
 
 func usefulType(typ string) bool {
 	switch typ {
-	case "switch", "range", "sensor", "climate", "led", "floor":
+	case "switch", "range", "sensor", "climate", "led", "floor", "air":
 		return true
 	default:
 		return false

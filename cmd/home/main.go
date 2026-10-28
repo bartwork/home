@@ -12,6 +12,7 @@ import (
 	"github.com/rs/zerolog/log"
 	_ "go.uber.org/automaxprocs"
 
+	"github.com/bartwork/home/internal/air"
 	"github.com/bartwork/home/internal/auth"
 	"github.com/bartwork/home/internal/colors"
 	"github.com/bartwork/home/internal/config"
@@ -74,7 +75,10 @@ func main() {
 	bridge.SetShadow(shadowRepo)
 	rulesEngine := rules.NewEngine(log.Logger, rulesRepo, bridge)
 	rulesSvc := rules.NewService(rulesRepo, rulesEngine)
-	bridge.SetObserver(mqttbridge.Fanout{discoEngine, rulesEngine})
+	airCtrl := air.New(log.Logger, bridge, devicesRepo)
+	devicesSvc := devices.New(devicesRepo)
+	devicesSvc.OnChange(airCtrl.RefreshIndex)
+	bridge.SetObserver(mqttbridge.Fanout{discoEngine, rulesEngine, airCtrl})
 	if err := bridge.RestoreShadow(ctx); err != nil {
 		log.Warn().Err(err).Msg("restore topic shadow")
 	}
@@ -88,6 +92,7 @@ func main() {
 	go floor.Bootstrap(ctx, log.Logger, devicesRepo, shadowRepo, bridge, rulesEngine, func(c context.Context) (int, error) {
 		return floor.EnsureRules(c, devicesRepo, rulesRepo, rulesEngine)
 	})
+	go air.Bootstrap(ctx, log.Logger, airCtrl, rulesEngine)
 
 	liveness := utils.NewHealth("/liveness", "ok")
 	liveness.Start(ctx, cfg.LivenessBind)
@@ -102,7 +107,7 @@ func main() {
 		transport.WithRequestID(header.XRequestID.String()),
 		transport.Auth(transport.NewAuth(auth.New(usersRepo, tokens))),
 		transport.Users(transport.NewUsers(users.New(usersRepo))),
-		transport.Devices(transport.NewDevices(devices.New(devicesRepo))),
+		transport.Devices(transport.NewDevices(devicesSvc)),
 	).WithMetrics().WithLog()
 
 	app := srv.Fiber()

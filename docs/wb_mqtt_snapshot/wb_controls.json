@@ -240,7 +240,7 @@
     "device": "network",
     "control": "Ethernet IP",
     "topic": "/devices/network/controls/Ethernet IP",
-    "value": "192.168.1.9\n",
+    "value": "192.168.1.2\n",
     "type": "text",
     "title": "Ethernet 1 IP",
     "suggested_type": "raw"
@@ -636,7 +636,7 @@
     "device": "system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e",
     "control": "Address",
     "topic": "/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/Address",
-    "value": "192.168.1.9",
+    "value": "192.168.1.2",
     "type": "text",
     "title": "system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e · Address",
     "suggested_type": "raw"

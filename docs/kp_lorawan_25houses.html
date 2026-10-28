@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<title>Коммерческое предложение — мониторинг 25 домов</title>
+<style>
+  @page { size: A4; margin: 16mm 14mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10.5pt;
+    color: #1a1a1a;
+    line-height: 1.35;
+    margin: 0;
+  }
+  h1 {
+    font-size: 16pt;
+    margin: 0 0 4px;
+    font-weight: 700;
+  }
+  .meta {
+    color: #444;
+    font-size: 9.5pt;
+    margin-bottom: 14px;
+  }
+  .meta strong { color: #111; }
+  h2 {
+    font-size: 11.5pt;
+    margin: 16px 0 8px;
+    border-bottom: 1.5px solid #222;
+    padding-bottom: 3px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 8px;
+  }
+  th, td {
+    border: 1px solid #bbb;
+    padding: 5px 6px;
+    vertical-align: top;
+  }
+  th {
+    background: #f0f0f0;
+    font-size: 9pt;
+    text-align: left;
+    font-weight: 700;
+  }
+  td.num, th.num { text-align: right; white-space: nowrap; }
+  td.center, th.center { text-align: center; }
+  .sum-row td {
+    font-weight: 700;
+    background: #f7f7f7;
+  }
+  .total-row td {
+    font-weight: 700;
+    background: #e8e8e8;
+    font-size: 11pt;
+  }
+  .note {
+    font-size: 8.5pt;
+    color: #555;
+    margin-top: 10px;
+  }
+  .note li { margin-bottom: 3px; }
+  .footer {
+    margin-top: 18px;
+    font-size: 8.5pt;
+    color: #666;
+    border-top: 1px solid #ccc;
+    padding-top: 6px;
+  }
+  .scope {
+    background: #fafafa;
+    border: 1px solid #ddd;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    font-size: 9.5pt;
+  }
+</style>
+</head>
+<body>
+
+<h1>Коммерческое предложение</h1>
+<div class="meta">
+  <strong>Объект:</strong> мониторинг 25 домов (отопление, протечка, дверь)<br/>
+  <strong>Состав:</strong> только оборудование<br/>
+  <strong>Дата:</strong> 28.10.2026<br/>
+  <strong>Цены:</strong> розничные ориентиры IOT Vega / Wiren Board (без НДС, где применимо); БС-4 — ориентир
+</div>
+
+<div class="scope">
+  <strong>Назначение комплекта:</strong>
+  сбор показаний с 25 домов по LoRaWAN — контроль нагрева котла (температура подачи),
+  датчики протечки, датчики открытия двери; агрегация и правила на контроллере Wiren Board 8.
+</div>
+
+<h2>1. Центральный узел</h2>
+<table>
+  <thead>
+    <tr>
+      <th style="width:4%">№</th>
+      <th style="width:14%">Артикул</th>
+      <th>Наименование</th>
+      <th class="center" style="width:8%">Кол-во</th>
+      <th class="num" style="width:12%">Цена, ₽</th>
+      <th class="num" style="width:13%">Сумма, ₽</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="center">1</td>
+      <td>БС-4</td>
+      <td>Базовая станция LoRaWAN Вега БС-4, 16 каналов, IP66, Passive PoE (Ethernet; LTE — опция)</td>
+      <td class="center">1</td>
+      <td class="num">95&nbsp;000*</td>
+      <td class="num">95&nbsp;000</td>
+    </tr>
+    <tr>
+      <td class="center">2</td>
+      <td>868-01-А8</td>
+      <td>Антенна LoRaWAN 868 МГц, усиление 8 dBi, для базовой станции</td>
+      <td class="center">1</td>
+      <td class="num">18&nbsp;400</td>
+      <td class="num">18&nbsp;400</td>
+    </tr>
+    <tr>
+      <td class="center">3</td>
+      <td>WB8-2G-32G-IND</td>
+      <td>Контроллер Wiren Board 8, 2 ГБ RAM / 32 ГБ eMMC, industrial (−40…+75&nbsp;°C)</td>
+      <td class="center">1</td>
+      <td class="num">25&nbsp;500</td>
+      <td class="num">25&nbsp;500</td>
+    </tr>
+    <tr>
+      <td class="center">4</td>
+      <td>LI30-20B24PR2</td>
+      <td>Блок питания DIN 24&nbsp;В для Wiren Board</td>
+      <td class="center">1</td>
+      <td class="num">1&nbsp;580</td>
+      <td class="num">1&nbsp;580</td>
+    </tr>
+    <tr class="sum-row">
+      <td colspan="5">Итого центральный узел</td>
+      <td class="num">140&nbsp;480</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>2. Оконечные устройства (на 25 домов)</h2>
+<table>
+  <thead>
+    <tr>
+      <th style="width:4%">№</th>
+      <th style="width:14%">Артикул</th>
+      <th>Наименование</th>
+      <th class="center" style="width:8%">Кол-во</th>
+      <th class="num" style="width:12%">Цена, ₽</th>
+      <th class="num" style="width:13%">Сумма, ₽</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="center">5</td>
+      <td>ТД-11</td>
+      <td>Датчик температуры LoRaWAN Вега ТД-11 (внешний зонд на подачу отопления / контроль котла), IP65</td>
+      <td class="center">25</td>
+      <td class="num">5&nbsp;472</td>
+      <td class="num">136&nbsp;800</td>
+    </tr>
+    <tr>
+      <td class="center">6</td>
+      <td>ДП-2</td>
+      <td>Датчик протечки Вега ДП-2 (проводной щуп 2&nbsp;м, на охранный вход ТД-11)</td>
+      <td class="center">25</td>
+      <td class="num">798</td>
+      <td class="num">19&nbsp;950</td>
+    </tr>
+    <tr>
+      <td class="center">7</td>
+      <td>Smart-MC0101</td>
+      <td>Магнитоконтактный датчик двери/окна LoRaWAN Вега Smart-MC0101</td>
+      <td class="center">25</td>
+      <td class="num">5&nbsp;016</td>
+      <td class="num">125&nbsp;400</td>
+    </tr>
+    <tr class="sum-row">
+      <td colspan="5">Итого оконечные устройства</td>
+      <td class="num">282&nbsp;150</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>3. Сводка</h2>
+<table>
+  <tbody>
+    <tr>
+      <td>Центральный узел (шлюз + антенна + Wiren Board + БП)</td>
+      <td class="num" style="width:20%">140&nbsp;480&nbsp;₽</td>
+    </tr>
+    <tr>
+      <td>Оконечные устройства × 25 домов</td>
+      <td class="num">282&nbsp;150&nbsp;₽</td>
+    </tr>
+    <tr>
+      <td>Оборудование на 1 дом (ТД-11 + ДП-2 + MC0101)</td>
+      <td class="num">11&nbsp;286&nbsp;₽</td>
+    </tr>
+    <tr class="total-row">
+      <td>Всего оборудование</td>
+      <td class="num">422&nbsp;630&nbsp;₽</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul class="note">
+  <li>* Цена Вега БС-4 на сайте — «по запросу»; в КП указан ориентир. Точную сумму уточнять у партнёра IOT Vega.</li>
+  <li>Цены ТД-11 / ДП-2 / MC0101 / антенны — РРЦ iotvega.com; Wiren Board — прайс wirenboard.com на дату КП.</li>
+  <li>В КП не включены: монтаж, кабель, мачта/крепёж антенны, PoE-инжектор, SIM/LTE, ПО, пусконаладка, доставка.</li>
+  <li>Комплект на дом: 1× ТД-11 (подача котла) + 1× ДП-2 (протечка на охранный вход ТД-11) + 1× Smart-MC0101 (дверь).</li>
+  <li>Wiren Board 8 — сетевой/прикладной узел (ChirpStack или IOT Vega Server + правила/алерты).</li>
+</ul>
+
+<div class="footer">
+  КП сформировано по каталогам IOT Vega (iotvega.com) и Wiren Board (wirenboard.com). Действительно как ориентир стоимости оборудования.
+</div>
+
+</body>
+</html>

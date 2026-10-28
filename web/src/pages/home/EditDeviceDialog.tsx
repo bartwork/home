@@ -146,6 +146,12 @@ export function EditDeviceDialog({ device, rooms, open, onClose, onSave, onDelet
               WB-LED.
             </Alert>
           ) : null}
+          {deviceType === 'air' ? (
+            <Alert severity="info" variant="outlined">
+              Якорь — Temperature (WB-MSW). Влажность, CO₂, VOC, освещённость, шум и движение — соседние
+              controls того же устройства.
+            </Alert>
+          ) : null}
           <FormControl fullWidth>
             <InputLabel id="dev-room">Комната</InputLabel>
             <Select

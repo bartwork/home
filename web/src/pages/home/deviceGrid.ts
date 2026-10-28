@@ -10,9 +10,9 @@ export const deviceGridSx = {
   justifyItems: 'stretch',
 } as const
 
-const WIDE_TYPES = new Set(['climate', 'led', 'floor'])
+const WIDE_TYPES = new Set(['climate', 'led', 'floor', 'air'])
 
-/** Широкие виджеты (climate, led, floor) занимают две колонки сетки. */
+/** Широкие виджеты (climate, led, floor, air) занимают две колонки сетки. */
 export function wideDeviceGridItemSx(deviceType: string): { gridColumn: 'span 2' } | undefined {
   return WIDE_TYPES.has(deviceType) ? { gridColumn: 'span 2' } : undefined
 }

@@ -80,6 +80,7 @@ export function FloorWidget({ device, values, sendCmd }: Props) {
           value={formatFloorTemp(s.temp)}
           size={TEMP_CIRCLE}
           accent={heating}
+          align="end"
           ariaLabel={`${device.name}: сейчас ${formatFloorTemp(s.temp)}°`}
         />
       </Box>

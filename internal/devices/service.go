@@ -11,11 +11,23 @@ import (
 )
 
 type Service struct {
-	repo repository.DeviceStore
+	repo     repository.DeviceStore
+	onChange func()
 }
 
 func New(repo repository.DeviceStore) *Service {
 	return &Service{repo: repo}
+}
+
+// OnChange — после create/update/delete (например air.RefreshIndex).
+func (s *Service) OnChange(fn func()) {
+	s.onChange = fn
+}
+
+func (s *Service) notifyChange() {
+	if s.onChange != nil {
+		s.onChange()
+	}
 }
 
 func (s *Service) ListDevices(ctx context.Context) ([]dto.Device, error) {
@@ -57,6 +69,7 @@ func (s *Service) CreateDevice(ctx context.Context, name, mqttTopic, deviceType,
 	if err != nil {
 		return dto.Device{}, err
 	}
+	s.notifyChange()
 	return row.ToDTO(), nil
 }
 
@@ -87,6 +100,7 @@ func (s *Service) UpdateDevice(ctx context.Context, id int64, name, mqttTopic, d
 	if err != nil {
 		return dto.Device{}, err
 	}
+	s.notifyChange()
 	return row.ToDTO(), nil
 }
 
@@ -94,7 +108,11 @@ func (s *Service) DeleteDevice(ctx context.Context, id int64) error {
 	if id <= 0 {
 		return errors.ErrBadRequest
 	}
-	return s.repo.Delete(ctx, id)
+	if err := s.repo.Delete(ctx, id); err != nil {
+		return err
+	}
+	s.notifyChange()
+	return nil
 }
 
 func resolvePower(mqttTopic, powerTopic, deviceType string, infer bool) string {

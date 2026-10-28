@@ -6,7 +6,7 @@
 
 ```bash
 task deps
-MQTT_BROKER=tcp://192.168.1.9:1883 task run
+MQTT_BROKER=tcp://192.168.1.2:1883 task run
 ```
 
 http://localhost:9000 · в **dev** первый пользователь: `admin` / `admin`
@@ -14,7 +14,7 @@ http://localhost:9000 · в **dev** первый пользователь: `admi
 Если `:9000` занят (часто Docker):
 
 ```bash
-BIND_SERVICE=:9020 MQTT_BROKER=tcp://192.168.1.9:1883 task run
+BIND_SERVICE=:9020 MQTT_BROKER=tcp://192.168.1.2:1883 task run
 ```
 
 → http://localhost:9020
@@ -36,7 +36,7 @@ APP_ENV=prod \
 JWT_SECRET='…' \
 SQLCIPHER_KEY='…' \
 ADMIN_PASSWORD='…' \
-MQTT_BROKER=tcp://192.168.1.9:1883 \
+MQTT_BROKER=tcp://192.168.1.2:1883 \
 ./bin/home
 ```
 

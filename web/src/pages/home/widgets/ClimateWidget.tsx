@@ -144,6 +144,7 @@ export function ClimateWidget({ device, values, sendCmd }: Props) {
           value={indoorLabel}
           size={TEMP_CIRCLE}
           accent={s.on}
+          align="end"
           ariaLabel={`${device.name}: в комнате ${indoorLabel}°`}
         />
       </Box>

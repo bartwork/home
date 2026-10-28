@@ -8,6 +8,7 @@ Graph-runtime в процессе `home` (без wb-rules / Node-RED / HA). IR =
 |-------|------|
 | `internal/rules` | compile, eval, cron, schedule, HTTP |
 | `internal/floor` | топики home, graph-шаблон, ensure, bootstrap |
+| `internal/air` | MSW CO₂ → Red/Green LED, bootstrap |
 | `internal/mqttbridge` | MQTT + local echo/dedupe для `/devices/home/*` |
 
 ## API

@@ -14,7 +14,7 @@ type RoomDef struct {
 type DeviceDef struct {
 	Name       string
 	Room       string // имя комнаты; пусто = без комнаты
-	Type       string // switch|range|sensor|climate|led|floor|raw
+	Type       string // switch|range|sensor|climate|led|floor|air|raw
 	Topic      string
 	PowerTopic string // явно; пусто: range → InferPowerTopic, floor → FloorSensorTopic
 	Icon       string
@@ -60,6 +60,7 @@ var Devices = []DeviceDef{
 	{Name: "вытяжка", Room: "кухня", Type: "switch", Topic: "/devices/wb-mr6cv3_239/controls/K3", Icon: "fan"},
 	{Name: "кондиционер", Room: "кухня", Type: "climate", Topic: "/devices/ONOKOM-AIR-HR-1-MB-B_1/controls/Active", Icon: "ac"},
 	{Name: "кондиционер", Room: "комната", Type: "climate", Topic: "/devices/ONOKOM-AIR-HR-1-MB-B_2/controls/Active", Icon: "ac"},
+	{Name: "воздух", Room: "комната", Type: "air", Topic: "/devices/wb-msw-v3_108/controls/Temperature", Icon: "sensor"},
 }
 
 func powerFor(d DeviceDef) string {

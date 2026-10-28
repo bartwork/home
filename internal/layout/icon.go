@@ -25,7 +25,7 @@ func IconFor(explicit, name, deviceType string) string {
 		return "light"
 	case deviceType == "range":
 		return "dimmer"
-	case deviceType == "sensor":
+	case deviceType == "sensor", deviceType == "air":
 		return "sensor"
 	case strings.Contains(n, "свет") || strings.Contains(n, "лент") || strings.Contains(n, "бра") || strings.Contains(n, "зеркал"):
 		return "light"

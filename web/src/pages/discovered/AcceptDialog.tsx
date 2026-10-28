@@ -36,6 +36,7 @@ function defaultIcon(suggestedType: string): string {
   if (suggestedType === 'climate') return 'ac'
   if (suggestedType === 'led') return 'light'
   if (suggestedType === 'floor') return 'thermo'
+  if (suggestedType === 'air') return 'sensor'
   if (suggestedType === 'range') return 'dimmer'
   if (suggestedType === 'switch') return 'light'
   if (suggestedType === 'sensor') return 'sensor'

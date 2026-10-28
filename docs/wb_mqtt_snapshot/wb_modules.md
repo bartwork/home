@@ -1,6 +1,6 @@
 # Wirenboard MQTT controls
 
-Broker: `tcp://192.168.1.9:1883`
+Broker (снимок): `tcp://192.168.1.2:1883` — актуально: `192.168.1.1` (см. [`mqtt_topics.md`](../mqtt_topics.md)).
 
 Controls: **314**
 
@@ -84,7 +84,7 @@ Without meta type: **0**
 | Ethernet 2 IP | `text` → `raw` |  | `/devices/network/controls/Ethernet 2 IP` |
 | Ethernet 2 IP Connection Enabled | `switch` → `switch` | 0 | `/devices/network/controls/Ethernet 2 IP Connection Enabled` |
 | Ethernet 2 IP Online Status | `switch` → `switch` | 0 | `/devices/network/controls/Ethernet 2 IP Online Status` |
-| Ethernet IP | `text` → `raw` | 192.168.1.9
+| Ethernet IP | `text` → `raw` | 192.168.1.2
  | `/devices/network/controls/Ethernet IP` |
 | Ethernet IP Connection Enabled | `switch` → `switch` | 1 | `/devices/network/controls/Ethernet IP Connection Enabled` |
 | Ethernet IP Online Status | `switch` → `switch` | 1 | `/devices/network/controls/Ethernet IP Online Status` |
@@ -155,7 +155,7 @@ Without meta type: **0**
 | control | type → class | value | topic |
 |---|---|---|---|
 | Active | `switch` → `switch` | 1 | `/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/Active` |
-| Address | `text` → `raw` | 192.168.1.9 | `/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/Address` |
+| Address | `text` → `raw` | 192.168.1.2 | `/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/Address` |
 | Connectivity | `switch` → `switch` | 1 | `/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/Connectivity` |
 | Device | `text` → `raw` | eth0 | `/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/Device` |
 | Name | `text` → `raw` | wb-eth0 | `/devices/system__networks__91f1c71d-2d97-4675-886f-ecbe52b8451e/controls/Name` |

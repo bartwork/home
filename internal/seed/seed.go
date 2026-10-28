@@ -21,7 +21,10 @@ func Run(ctx context.Context, log zerolog.Logger, rooms repository.RoomStore, de
 	if err := backfillPower(ctx, log, devices); err != nil {
 		return err
 	}
-	return backfillFloor(ctx, log, devices)
+	if err := backfillFloor(ctx, log, devices); err != nil {
+		return err
+	}
+	return backfillAir(ctx, log, devices)
 }
 
 func seedRooms(ctx context.Context, log zerolog.Logger, rooms repository.RoomStore) error {
@@ -221,6 +224,47 @@ func backfillFloor(ctx context.Context, log zerolog.Logger, devices repository.D
 	}
 	if n > 0 {
 		log.Info().Int("devices", n).Msg("seed backfill floor")
+	}
+	return nil
+}
+
+// backfillAir приводит каталожные MSW к типу air и имени из seed.
+func backfillAir(ctx context.Context, log zerolog.Logger, devices repository.DeviceStore) error {
+	byTopic := map[string]DeviceDef{}
+	for _, d := range Devices {
+		if d.Type == "air" {
+			byTopic[d.Topic] = d
+		}
+	}
+	existing, err := devices.List(ctx)
+	if err != nil {
+		return err
+	}
+	n := 0
+	for _, d := range existing {
+		def, ok := byTopic[d.MqttTopic]
+		if !ok {
+			continue
+		}
+		if d.DeviceType == "air" && d.Name == def.Name {
+			continue
+		}
+		icon := d.Icon
+		if icon == "" {
+			icon = layout.IconFor(def.Icon, def.Name, "air")
+		}
+		if _, err := devices.Update(ctx, d.ID, repository.WriteDevice{
+			Name: def.Name, MqttTopic: d.MqttTopic, DeviceType: "air", Unit: d.Unit,
+			PowerTopic: d.PowerTopic, RoomID: d.RoomID, Icon: icon,
+			X: d.X, Y: d.Y, W: d.W, H: d.H, Active: d.Active,
+			WbDevice: d.WbDevice, WbControl: d.WbControl, Source: d.Source,
+		}); err != nil {
+			return err
+		}
+		n++
+	}
+	if n > 0 {
+		log.Info().Int("devices", n).Msg("seed backfill air")
 	}
 	return nil
 }

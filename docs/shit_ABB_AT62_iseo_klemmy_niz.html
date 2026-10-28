@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ABB AT62 — ISEO · нижние клеммы двери</title>
+<style>
+:root {
+  --ink:#15202b; --muted:#5a6570; --line:#c5ced6;
+  --ok:#1e7a45; --pwr:#c0392b; --sig:#2980b9; --ssr:#0e6655;
+  --bg:#e8ecf0; --card:#fff;
+}
+* { box-sizing:border-box; }
+body { margin:0; font-family:"Segoe UI",system-ui,sans-serif; background:var(--bg); color:var(--ink); }
+header { background:#1a3d5c; color:#fff; padding:1rem 1.2rem; }
+header h1 { margin:0 0 .35rem; font-size:1.2rem; }
+header p { margin:0; font-size:.9rem; opacity:.93; max-width:980px; }
+.nav { display:flex; flex-wrap:wrap; gap:.4rem; margin:.6rem 0 0; }
+.nav a {
+  color:#fff; text-decoration:none; border:1px solid rgba(255,255,255,.35);
+  padding:.2rem .55rem; border-radius:4px; font-size:.8rem;
+}
+main { max-width:1040px; margin:0 auto; padding:1rem 1.1rem 2.5rem; }
+section {
+  background:var(--card); border:1px solid var(--line); border-radius:8px;
+  padding:.9rem 1rem; margin:0 0 .85rem;
+}
+h2 { margin:0 0 .55rem; font-size:1.05rem; }
+p, li { font-size:.9rem; line-height:1.45; }
+.note { color:var(--muted); font-size:.82rem; }
+table { width:100%; border-collapse:collapse; font-size:.85rem; }
+th, td { border:1px solid var(--line); padding:.35rem .45rem; text-align:left; vertical-align:top; }
+th { background:#f0f3f6; }
+.box {
+  border-left:4px solid var(--ok); background:#eafaf1; padding:.65rem .8rem;
+  margin:.5rem 0; border-radius:0 6px 6px 0; font-size:.88rem;
+}
+.box.warn { border-left-color:#b9770e; background:#fef9e7; }
+.box.bad { border-left-color:#c0392b; background:#fdedec; }
+.diagram {
+  width:100%; background:#f7f9fb; border:1px solid var(--line);
+  border-radius:8px; overflow:auto;
+}
+.diagram svg { display:block; min-width:860px; width:100%; height:auto; }
+.wire { font-weight:700; }
+.w-red { color:#c0392b; }
+.w-blk { color:#1a1a1a; }
+.w-brn { color:#8b4513; }
+.w-blu { color:#2471a3; }
+.w-grn { color:#1e8449; }
+.w-org { color:#d35400; }
+.w-ylw { color:#b7950b; }
+code { font-size:.84em; background:#f0f3f6; padding:.05rem .25rem; border-radius:3px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>ISEO · нижние винтовые клеммы → куда разводить</h1>
+  <p>
+    Вариант C: один БП замка на мотор и команду · открытие через сухой контакт
+    <b>WBIO-DO-SSR-8 / K1</b> · статус на DI WB7 / MR6C.
+  </p>
+  <div class="nav">
+    <a href="shit_ABB_AT62_iseo_dver.html">ISEO дверь · полная схема</a>
+    <a href="shit_ABB_AT62_wirenboard_zakaz.html">заказ WB</a>
+    <a href="shit_ABB_AT62_shema.html">схема щита</a>
+  </div>
+</header>
+<main>
+
+<section>
+  <h2>Схема: 8 клемм снизу + разводка вверх</h2>
+  <div class="box warn">
+    Перемычка только <b>красный ↔ коричневый</b> (+).
+    Коричневый с чёрным <b>не</b> объединять — это + и −.
+  </div>
+  <div class="diagram">
+    <svg viewBox="0 0 980 720" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,system-ui,sans-serif">
+      <!-- Door cable -->
+      <rect x="20" y="20" width="160" height="280" rx="8" fill="#566573"/>
+      <text x="100" y="48" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">Кабель двери</text>
+      <text x="100" y="68" text-anchor="middle" fill="#d5d8dc" font-size="11">ISEO 8-пин</text>
+      <text x="36" y="100" fill="#ecf0f1" font-size="12">чёрный</text>
+      <text x="36" y="130" fill="#e74c3c" font-size="12" font-weight="700">красный</text>
+      <text x="36" y="160" fill="#a0522d" font-size="12" font-weight="700">коричневый</text>
+      <text x="36" y="190" fill="#3498db" font-size="12" font-weight="700">синий</text>
+      <text x="36" y="220" fill="#27ae60" font-size="12" font-weight="700">зелёный</text>
+      <text x="36" y="250" fill="#e67e22" font-size="12" font-weight="700">оранжевый</text>
+      <text x="36" y="280" fill="#f1c40f" font-size="12" font-weight="700">жёлтый</text>
+
+      <!-- lines door -> terminals -->
+      <path d="M180 96 H220" stroke="#1a1a1a" stroke-width="2"/>
+      <path d="M180 126 H220" stroke="#c0392b" stroke-width="2"/>
+      <path d="M180 156 H220" stroke="#8b4513" stroke-width="2"/>
+      <path d="M180 186 H220" stroke="#2471a3" stroke-width="2"/>
+      <path d="M180 216 H220" stroke="#1e8449" stroke-width="2"/>
+      <path d="M180 246 H220" stroke="#d35400" stroke-width="2"/>
+      <path d="M180 276 H220" stroke="#b7950b" stroke-width="2"/>
+
+      <!-- Terminal block -->
+      <rect x="220" y="40" width="280" height="420" rx="10" fill="#fff" stroke="#95a5a6" stroke-width="2"/>
+      <text x="360" y="68" text-anchor="middle" fill="#1a3d5c" font-size="14" font-weight="700">Нижние клеммы · DIN</text>
+      <text x="360" y="88" text-anchor="middle" fill="#5a6570" font-size="11">слева → направо · 1…8</text>
+
+      <!-- term 1 -->
+      <rect x="240" y="105" width="240" height="36" rx="4" fill="#2c3e50"/>
+      <text x="255" y="128" fill="#fff" font-size="13" font-weight="700">1  −</text>
+      <text x="310" y="128" fill="#ecf0f1" font-size="12">чёрный</text>
+      <!-- term 2 -->
+      <rect x="240" y="145" width="240" height="36" rx="4" fill="#922b21"/>
+      <text x="255" y="168" fill="#fff" font-size="13" font-weight="700">2  +М</text>
+      <text x="320" y="168" fill="#fadbd8" font-size="12">красный</text>
+      <!-- term 3 -->
+      <rect x="240" y="185" width="240" height="36" rx="4" fill="#6e2c00"/>
+      <text x="255" y="208" fill="#fff" font-size="13" font-weight="700">3  open+</text>
+      <text x="340" y="208" fill="#f5cba7" font-size="12">коричневый</text>
+      <!-- jumper 2-3 -->
+      <path d="M470 163 V203" stroke="#e74c3c" stroke-width="3" fill="none"/>
+      <path d="M465 163 H475 M465 203 H475" stroke="#e74c3c" stroke-width="3"/>
+      <text x="485" y="188" fill="#c0392b" font-size="11" font-weight="700">перемычка +</text>
+      <!-- term 4 -->
+      <rect x="240" y="235" width="240" height="36" rx="4" fill="#1a5276"/>
+      <text x="255" y="258" fill="#fff" font-size="13" font-weight="700">4  SSR</text>
+      <text x="320" y="258" fill="#aed6f1" font-size="12">синий</text>
+      <!-- term 5 -->
+      <rect x="240" y="275" width="240" height="36" rx="4" fill="#145a32"/>
+      <text x="255" y="298" fill="#fff" font-size="13" font-weight="700">5  COM</text>
+      <text x="325" y="298" fill="#abebc6" font-size="12">зелёный</text>
+      <!-- term 6 -->
+      <rect x="240" y="315" width="240" height="36" rx="4" fill="#9c640c"/>
+      <text x="255" y="338" fill="#fff" font-size="13" font-weight="700">6  NO</text>
+      <text x="310" y="338" fill="#fdebd0" font-size="12">оранжевый</text>
+      <!-- term 7 -->
+      <rect x="240" y="355" width="240" height="36" rx="4" fill="#7d6608"/>
+      <text x="255" y="378" fill="#fff" font-size="13" font-weight="700">7  NC</text>
+      <text x="310" y="378" fill="#fcf3cf" font-size="12">жёлтый</text>
+      <!-- term 8 -->
+      <rect x="240" y="395" width="240" height="36" rx="4" fill="#7f8c8d"/>
+      <text x="255" y="418" fill="#fff" font-size="13" font-weight="700">8  —</text>
+      <text x="310" y="418" fill="#ecf0f1" font-size="12">белый · не разводить</text>
+
+      <!-- Destinations -->
+      <rect x="620" y="40" width="340" height="90" rx="8" fill="#922b21"/>
+      <text x="790" y="70" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">БП замка 8–30 В</text>
+      <text x="640" y="98" fill="#f5b7b1" font-size="13">+ ← с клемм 2/3 (одна жила)</text>
+      <text x="640" y="118" fill="#f5b7b1" font-size="13">− ← с клеммы 1</text>
+
+      <rect x="620" y="150" width="340" height="110" rx="8" fill="#0e6655"/>
+      <text x="790" y="180" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">WBIO-DO-SSR-8 · K1</text>
+      <text x="640" y="208" fill="#d5f5e3" font-size="13">K1a ← клемма 4 (синий)</text>
+      <text x="640" y="232" fill="#d5f5e3" font-size="13">K1b → клемма 1 (− / чёрный)</text>
+      <text x="640" y="250" fill="#a9dfbf" font-size="11">сухой контакт · полярности нет</text>
+
+      <rect x="620" y="280" width="340" height="120" rx="8" fill="#1a3d5c"/>
+      <text x="790" y="310" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">WB7 · статус</text>
+      <text x="640" y="340" fill="#58d68d" font-size="13">GND ← клемма 5 (зелёный)</text>
+      <text x="640" y="364" fill="#f5b041" font-size="13">W1  ← клемма 6 (оранжевый)</text>
+      <text x="640" y="386" fill="#aed6f1" font-size="11">W1=1 → дверь открыта / не сейф</text>
+
+      <rect x="620" y="420" width="340" height="70" rx="8" fill="#5b2c6f"/>
+      <text x="790" y="448" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">MR6C · DI (опц.)</text>
+      <text x="640" y="472" fill="#e8daef" font-size="13">DI ← клемма 7 (жёлтый)</text>
+
+      <!-- arrows from terminals to dest -->
+      <path d="M500 163 H560 V70 H620" stroke="#c0392b" stroke-width="2" fill="none"/>
+      <path d="M500 123 H540 V118 H620" stroke="#1a1a1a" stroke-width="2" fill="none"/>
+      <path d="M500 253 H580 V200 H620" stroke="#2471a3" stroke-width="2.5" fill="none"/>
+      <path d="M580 232 H560 V123" stroke="#0e6655" stroke-width="2" stroke-dasharray="5 3" fill="none"/>
+      <text x="545" y="210" fill="#0e6655" font-size="10" font-weight="700">K1b</text>
+      <path d="M500 293 H560 V340 H620" stroke="#1e8449" stroke-width="2" fill="none"/>
+      <path d="M500 333 H550 V360 H620" stroke="#d35400" stroke-width="2" fill="none"/>
+      <path d="M500 373 H540 V455 H620" stroke="#8e44ad" stroke-width="2" fill="none"/>
+
+      <!-- circuit summary bottom -->
+      <rect x="20" y="500" width="940" height="200" rx="10" fill="#eaf2f8" stroke="#2980b9"/>
+      <text x="40" y="535" fill="#1a3d5c" font-size="15" font-weight="700">Цепь команды «открыть»</text>
+      <text x="40" y="570" fill="#2c3e50" font-size="14">
+        +БП → клеммы 2+3 (красн.+коричн.) → оптовход ISEO → синий (кл.4) → SSR K1a ─ K1b → кл.1 (−) → −БП
+      </text>
+      <text x="40" y="605" fill="#1a3d5c" font-size="15" font-weight="700">Статус</text>
+      <text x="40" y="635" fill="#2c3e50" font-size="14">зелёный COM → GND · оранжевый NO → W1 · жёлтый NC → DI MR6C (по желанию)</text>
+      <text x="40" y="670" fill="#5a6570" font-size="13">MQTT: импульс 1–2 с на /devices/wb-gpio/controls/EXT1_K1 · белый не подключать</text>
+    </svg>
+  </div>
+</section>
+
+<section>
+  <h2>Таблица разводки</h2>
+  <table>
+    <thead>
+      <tr><th>№</th><th>Маркер</th><th>Цвет с двери</th><th>Перемычка</th><th>ПУГВ вверх</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>−</td>
+        <td><span class="wire w-blk">чёрный</span></td>
+        <td>—</td>
+        <td><b>БП −</b> + сюда же провод с <b>SSR K1b</b></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>+М</td>
+        <td><span class="wire w-red">красный</span></td>
+        <td rowspan="2"><b>2 ↔ 3</b></td>
+        <td rowspan="2">одна жила на <b>БП +</b></td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>open+</td>
+        <td><span class="wire w-brn">коричневый</span></td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>SSR</td>
+        <td><span class="wire w-blu">синий</span></td>
+        <td>—</td>
+        <td><b>SSR K1a</b></td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>COM</td>
+        <td><span class="wire w-grn">зелёный</span></td>
+        <td>—</td>
+        <td><b>GND</b> WB7</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>NO</td>
+        <td><span class="wire w-org">оранжевый</span></td>
+        <td>—</td>
+        <td><b>W1</b> WB7</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td>NC</td>
+        <td><span class="wire w-ylw">жёлтый</span></td>
+        <td>—</td>
+        <td>DI <b>MR6C</b> (опционально)</td>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td>—</td>
+        <td>белый</td>
+        <td>—</td>
+        <td>ничего</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="box bad">
+    Не соединять коричневый с чёрным. На SSR — только синий (K1a) и возврат K1b на минус (кл.1).
+  </div>
+  <p class="note">Подробности и варианты питания команды: <a href="shit_ABB_AT62_iseo_dver.html">ISEO дверь</a>.</p>
+</section>
+
+</main>
+</body>
+</html>

@@ -78,6 +78,18 @@ func TestSuggestDeviceTypeFloor(t *testing.T) {
 	}
 }
 
+func TestSuggestDeviceTypeMSW(t *testing.T) {
+	if got := discovery.SuggestDeviceType("wb-msw-v3_108", "Temperature", "temperature"); got != "air" {
+		t.Fatalf("Temperature: %q", got)
+	}
+	if got := discovery.SuggestDeviceType("wb-msw-v3_108", "CO2", "concentration"); got != "raw" {
+		t.Fatalf("CO2 sibling: %q", got)
+	}
+	if got := discovery.SuggestDeviceType("wb-msw-v3_108", "Humidity", "rel_humidity"); got != "raw" {
+		t.Fatalf("Humidity sibling: %q", got)
+	}
+}
+
 func TestSuggestDeviceTypeLed(t *testing.T) {
 	if got := discovery.SuggestDeviceType("wb-led_221", "RGB Strip", "switch"); got != "led" {
 		t.Fatalf("RGB Strip: %q", got)

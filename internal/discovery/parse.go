@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"strings"
 
+	"github.com/bartwork/home/internal/air"
 	"github.com/bartwork/home/internal/layout"
 )
 
@@ -79,8 +80,8 @@ func ClassifyWBType(wbType string) string {
 	}
 }
 
-// SuggestDeviceType учитывает устройство WB (ONOKOM / WB-LED / тёплый пол) поверх meta-типа.
-// ONOKOM Active → climate; WB-LED RGB Strip → led; реле ТП → floor; sibling-каналы → raw.
+// SuggestDeviceType учитывает устройство WB (ONOKOM / WB-LED / тёплый пол / MSW) поверх meta-типа.
+// ONOKOM Active → climate; WB-LED RGB Strip → led; реле ТП → floor; MSW Temperature → air; sibling-каналы → raw.
 func SuggestDeviceType(deviceID, control, wbType string) string {
 	if isOnokomAC(deviceID) {
 		if strings.EqualFold(strings.TrimSpace(control), "Active") {
@@ -96,6 +97,13 @@ func SuggestDeviceType(deviceID, control, wbType string) string {
 		if isWBLedRGBStripSibling(c) {
 			return "raw"
 		}
+	}
+	if air.IsMSWDevice(deviceID) {
+		c := strings.TrimSpace(control)
+		if strings.EqualFold(c, air.ControlTemperature) {
+			return "air"
+		}
+		return "raw"
 	}
 	if layout.IsFloorRelay(deviceID, control) {
 		return "floor"

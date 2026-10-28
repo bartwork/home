@@ -133,11 +133,13 @@ export function TempCircle({
   size = TEMP_CIRCLE,
   accent,
   ariaLabel,
+  align = 'start',
 }: {
   value: string
   size?: number
   accent?: boolean
   ariaLabel?: string
+  align?: 'start' | 'end' | 'center'
 }) {
   return (
     <Box
@@ -150,7 +152,7 @@ export function TempCircle({
         borderRadius: '50%',
         display: 'grid',
         placeItems: 'center',
-        justifySelf: 'end',
+        justifySelf: align,
         bgcolor: accent ? 'rgba(94, 200, 216, 0.22)' : 'rgba(232, 238, 246, 0.1)',
         border: 1,
         borderColor: accent ? 'rgba(94, 200, 216, 0.5)' : 'rgba(232, 238, 246, 0.14)',
