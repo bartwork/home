@@ -42,3 +42,5 @@ Excel: [`devices.xlsx`](devices.xlsx) — рабочая копия (допол�
 - Жёлтые: №27↔№28 (лента↔свет кладовки), №71↔№72 (свет↔вытяжка туалета).
 - Контроллер: `192.168.1.1`. Все прежние Modbus на **RS485-1**; RS485-2 свободен под AKKO.
 - Алиса: [`alice_setup.md`](alice_setup.md) (как править), [`alice_devices.md`](alice_devices.md) (список).
+- Сеть (IP/MAC): [`network_devices.md`](network_devices.md) / [`network_devices.xlsx`](network_devices.xlsx).
+- Домофон SIP + Asterisk: [`domofon_asterisk.md`](domofon_asterisk.md).

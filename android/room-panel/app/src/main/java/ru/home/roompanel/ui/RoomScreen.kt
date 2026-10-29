@@ -22,10 +22,13 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalViewConfiguration
+import androidx.compose.ui.platform.ViewConfiguration
 import androidx.compose.ui.unit.dp
 import ru.home.roompanel.RoomViewModel
 import ru.home.roompanel.UiState
@@ -44,6 +47,7 @@ private val tabs = listOf("Свет", "Лента", "Климат")
 fun RoomScreen(
     state: UiState,
     vm: RoomViewModel,
+    onBlankScreen: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var tab by remember { mutableIntStateOf(0) }
@@ -61,6 +65,10 @@ fun RoomScreen(
                 connected = state.connected,
                 onSelect = { tab = it },
                 onOpenSettings = { settings = true },
+                onBlankScreen = {
+                    settings = false
+                    onBlankScreen()
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(44.dp),
@@ -112,6 +120,10 @@ fun RoomScreen(
             onAutoBrightness = vm::setAutoBrightness,
             onManualBrightness = vm::setManualBrightness,
             onClickSound = vm::setClickSound,
+            onBlankScreen = {
+                settings = false
+                onBlankScreen()
+            },
             onSaveBroker = vm::saveBroker,
             onReconnect = vm::reconnect,
         )
@@ -126,67 +138,85 @@ private fun SegmentTabs(
     connected: Boolean,
     onSelect: (Int) -> Unit,
     onOpenSettings: () -> Unit,
+    onBlankScreen: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val click = LocalClickSound.current
-    Row(
-        modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
-            .background(Surface)
-            .padding(4.dp),
-    ) {
-        tabs.forEachIndexed { i, title ->
-            val active = selected == i
-            val bg by animateColorAsState(
-                targetValue = when {
-                    active && connected -> Teal
-                    active -> Teal.copy(alpha = 0.45f)
-                    else -> Color.Transparent
-                },
-                label = "tabBg",
-            )
-            val fg by animateColorAsState(
-                if (active) Bg else TextMuted,
-                label = "tabFg",
-            )
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(bg)
-                    .then(
-                        if (active) {
-                            // настройки — только двойной тап по уже активной вкладке
-                            Modifier.combinedClickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null,
-                                onClick = { click.play() },
-                                onDoubleClick = {
-                                    click.play()
-                                    onOpenSettings()
-                                },
-                            )
-                        } else {
-                            Modifier.combinedClickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null,
-                                onClick = {
-                                    click.play()
-                                    onSelect(i)
-                                },
-                            )
-                        },
-                    ),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = title,
-                    style = if (active) MaterialTheme.typography.tabActive
-                    else MaterialTheme.typography.tabIdle,
-                    color = fg,
-                    maxLines = 1,
+    val baseConfig = LocalViewConfiguration.current
+    val longPressConfig = remember(baseConfig) {
+        object : ViewConfiguration by baseConfig {
+            override val longPressTimeoutMillis: Long
+                get() = baseConfig.longPressTimeoutMillis * 2
+        }
+    }
+    CompositionLocalProvider(LocalViewConfiguration provides longPressConfig) {
+        Row(
+            modifier = modifier
+                .clip(RoundedCornerShape(16.dp))
+                .background(Surface)
+                .padding(4.dp),
+        ) {
+            tabs.forEachIndexed { i, title ->
+                val active = selected == i
+                val bg by animateColorAsState(
+                    targetValue = when {
+                        active && connected -> Teal
+                        active -> Teal.copy(alpha = 0.45f)
+                        else -> Color.Transparent
+                    },
+                    label = "tabBg",
                 )
+                val fg by animateColorAsState(
+                    if (active) Bg else TextMuted,
+                    label = "tabFg",
+                )
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(bg)
+                        .then(
+                            if (active) {
+                                // тап · двойной → настройки · удержание → экран выкл
+                                Modifier.combinedClickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null,
+                                    onClick = { click.play() },
+                                    onDoubleClick = {
+                                        click.play()
+                                        onOpenSettings()
+                                    },
+                                    onLongClick = {
+                                        click.play()
+                                        onBlankScreen()
+                                    },
+                                )
+                            } else {
+                                Modifier.combinedClickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null,
+                                    onClick = {
+                                        click.play()
+                                        onSelect(i)
+                                    },
+                                    onLongClick = {
+                                        click.play()
+                                        onBlankScreen()
+                                    },
+                                )
+                            },
+                        ),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = title,
+                        style = if (active) MaterialTheme.typography.tabActive
+                        else MaterialTheme.typography.tabIdle,
+                        color = fg,
+                        maxLines = 1,
+                    )
+                }
             }
         }
     }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SIPServerList version="2.0" xmlns="http://www.isapi.org/ver20/XMLSchema">
+<SIPServer>
+<id>1</id>
+<Standard>
+<enabled>true</enabled>
+<registerStatus>false</registerStatus>
+<proxy>pbx.novofon.com</proxy>
+<proxyPort>5060</proxyPort>
+<stun>0.0.0.0</stun>
+<stunPort>3478</stunPort>
+<userName>21663-102</userName>
+<displayName>102</displayName>
+<authID>102</authID>
+<expires>60</expires>
+</Standard>
+</SIPServer>
+</SIPServerList>

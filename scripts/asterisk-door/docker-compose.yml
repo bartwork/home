@@ -1,0 +1,19 @@
+services:
+  asterisk:
+    image: andrius/asterisk:20
+    container_name: asterisk-door
+    restart: unless-stopped
+    ports:
+      - "5060:5060/udp"
+      - "5060:5060/tcp"
+      - "8088:8088"
+      - "10000-10050:10000-10050/udp"
+    volumes:
+      - ./conf/pjsip.conf:/etc/asterisk/pjsip.conf:ro
+      - ./conf/extensions.conf:/etc/asterisk/extensions.conf:ro
+      - ./conf/rtp.conf:/etc/asterisk/rtp.conf:ro
+      - ./conf/modules.conf:/etc/asterisk/modules.conf:ro
+      - ./conf/logger.conf:/etc/asterisk/logger.conf:ro
+      - ./logs:/var/log/asterisk
+    environment:
+      - TZ=Europe/Moscow

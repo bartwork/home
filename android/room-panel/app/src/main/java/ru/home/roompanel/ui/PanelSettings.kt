@@ -73,6 +73,7 @@ fun PanelSettingsOverlay(
     onAutoBrightness: (Boolean) -> Unit,
     onManualBrightness: (Float) -> Unit,
     onClickSound: (Boolean) -> Unit,
+    onBlankScreen: () -> Unit,
     onSaveBroker: (String, Int) -> Unit,
     onReconnect: () -> Unit,
 ) {
@@ -87,6 +88,7 @@ fun PanelSettingsOverlay(
             onAutoBrightness = onAutoBrightness,
             onManualBrightness = onManualBrightness,
             onClickSound = onClickSound,
+            onBlankScreen = onBlankScreen,
             onSaveBroker = onSaveBroker,
             onReconnect = onReconnect,
         )
@@ -101,6 +103,7 @@ private fun PanelSettingsScreen(
     onAutoBrightness: (Boolean) -> Unit,
     onManualBrightness: (Float) -> Unit,
     onClickSound: (Boolean) -> Unit,
+    onBlankScreen: () -> Unit,
     onSaveBroker: (String, Int) -> Unit,
     onReconnect: () -> Unit,
 ) {
@@ -197,6 +200,32 @@ private fun PanelSettingsScreen(
                         ),
                     )
                 }
+                Spacer(Modifier.height(10.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(42.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color(0xFF1A2433))
+                        .border(1.dp, Color.White.copy(alpha = 0.10f), RoundedCornerShape(12.dp))
+                        .clickable {
+                            click.play()
+                            onBlankScreen()
+                        },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        "Выключить экран",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = TextPrimary,
+                    )
+                }
+                Text(
+                    "Или удержание вкладки сверху · касание включит снова",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = TextMuted,
+                    modifier = Modifier.padding(top = 6.dp),
+                )
             }
 
             SettingsSection(icon = Icons.AutoMirrored.Outlined.VolumeUp, title = "Звук") {

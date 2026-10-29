@@ -96,7 +96,7 @@ class ClickFeedback(context: Context) {
                 .build()
                 .also { at ->
                     at.write(samples, 0, samples.size, AudioTrack.WRITE_BLOCKING)
-                    at.setVolume(0.85f)
+                    at.setVolume(0.72f)
                     routeToSpeakerLocked(at)
                     track = at
                 }
@@ -159,37 +159,45 @@ class ClickFeedback(context: Context) {
     }
 }
 
-/** Синтез один раз на процесс. */
+/**
+ * Короткий «стеклянный» UI-клик в духе macOS Aqua/Tink:
+ * яркий тик ~35 мс, без басового «булька».
+ */
 private object SoftClick {
     const val SAMPLE_RATE = 44_100
     val samples: ShortArray = synthesize()
 
     private fun synthesize(): ShortArray {
-        val n = (SAMPLE_RATE * 0.065).toInt()
+        val n = (SAMPLE_RATE * 0.038).toInt()
         val out = ShortArray(n)
-        // детерминированный «шум» без Random на каждый sample-аллок
-        var noiseState = 0xA5A5_1234
+        var noiseState = 0xC0FF_EE42
         for (i in 0 until n) {
             val t = i.toDouble() / SAMPLE_RATE
-            val attack = if (t < 0.0015) (t / 0.0015) else 1.0
-            val bodyEnv = attack * exp(-t * 42.0)
-            val sparkleEnv = attack * exp(-t * 95.0)
+            // почти мгновенная атака, как у Mac
+            val attack = if (t < 0.00035) (t / 0.00035) else 1.0
+            val tickEnv = attack * exp(-t * 160.0)
+            val ringEnv = attack * exp(-t * 78.0)
+            val airEnv = attack * exp(-t * 220.0)
 
-            val body = sin(2.0 * PI * 620.0 * t) * 0.55
-            val mid = sin(2.0 * PI * 1240.0 * t + 0.3) * 0.28
-            val sparkleFreq = 3200.0 - t * 1800.0
-            val sparkle = sin(2.0 * PI * sparkleFreq * t) * 0.22 * sparkleEnv
+            // основной тон ~2.4 кГц слышен на планшетном динамике
+            val fund = sin(2.0 * PI * 2420.0 * t) * 0.62 * ringEnv
+            val glass = sin(2.0 * PI * 4850.0 * t + 0.4) * 0.28 * tickEnv
+            val air = sin(2.0 * PI * 7100.0 * t) * 0.12 * airEnv
+            // чуть «дерева» в середине — иначе на мелком динамике слишком тонко
+            val wood = sin(2.0 * PI * 1180.0 * t + 0.15) * 0.14 * ringEnv
 
             noiseState = noiseState * 1103515245 + 12345
-            val noise = ((noiseState ushr 16) / 32768.0 - 1.0) * 0.04 * sparkleEnv
+            val noise = ((noiseState ushr 16) / 32768.0 - 1.0) * 0.09 * airEnv
 
-            var sample = (body + mid) * bodyEnv + sparkle + noise
-            sample *= 0.72
-            sample /= sqrt(1.0 + sample * sample)
+            var sample = fund + glass + air + wood + noise
+            // мягкий soft-clip без жёсткого клиппинга
+            sample *= 0.9
+            sample /= sqrt(1.0 + sample * sample * 0.85)
+            // хвост в ноль
             val fade = 0.5 * (1.0 + cos(PI * (i.toDouble() / n)))
-            sample *= 0.35 + 0.65 * fade
+            sample *= 0.25 + 0.75 * fade
 
-            out[i] = (sample * Short.MAX_VALUE).toInt()
+            out[i] = (sample * Short.MAX_VALUE * 0.55).toInt()
                 .coerceIn(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt())
                 .toShort()
         }
