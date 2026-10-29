@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ResponseStatus version="1.0" xmlns="http://www.std-cgi.com/ver10/XMLSchema">
+<requestURL></requestURL>
+<statusCode>4</statusCode>
+<statusString>Invalid Operation</statusString>
+<subStatusCode>notSupport</subStatusCode>
+<errorCode>1073741825</errorCode>
+<errorMsg>The device does not support this resource</errorMsg>
+</ResponseStatus>

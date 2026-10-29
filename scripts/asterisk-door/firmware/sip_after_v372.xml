@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SIPServerList version="2.0" xmlns="http://www.isapi.org/ver20/XMLSchema">
+<SIPServer>
+<id>1</id>
+<Standard>
+<enabled>true</enabled>
+<registerStatus>true</registerStatus>
+<proxy>192.168.1.9</proxy>
+<proxyPort>5060</proxyPort>
+<userName>100</userName>
+<displayName>Door</displayName>
+<authID>100</authID>
+<expires>60</expires>
+</Standard>
+</SIPServer>
+<SIPServer>
+<id>2</id>
+<Standard>
+<enabled>false</enabled>
+<registerStatus>false</registerStatus>
+<proxy></proxy>
+<proxyPort>5060</proxyPort>
+<userName></userName>
+<displayName></displayName>
+<authID></authID>
+<expires>60</expires>
+</Standard>
+</SIPServer>
+</SIPServerList>

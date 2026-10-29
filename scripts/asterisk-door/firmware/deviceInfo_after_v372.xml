@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DeviceInfo version="2.0" xmlns="http://www.isapi.org/ver20/XMLSchema">
+<deviceName>Door</deviceName>
+<deviceID>7d49925b-4fc7-406b-a0ec-bc9b5e248a54</deviceID>
+<deviceDescription>VIS</deviceDescription>
+<deviceLocation>STD-CGI</deviceLocation>
+<systemContact>STD-CGI</systemContact>
+<model>DS-KV6103-PE1(C)</model>
+<serialNumber>DS-KV6103-PE1(C)0120220913ENK56388257</serialNumber>
+<macAddress>bc:9b:5e:24:8a:54</macAddress>
+<firmwareVersion>V3.7.2</firmwareVersion>
+<firmwareReleasedDate>build 260828</firmwareReleasedDate>
+<bootVersion>50790402</bootVersion>
+<bootReleasedDate>1706012</bootReleasedDate>
+<hardwareVersion>1-0-0</hardwareVersion>
+<deviceType>VIS</deviceType>
+<subDeviceType>villaDoorStation</subDeviceType>
+<telecontrolID>88</telecontrolID>
+<supportBeep>true</supportBeep>
+<supportVideoLoss>true</supportVideoLoss>
+<alarmOutNum>1</alarmOutNum>
+<alarmInNum>4</alarmInNum>
+<RS485Num>0</RS485Num>
+<OEMCode>1</OEMCode>
+<bspVersion>V1.4.0.790168</bspVersion>
+<dspVersion>V2.9.20 build 20260411</dspVersion>
+<encryptionModel>e256</encryptionModel>
+<productionDate>2022-09-13</productionDate>
+<displayInterfaceSize>0</displayInterfaceSize>
+<releaseRegion>abroad</releaseRegion>
+</DeviceInfo>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DeviceInfo version="2.0" xmlns="http://www.isapi.org/ver20/XMLSchema">
+<deviceName>Door</deviceName>
+<deviceID>7d49925b-4fc7-406b-a0ec-bc9b5e248a54</deviceID>
+<deviceDescription>	Vis</deviceDescription>
+<deviceLocation>STD-CGI</deviceLocation>
+<systemContact>STD-CGI</systemContact>
+<model>DS-KV6103-PE1(C)</model>
+<serialNumber>DS-KV6103-PE1(C)0120220913RRK56388257</serialNumber>
+<macAddress>bc:9b:5e:24:8a:54</macAddress>
+<firmwareVersion>V2.2.55</firmwareVersion>
+<firmwareReleasedDate>build 220816</firmwareReleasedDate>
+<bootVersion>33685559</bootVersion>
+<bootReleasedDate>1443856</bootReleasedDate>
+<hardwareVersion>0x0</hardwareVersion>
+<encoderVersion>V4.0</encoderVersion>
+<encoderReleasedDate>build 181206</encoderReleasedDate>
+<deviceType>	Vis</deviceType>
+<telecontrolID>88</telecontrolID>
+<supportBeep>true</supportBeep>
+<supportVideoLoss>true</supportVideoLoss>
+<alarmOutNum>1</alarmOutNum>
+<alarmInNum>4</alarmInNum>
+<RS485Num>1</RS485Num>
+<customizedInfo></customizedInfo>
+</DeviceInfo>

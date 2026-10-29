@@ -3,7 +3,8 @@
 Проверено **2026-10-29**: кнопка → видеозвонок в Linphone (Mac), аудио и видео работают.
 
 Конфиг: [`scripts/asterisk-door/`](../scripts/asterisk-door/).  
-Реестр сетевых устройств: [`network_devices.md`](network_devices.md).
+Реестр сетевых устройств: [`network_devices.md`](network_devices.md).  
+iOS-клиент (SIP `102` + MQTT-свет): [`ios_homepanel.md`](ios_homepanel.md) / [`ios/HomePanel/`](../ios/HomePanel/).
 
 ## Схема
 
@@ -104,7 +105,9 @@ docker compose down   # остановить
 ### Dialplan (кратко)
 
 - `from-door`: номер `1` (и catch-all) → звонок на `101` и `102`
-- `from-internal`: `100` → домофон (можно позвонить на панель из Linphone)
+- `from-internal`: `100` → домофон (CallerID подменяется на `1` / Indoor)
+
+**Исходящий softphone → дверь:** на **V2.2.55** панель отвечала `603 Decline` (`Forbidden` в клиенте). После **V2.2.77_240515** исходящий на `100` принимается (`DIALSTATUS=ANSWER`). Сейчас на панели **V3.7.2_260828**. Кнопка двери → 101/102 по-прежнему основной сценарий.
 
 Для диагностики без softphone раньше использовали `Answer()` + `Milliwatt()` (тон ~1 кГц на динамике панели).
 
@@ -113,11 +116,14 @@ docker compose down   # остановить
 - [x] Регистрация домофона на Asterisk
 - [x] Нажатие кнопки → INVITE на Asterisk
 - [x] Тестовый тон (Milliwatt) слышен на панели
-- [x] Звонок в Linphone: **аудио + видео**
+- [x] Звонок в Linphone: **аудио + видео** (входящий с двери)
+- [x] Исходящий на `100` → на V2.2.55 был **Decline 603**; после **V2.2.77** — **Answer**
+- [x] Прошивка панели: **V2.2.55 → V2.2.77_240515 → V3.7.2_260828** (ISAPI `updateFirmware`)
 
 ## Дальше (идеи)
 
 - Softphone на Android kitchen/room panel (`101` / `102`)
+- ~~iOS HomePanel~~ — см. [`ios_homepanel.md`](ios_homepanel.md) (Linphone SDK + MQTT)
 - Home Assistant / SIP-HASS вместо Linphone на дашборде
 - Постоянный Asterisk на сервере в LAN (не Docker Desktop на Mac) — стабильнее NAT/RTP
 - Открытие двери: ISAPI remote open / DTMF → скрипт

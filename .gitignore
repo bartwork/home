@@ -35,3 +35,15 @@ android/**/*.iml
 # Локальные скрины/артефакты
 **/.last-screen.png
 **/captures/
+
+# iOS / Xcode
+ios/**/xcuserdata/
+ios/**/*.xcuserstate
+ios/**/DerivedData/
+ios/HomePanel/.build/
+
+# Тяжёлые прошивки домофона (локально)
+scripts/asterisk-door/firmware/**/*.zip
+scripts/asterisk-door/firmware/**/*.dav
+scripts/asterisk-door/firmware/**/*.bin
+scripts/asterisk-door/firmware/**/*.pdf
