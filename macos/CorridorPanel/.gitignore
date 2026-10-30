@@ -1,0 +1,11 @@
+.DS_Store
+*.xcodeproj
+*.xcworkspace
+DerivedData/
+build/
+.build/
+xcuserdata/
+*.xcuserstate
+Packages/
+.swiftpm/
+# бинарники XCFrameworks тянет SPM; исходники Vendor/linphonesw — в репо

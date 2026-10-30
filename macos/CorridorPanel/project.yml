@@ -1,0 +1,62 @@
+name: CorridorPanel
+options:
+  bundleIdPrefix: ru.home
+  deploymentTarget:
+    macOS: "14.0"
+  createIntermediateGroups: true
+  xcodeVersion: "16.0"
+
+packages:
+  CocoaMQTT:
+    url: https://github.com/emqx/CocoaMQTT
+    from: 2.1.6
+  # SPM-git с download.linphone.org часто 404 — как iOS: локальный Package.swift + binary XCFrameworks.
+  linphonesw:
+    path: Vendor/linphonesw
+  # AVPlayer RTSP у Hikvision почти не работает — VLC тянет H.264/TCP нормально.
+  VLCKitSPM:
+    url: https://github.com/tylerjonesio/vlckit-spm
+    from: 3.6.0
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+
+targets:
+  CorridorPanel:
+    type: application
+    platform: macOS
+    sources:
+      - path: CorridorPanel
+        excludes:
+          - Resources/**
+      - path: CorridorPanel/Resources
+        type: folder
+        buildPhase: resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ru.home.corridorpanel.macos
+        # ASCII name: Linphone/belle-sip падает на loadGrammar при кириллице в пути .app
+        PRODUCT_NAME: HomePanel
+        INFOPLIST_KEY_CFBundleDisplayName: "Мой дом"
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: CorridorPanel/Info.plist
+        CODE_SIGN_ENTITLEMENTS: CorridorPanel/CorridorPanel.entitlements
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: ""
+        ENABLE_PREVIEWS: YES
+        COMBINE_HIDPI_IMAGES: YES
+        OTHER_LDFLAGS: "$(inherited) -ObjC"
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/../Frameworks"
+    dependencies:
+      - package: CocoaMQTT
+        product: CocoaMQTT
+      - package: linphonesw
+        product: linphonesw
+      - package: VLCKitSPM
+        product: VLCKitSPM
+    scheme:
+      testTargets: []

@@ -42,6 +42,13 @@ ios/**/*.xcuserstate
 ios/**/DerivedData/
 ios/HomePanel/.build/
 
+# macOS CorridorPanel
+macos/**/xcuserdata/
+macos/**/*.xcuserstate
+macos/**/DerivedData/
+macos/**/build/
+macos/**/.build/
+
 # Тяжёлые прошивки домофона (локально)
 scripts/asterisk-door/firmware/**/*.zip
 scripts/asterisk-door/firmware/**/*.dav
