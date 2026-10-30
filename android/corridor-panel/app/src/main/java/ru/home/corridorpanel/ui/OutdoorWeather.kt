@@ -35,7 +35,7 @@ fun OutdoorWeatherRow(
 ) {
     val w = values.weatherState()
     val tempText = w.temp?.let { String.format(Locale.US, "%.1f°", it) } ?: "—"
-    val humText = w.humidity?.let { "${it.toInt()}%" } ?: "—"
+    val humText = w.humidity?.let { "${kotlin.math.round(it).toInt()}%" } ?: "—"
 
     Row(
         modifier = modifier

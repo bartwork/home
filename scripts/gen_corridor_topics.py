@@ -259,7 +259,7 @@ def gen_swift(data: dict) -> str:
     floor_ids = ", ".join(z["id"] for z in data["floors"])
     lines.append(f"    static let floors = [{floor_ids}]")
     lines.append("")
-    lines += [
+    all_lines = [
         "    static func allStateTopics() -> [String] {",
         "        var out: [String] = []",
         "        for d in dimmers {",
@@ -267,9 +267,14 @@ def gen_swift(data: dict) -> str:
         "            out.append(d.power)",
         "        }",
         "        out.append(contentsOf: allSwitches.map(\\.topic))",
-        "        out.append(contentsOf: Led.all)",
-        "        out.append(contentsOf: Air.all)",
-        "        out.append(contentsOf: Weather.all)",
+    ]
+    if led:
+        all_lines.append("        out.append(contentsOf: Led.all)")
+    if air:
+        all_lines.append("        out.append(contentsOf: Air.all)")
+    if weather:
+        all_lines.append("        out.append(contentsOf: Weather.all)")
+    all_lines += [
         "        for c in climates {",
         "            out.append(contentsOf: c.topics)",
         "        }",
@@ -286,6 +291,7 @@ def gen_swift(data: dict) -> str:
         "}",
         "",
     ]
+    lines += all_lines
     return "\n".join(lines)
 
 
@@ -503,7 +509,7 @@ def gen_kotlin(data: dict) -> str:
         "    val floors = listOf(" + ", ".join(z["id"] for z in data["floors"]) + ")"
     )
     lines.append("")
-    lines += [
+    all_lines = [
         "    fun allStateTopics(): List<String> =",
         "        buildList {",
         "            dimmers.forEach {",
@@ -511,9 +517,14 @@ def gen_kotlin(data: dict) -> str:
         "                add(it.power)",
         "            }",
         "            allSwitches.forEach { add(it.topic) }",
-        "            addAll(Led.all)",
-        "            addAll(Air.all)",
-        "            addAll(Weather.all)",
+    ]
+    if led:
+        all_lines.append("            addAll(Led.all)")
+    if air:
+        all_lines.append("            addAll(Air.all)")
+    if weather:
+        all_lines.append("            addAll(Weather.all)")
+    all_lines += [
         "            climates.forEach { addAll(it.topics) }",
         "            floors.forEach { addAll(it.topics) }",
         "        }",
@@ -522,6 +533,7 @@ def gen_kotlin(data: dict) -> str:
         "}",
         "",
     ]
+    lines += all_lines
     return "\n".join(lines)
 
 
